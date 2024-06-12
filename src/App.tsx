@@ -1,9 +1,10 @@
 function App() {
 
   return (
-      <div className="text-3xl font-bold underline">
-        <h1>Página de inicio</h1>
-      </div>
+    <div className="">
+      <h1 className="text-3xl font-bold underline">Página de inicio</h1>
+      <p className="font-roboto font-light">Ejemplo de texto con Roboto</p>
+    </div>
   )
 }
 

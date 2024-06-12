@@ -4,7 +4,11 @@ export default {
     "./src/*.tsx",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        roboto: ['Roboto', 'sans-serif'],
+      }
+    },
   },
   plugins: [],
 }
