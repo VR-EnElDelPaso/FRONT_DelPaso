@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FaUser, FaBars, FaTimes } from 'react-icons/fa';
+import { FaUser, FaBars, FaTimes, FaWhatsapp, FaFacebook, FaInstagram } from 'react-icons/fa';
 import { IoLanguage } from 'react-icons/io5';
 
 export default function AppBar() {
@@ -41,7 +41,12 @@ export default function AppBar() {
                     <a className="text-base border-b-2 border-transparent hover:border-black transition duration-300 uppercase" href="#">Inicio</a>
                     <a className="text-base border-b-2 border-transparent hover:border-black transition duration-300 uppercase" href="#">Acerca del Museo</a>
                     <a className="text-base border-b-2 border-transparent hover:border-black transition duration-300 uppercase" href="#">Ayuda</a>
-                    <a className="text-base border-b-2 border-transparent hover:border-black transition duration-300 uppercase">Idioma</a>
+                    <a className="text-base border-b-2 border-transparent hover:border-black transition duration-300 uppercase" href="#">Idioma</a>
+                    <div className="flex space-x-6">
+                       <button className="cursor-pointer hover:text-gray-600"><FaFacebook /></button>
+                       <button className="cursor-pointer hover:text-gray-600"><FaWhatsapp /></button>
+                       <button className="cursor-pointer hover:text-gray-600"><FaInstagram /></button>
+                    </div>
                 </div>
             )}
         </nav>
