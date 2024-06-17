@@ -1,7 +1,7 @@
 import { FaUser, FaWhatsapp, FaFacebook, FaInstagram } from 'react-icons/fa';
 import { IoLanguage } from 'react-icons/io5';
 import NavLink from './NavLink';
-import SocialMediaIcon from './SocialMediaIcon';
+import SocialMediaIcon from '../SocialMediaIcons/SocialMediaIcon';
 import MenuButton from './MenuButton';
 import useToggle from '../../hooks/useToggle';
 
@@ -16,7 +16,7 @@ export default function AppBar() {
                         <img className='w-48' src="/logo K.png" alt="Fernando del Paso"/>
                     </a>
                 </div>
-                <div className="hidden lg:flex space-x-20">
+                <div className="font-bold hidden lg:flex space-x-20">
                     <NavLink href="#">Inicio</NavLink>
                     <NavLink href="#">Acerca del Museo</NavLink>
                     <NavLink href="#">Ayuda</NavLink>
@@ -34,7 +34,7 @@ export default function AppBar() {
                 </div>
             </div>
             {menuOpen && (
-                <div className="lg:hidden mt-4 flex flex-col space-y-12 items-center">
+                <div className="font-bold lg:hidden mt-4 flex flex-col space-y-12 items-center">
                     <NavLink href="#">Inicio</NavLink>
                     <NavLink href="#">Acerca del Museo</NavLink>
                     <NavLink href="#">Ayuda</NavLink>
