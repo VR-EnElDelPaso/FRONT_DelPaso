@@ -1,7 +1,7 @@
-import { FaUser, FaWhatsapp, FaFacebook, FaInstagram } from 'react-icons/fa';
+import { FaUser } from 'react-icons/fa';
 import { IoLanguage } from 'react-icons/io5';
 import NavLink from './NavLink';
-import SocialMediaIcon from '../SocialMediaIcons/SocialMediaIcon';
+import SocialMediaIcons from '../SocialMediaIcons/SocialMediaIcons';
 import MenuButton from './MenuButton';
 import useToggle from '../../hooks/useToggle';
 
@@ -39,17 +39,7 @@ export default function AppBar() {
                     <NavLink href="#">Acerca del Museo</NavLink>
                     <NavLink href="#">Ayuda</NavLink>
                     <NavLink href="#">Idioma</NavLink>
-                    <div className="flex space-x-6">
-                        <SocialMediaIcon href="https://www.facebook.com/" ariaLabel="Facebook">
-                            <FaFacebook className="text-3xl" />
-                        </SocialMediaIcon>
-                        <SocialMediaIcon href="https://www.instagram.com/" ariaLabel="Instagram">
-                            <FaInstagram className="text-3xl" />
-                        </SocialMediaIcon>
-                        <SocialMediaIcon href="https://www.whatsapp.com/" ariaLabel="Whatsapp">
-                            <FaWhatsapp className="text-3xl" />
-                        </SocialMediaIcon>
-                    </div>
+                    <SocialMediaIcons containerClass="flex space-x-5" iconClass="text-3xl" />
                 </div>
             )}
         </nav>
