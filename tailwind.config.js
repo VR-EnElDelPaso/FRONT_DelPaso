@@ -6,10 +6,10 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        roboto: ['Roboto', 'sans-serif'],
-      }
+        kaiseiDecol: ['Kaisei Decol', 'sans-serif'],
+        inter: ['Inter', 'sans-serif'],
+      },
     },
   },
   plugins: [],
-}
-
+};
