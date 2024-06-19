@@ -3,13 +3,21 @@ import { ReactNode } from "react";
 
 interface FadeInLeftOnScreenProps {
   children: ReactNode;
-  duration?: number;
-  from?: "left" | "right" | "top" | "bottom";
-  distance?: number;
   className?: string;
+  duration?: number;
+  distance?: number;
+  delay?: number
+  from?: "left" | "right" | "top" | "bottom";
 }
 
-export function FadeInOnScreen({className, children, duration = 2, from = "bottom", distance = 100 }: FadeInLeftOnScreenProps) {
+export function FadeInOnScreen({
+  className,
+  children,
+  duration = 2,
+  distance = 100,
+  delay = 0,
+  from = "bottom",
+}: FadeInLeftOnScreenProps) {
   const animationVariants: {[key: string]:  Variants} = {
     "left": {
       offscreen: {
@@ -20,7 +28,8 @@ export function FadeInOnScreen({className, children, duration = 2, from = "botto
         x: 0,
         opacity: 1,
         transition: {
-          duration: duration
+          duration,
+          delay
         }
       }
     } as Variants,
@@ -33,7 +42,8 @@ export function FadeInOnScreen({className, children, duration = 2, from = "botto
         x: 0,
         opacity: 1,
         transition: {
-          duration: duration
+          duration,
+          delay
         }
       }
     } as Variants,
@@ -46,7 +56,8 @@ export function FadeInOnScreen({className, children, duration = 2, from = "botto
         y: 0,
         opacity: 1,
         transition: {
-          duration: duration
+          duration,
+          delay
         }
       }
     } as Variants,
@@ -59,7 +70,8 @@ export function FadeInOnScreen({className, children, duration = 2, from = "botto
         y: 0,
         opacity: 1,
         transition: {
-          duration: duration
+          duration,
+          delay
         }
       }
     } as Variants,
