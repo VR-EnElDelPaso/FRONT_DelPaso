@@ -1,12 +1,10 @@
-import React from 'react';
+import AppBar from './components/AppBar/AppBar';
 
 function App() {
   return (
-    <div>
-      <h1 className="text-3xl font-bold underline">Página de inicio</h1>
-      <p className="font-kaiseiDecol font-light">Ejemplo de texto con Kaisei Decol</p>
-      <p className="font-inter font-light">Ejemplo de texto con Inter</p>
-    </div>
+      <div className="text-3xl font-bold">
+        <AppBar />
+      </div>
   );
 }
 
