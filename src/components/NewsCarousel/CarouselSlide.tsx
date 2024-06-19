@@ -1,4 +1,4 @@
-interface CarouselSlideProps {
+export interface CarouselSlideProps {
   title: string;
   description: string;
   imageUrl: string;

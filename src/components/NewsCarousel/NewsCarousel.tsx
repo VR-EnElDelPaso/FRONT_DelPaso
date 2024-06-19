@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CarouselSlide from './CarouselSlide';
 import SocialMediaIcons from '../SocialMediaIcons/SocialMediaIcons';
+import CarouselSlideInterface from './CarouselSlideInterface';
 
-const slides = [
+const slides: CarouselSlideInterface[] = [
   {
     id: 1,
     title: 'Fernando del Paso',
