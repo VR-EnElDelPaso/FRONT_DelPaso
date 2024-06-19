@@ -4,8 +4,12 @@ export default {
     "./src/*.tsx",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        kaiseiDecol: ['Kaisei Decol', 'sans-serif'],
+        inter: ['Inter', 'sans-serif'],
+      },
+    },
   },
   plugins: [],
-}
-
+};
