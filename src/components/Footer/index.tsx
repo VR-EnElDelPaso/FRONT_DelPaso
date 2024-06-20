@@ -1,6 +1,7 @@
 
 import SocialMediaIcons from '../SocialMediaIcons/SocialMediaIcons';
-import { FadeInOnScreen } from '../animations/FadeInOnScreen';
+import { FadeInOnScroll } from '../animations/FadeInOnScroll';
+import { ZoomInOnScroll } from '../animations/ZoomInOnScroll';
 
 export default function Footer() {
 
@@ -10,13 +11,13 @@ export default function Footer() {
     <div className="bg-secondary font-inter text-white py-4 lg:px-[225px] px-10 flex justify-center">
       <div className='max-w-[1000px]'>
         <div className=" grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FadeInOnScreen from='left' distance={30}>
+          <FadeInOnScroll from='left' distance={30}>
             <h4 className="font-semibold">Ubicación</h4>
             <p>C. 27 de Septiembre No. 119, Centro, C.P. 28000, Colima, Colima, México</p>
             <iframe className='md:w-3/4 w-full rounded-xl mt-4' src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d941.7221742361119!2d-103.72468924398711!3d19.24368197467158!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x84255aac6a222821%3A0x69cd49bd530cb8d0!2sMuseo%20Universitario%20Fernando%20del%20Paso!5e0!3m2!1sen!2smx!4v1718795745682!5m2!1sen!2smx" loading="eager"></iframe>
-          </FadeInOnScreen>
+          </FadeInOnScroll>
           <div>
-            <FadeInOnScreen from='right' distance={30}>
+            <FadeInOnScroll from='right' distance={30}>
               <div>
                 <h4 className="font-bold font-">Horario</h4>
                 <ul className='list-disc pl-5 space-y-2'>
@@ -28,20 +29,20 @@ export default function Footer() {
                   </li>
                 </ul>
               </div>
-            </FadeInOnScreen>
-            <FadeInOnScreen from='right' distance={30}>
+            </FadeInOnScroll>
+            <FadeInOnScroll from='right' distance={30}>
               <h4 className="font-semibold">Redes sociales</h4>
               <SocialMediaIcons containerClass="flex pl-2" iconClass="text-3xl" />
-            </FadeInOnScreen>
-            <FadeInOnScreen from='right' distance={30}>
+            </FadeInOnScroll>
+            <FadeInOnScroll from='right' distance={30}>
               <h4 className="font-semibold">Contacto</h4>
               <p className='pl-4'>312 307 0289</p>
-            </FadeInOnScreen>
+            </FadeInOnScroll>
           </div>
         </div>
-        <FadeInOnScreen className="pt-10" from='bottom' distance={30}>
+        <ZoomInOnScroll className="pt-10" initialScale={.8}>
           <img src="/assets/images/identity/pleca2023.png" alt="" />
-        </FadeInOnScreen>
+        </ZoomInOnScroll>
       </div>
     </div>
   )
