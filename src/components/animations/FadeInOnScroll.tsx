@@ -1,7 +1,7 @@
 import { motion, Variants } from 'framer-motion';
 import { ReactNode } from "react";
 
-interface FadeInLeftOnScreenProps {
+interface FadeInOnScrollProps {
   children: ReactNode;
   className?: string;
   duration?: number;
@@ -10,14 +10,14 @@ interface FadeInLeftOnScreenProps {
   from?: "left" | "right" | "top" | "bottom";
 }
 
-export function FadeInOnScreen({
+export function FadeInOnScroll({
   className,
   children,
   duration = 2,
   distance = 100,
   delay = 0,
   from = "bottom",
-}: FadeInLeftOnScreenProps) {
+}: FadeInOnScrollProps) {
   const animationVariants: {[key: string]:  Variants} = {
     "left": {
       offscreen: {
