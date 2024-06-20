@@ -39,7 +39,7 @@ export default function TheNew() {
       </div>
       {/* fin de imagen de decoración */}
 
-      <div className="px-24 py-16">
+      <div className="m-auto max-w-6xl md:px-24 sm:px-16 px-8 py-16">
         {/* titulo */}
         <div className="mb-6">
           <h3 className="tracking-widest font-inter text-lg">
