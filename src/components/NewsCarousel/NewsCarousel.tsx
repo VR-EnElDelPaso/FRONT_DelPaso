@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CarouselSlide from './CarouselSlide';
 import SocialMediaIcons from '../SocialMediaIcons/SocialMediaIcons';
@@ -31,6 +31,14 @@ export default function NewsCarousel() {
   const handleSlideChange = (index: number) => {
     setCurrentSlide(index);
   };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="relative h-full overflow-hidden">
