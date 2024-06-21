@@ -20,7 +20,7 @@ function MuseumStatus() {
 const StatusIndicator = ({ color }: { color: string }) => (
     <motion.div
         className={`w-3 h-3 rounded-full mr-2 bg-${color}-500`}
-        animate={{ scale: [1, 1.3, 1] }}
+        animate={{ scale: [.5, .8, .5] }}
         transition={{ 
             duration: 3, 
             repeat: Infinity,
