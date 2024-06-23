@@ -36,7 +36,7 @@ export function ZoomInOnScroll({
       className={className}
       initial="offscreen"
       whileInView="onscreen"
-      // viewport={{ once: true, amount: 0.8 }}
+      viewport={{ once: true, amount: 0.8 }}
     >
       <motion.div
         variants={animationVariants}
