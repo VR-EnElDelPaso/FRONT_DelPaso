@@ -9,6 +9,9 @@ export default {
         kaiseiDecol: ['Kaisei Decol', 'sans-serif'],
         inter: ['Inter', 'sans-serif'],
       },
+      backgroundColor: {
+        secondary: '#5F5EA3',
+      }
     },
   },
   plugins: [],
