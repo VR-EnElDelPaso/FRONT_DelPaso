@@ -40,7 +40,7 @@ export default function Footer() {
             </FadeInOnScroll>
           </div>
         </div>
-        <ZoomInOnScroll className="pt-10" initialScale={.8}>
+        <ZoomInOnScroll className="pt-10" initialScale={.9}>
           <img src="/assets/images/identity/pleca2023.png" alt="" />
         </ZoomInOnScroll>
       </div>

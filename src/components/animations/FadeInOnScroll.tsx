@@ -82,7 +82,7 @@ export function FadeInOnScroll({
       className={className}
       initial="offscreen"
       whileInView="onscreen"
-      viewport={{ once: true, amount: 0.8 }}
+      viewport={{ once: true, amount: .5 }}
     >
       <motion.div
         variants={animationVariants[from]}
