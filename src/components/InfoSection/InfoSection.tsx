@@ -8,8 +8,8 @@ export default function InfoSection() {
                 <div className="flex flex-col">
                     <h1 className="font-bold">Horarios</h1>
                     <p>Lunes: Cerrado</p>
-                    <p>Martes - Sabado 10 a.m - 2 p.m / 5 p.m - 8 p.m</p>
-                    <p>Domingo: 10 a.m - 1 p.m</p>
+                    <p>Martes - Sabado 10 a.m - 2 p.m / 5 p.m - 8 p.m.</p>
+                    <p>Domingo: 10 a.m - 1 p.m.</p>
                 </div>
             <FaLocationDot className="text-2xl hidden md:block" />
             <div className="flex flex-col">

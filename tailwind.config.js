@@ -4,8 +4,15 @@ export default {
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        kaiseiDecol: ['Kaisei Decol', 'sans-serif'],
+        inter: ['Inter', 'sans-serif'],
+      },
+      backgroundColor: {
+        secondary: '#5F5EA3',
+      }
+    },
   },
   plugins: [],
-}
-
+};

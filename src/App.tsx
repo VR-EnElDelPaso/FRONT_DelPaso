@@ -2,20 +2,20 @@ import AppBar from './components/AppBar/AppBar';
 import NewsCarousel from './components/NewsCarousel/NewsCarousel';
 import InfoSection from './components/InfoSection/InfoSection';
 import NowShowing from './components/NowShowing/NowShowing';
+import Footer from './components/Footer';
+import TheNew from './components/TheNew';
 
 function App() {
-
   return (
-      <div className="flex flex-col h-screen">
-        <AppBar />
-        <div className="flex-grow">
-          <NewsCarousel />
-          <InfoSection />
-          <NowShowing />
-        </div>
-
-      </div>
-  )
+    <div>
+      <AppBar />
+      <NewsCarousel />
+      <InfoSection />
+      <NowShowing />
+      <TheNew />
+      <Footer />
+    </div >
+  );
 }
 
-export default App
+export default App;
