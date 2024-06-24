@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { wrap } from 'popmotion';
 import Slide from './Slide';
@@ -11,9 +11,9 @@ export default function Carousel() {
 
     const imageIndex = wrap(0, slides.length, page);
 
-    const paginate = (newDirection: number) => {
-        setPage([page + newDirection, newDirection]);
-    };
+    const paginate = useCallback((newDirection: number) => {
+        setPage((prevPage) => [prevPage[0] + newDirection, newDirection]);
+      }, [setPage]);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -21,7 +21,7 @@ export default function Carousel() {
         }, 5000); // Cambia de slide cada 5 segundos
 
         return () => clearInterval(interval); // Limpiar el intervalo cuando el componente se desmonte
-    }, [page]); // Dependencia para actualizar el intervalo en cada cambio de página
+    }, [paginate]); // Dependencia para actualizar el intervalo en cada cambio de página
 
     return (
         <div className="relative w-full h-full mt-8">
@@ -41,7 +41,7 @@ export default function Carousel() {
                         drag="x"
                         dragConstraints={{ left: 0, right: 0 }}
                         dragElastic={1}
-                        onDragEnd={(e, { offset, velocity }) => {
+                        onDragEnd={(_, { offset, velocity }) => {
                             const swipe = swipePower(offset.x, velocity.x);
 
                             if (swipe < -swipeConfidenceThreshold) {
