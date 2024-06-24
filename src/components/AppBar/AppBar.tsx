@@ -11,7 +11,7 @@ export default function AppBar() {
     return (
         <nav className="sticky top-0 z-50 bg-white shadow-md">
             <div className="h-20 p-4 container mx-auto flex justify-between items-center">
-                <div className='h-full bg-red-50 '>
+                <div className='h-full'>
                     <a href="/" className="h-full flex cursor-pointer items-center">
                         <img className='h-full' src="/logo K.png" alt="Fernando del Paso"/>
                     </a>
@@ -29,17 +29,17 @@ export default function AppBar() {
                         <FaUser className="text-3xl" />
                     </button>
                 </div>
-                <div className="lg:hidde flex items-center">
+                <div className="lg:hidden flex items-center">
                     <MenuButton isOpen={menuOpen} onClick={toggleMenu} />    
                 </div>
             </div>
             {menuOpen && (
-                <div className=" font-bold lg:hiden mt-4 flex flex-col space-y-12 items-center">
+                <div className=" font-bold lg:hidden mt-4 flex flex-col space-y-12 items-center">
                     <NavLink href="#">Inicio</NavLink>
                     <NavLink href="#">Acerca del Museo</NavLink>
                     <NavLink href="#">Ayuda</NavLink>
                     <NavLink href="#">Idioma</NavLink>
-                    <SocialMediaIcons containerClass="flex space-x-5" iconClass="text-3xl" />
+                    <SocialMediaIcons containerClass="flex space-x-5 pb-4" iconClass="text-3xl" />
                 </div>
             )}
         </nav>
