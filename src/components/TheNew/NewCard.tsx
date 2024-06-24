@@ -19,8 +19,8 @@ export default function NewCard({ title, description, imagePath }: NewCardProps)
 
       {/* texto */}
       <div className=" flex flex-col justify-center">
-        <p className="tracking-[1.4px] font-semibold font-inter">{description}</p>
         <h4 className="text-lg">{title}</h4>
+        <p className="tracking-[1.4px] font-semibold font-inter">{description}</p>
       </div>
       {/* fin de texto */}
     </div>

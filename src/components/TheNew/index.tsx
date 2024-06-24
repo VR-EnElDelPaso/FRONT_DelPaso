@@ -39,7 +39,7 @@ export default function TheNew() {
       </div>
       {/* fin de imagen de decoración */}
 
-      <div className="m-auto max-w-6xl md:px-24 sm:px-16 px-8 py-16">
+      <div className="mx-auto sm:py-8 px-8 py-4 container">
         {/* titulo */}
         <div className="mb-6">
           <h3 className="tracking-widest font-inter text-lg">
@@ -50,13 +50,13 @@ export default function TheNew() {
         {/* fin de titulo */}
 
         {/* sm cards */}
-        <div className="sm:hidden grid sm:grid-cols-2 grid-cols-1 gap-8">
+        <div className="sm:hidden grid sm:grid-cols-2 grid-cols-1 gap-14">
           {newCards.map((newCard, index) => (
             <FadeInOnScroll
               key={index}
               from={"bottom"}
-              distance={20}
-              duration={1}
+              distance={10}
+              duration={1.5}
             >
               <NewCard {...newCard} />
             </FadeInOnScroll>
@@ -64,17 +64,19 @@ export default function TheNew() {
         </div>
         {/* fin de sm cards */}
 
-        {/* cards */}
-        <div className="hidden sm:grid sm:grid-cols-2 grid-cols-1 gap-8">
-          {newCards.map((newCard, index) => (
-            <FadeInOnScroll
-            key={index}
-            from={index % 2 == 0 ? "left" : "right"}
-            distance={30}
-            >
-              <NewCard {...newCard} />
-            </FadeInOnScroll>
-          ))}
+        {/* >sm cards */}
+        <div className="hidden sm:block">
+          <FadeInOnScroll
+            from="bottom"
+            distance={20}
+            duration={2}
+          >
+            <div className="hidden sm:grid sm:grid-cols-2 grid-cols-1 gap-8">
+              {newCards.map((newCard, index) => (
+                <NewCard key={index} {...newCard} />
+              ))}
+            </div>
+          </FadeInOnScroll>
         </div>
         {/* fin de cards */}
       </div>
