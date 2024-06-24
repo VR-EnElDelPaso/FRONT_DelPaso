@@ -8,7 +8,7 @@ interface CarouselControlsProps {
 
 export default function CarouselControls({ nextSlide, prevSlide, currentSlide, totalSlides, setCurrentSlide }: CarouselControlsProps) {
     return (
-        <div className="absolute bottom-0 right-0 flex justify-end items-center p-4 space-x-2 font-bold">
+        <div className="absolute bottom-0 right-0 flex justify-end items-center p-4 space-x-2 font-bold z-20">
             <button onClick={prevSlide} className="text-lg p-2">&#8592;</button>
             <div className="flex space-x-2">
                 {Array.from({ length: totalSlides }).map((_, index) => (
