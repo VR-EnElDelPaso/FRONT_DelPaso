@@ -4,6 +4,7 @@ import InfoSection from './components/InfoSection/InfoSection';
 import NowShowing from './components/NowShowing/NowShowing';
 import Footer from './components/Footer';
 import TheNew from './components/TheNew';
+import { FadeInOnScroll } from './components/animations/FadeInOnScroll';
 
 function App() {
   return (
@@ -11,7 +12,12 @@ function App() {
       <AppBar />
       <NewsCarousel />
       <InfoSection />
-      <NowShowing />
+      <FadeInOnScroll
+        distance={20}
+        duration={2}
+      >
+        <NowShowing />
+      </FadeInOnScroll>
       <TheNew />
       <Footer />
     </div >
