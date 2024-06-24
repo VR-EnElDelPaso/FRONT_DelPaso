@@ -1,10 +1,8 @@
-export interface CarouselSlideProps {
-  title: string;
-  description: string;
-  imageUrl: string;
-}
+// CarouselSlide.tsx
+import React from 'react';
+import { CarouselSlideProps } from './slide-data';
 
-export default function CarouselSlide({ title, description, imageUrl }: CarouselSlideProps) {
+const CarouselSlide: React.FC<CarouselSlideProps> = ({ title, description, imageUrl }) => {
   return (
     <div className="relative h-full">
       <img 
@@ -25,4 +23,6 @@ export default function CarouselSlide({ title, description, imageUrl }: Carousel
       </div>
     </div>
   );
-}
+};
+
+export default CarouselSlide;
