@@ -10,7 +10,7 @@ export default function Footer() {
     <div className="bg-secondary overflow-hidden font-inter text-white">
       <FadeInOnScroll from='bottom' distance={20} duration={2}>
         <div className='auto px-8 pt-8 container mx-auto'>
-          <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 lg:gap-8 md:gap-x-8 md:gap-y-16 sm:gap-10">
+          <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 lg:gap-8 md:gap-x-8 md:gap-y-16 gap-10">
             <div className='md:order-4 lg:order-1'>
               <h4 className="text-xl font-semibold">Horario</h4>
               <div className='h-full flex items-center'>
