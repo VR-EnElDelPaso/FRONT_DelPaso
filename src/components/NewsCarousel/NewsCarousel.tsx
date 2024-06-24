@@ -1,5 +1,5 @@
 // NewsCarousel.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { wrap } from 'popmotion';
 import CarouselSlide from './CarouselSlide';
@@ -12,9 +12,9 @@ const NewsCarousel: React.FC = () => {
 
   const imageIndex = wrap(0, slides.length, page);
 
-  const paginate = (newDirection: number) => {
-    setPage([page + newDirection, newDirection]);
-  };
+  const paginate = useCallback((newDirection: number) => {
+    setPage((prevPage) => [prevPage[0] + newDirection, newDirection]);
+  }, [setPage]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -22,14 +22,14 @@ const NewsCarousel: React.FC = () => {
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [page]);
+  }, [paginate]);
 
   const handleSlideChange = (index: number) => {
     setPage([index, 0]);
   };
 
   return (
-    <div className="relative h-full overflow-hidden">
+    <div className="bg-black relative h-full overflow-hidden">
       <AnimatePresence initial={false} custom={direction}>
         {slides.map((slide, index) => (
           index === imageIndex && (
@@ -48,7 +48,7 @@ const NewsCarousel: React.FC = () => {
               drag="x"
               dragConstraints={{ left: 0, right: 0 }}
               dragElastic={1}
-              onDragEnd={(e, { offset, velocity }) => {
+              onDragEnd={(_, { offset, velocity }) => {
                 const swipe = swipePower(offset.x, velocity.x);
                 
                 if (swipe < -swipeConfidenceThreshold) {
@@ -69,7 +69,7 @@ const NewsCarousel: React.FC = () => {
       </AnimatePresence>
       <div className="absolute bottom-16 w-1/3 right-32 h-0.5 bg-white bg-opacity-50"></div>
       <div className="z-10 absolute bottom-8 right-40 -space-x-20 flex">
-      {slides.map((slide, index) => (
+      {slides.map((_, index) => (
         <button
           key={slides[index].id}
           onClick={() => handleSlideChange(index)}
