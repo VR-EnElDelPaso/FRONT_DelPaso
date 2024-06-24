@@ -6,15 +6,13 @@ import TheNew from './components/TheNew';
 
 function App() {
   return (
-    <div className="flex flex-col h-screen">
+    <div>
       <AppBar />
-      <div className="flex-grow">
-        <NewsCarousel />
-        <InfoSection />
-        <TheNew />
-        <Footer />
-      </div>
-    </div>
+      <NewsCarousel />
+      <InfoSection />
+      <TheNew />
+      <Footer />
+    </div >
   );
 }
 
