@@ -29,7 +29,7 @@ const NewsCarousel: React.FC = () => {
   };
 
   return (
-    <div className="bg-black relative h-full overflow-hidden">
+    <div className="bg-black relative h-[calc(100vh-5rem)] overflow-hidden">
       <AnimatePresence initial={false} custom={direction}>
         {slides.map((slide, index) => (
           index === imageIndex && (
