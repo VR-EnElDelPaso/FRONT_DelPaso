@@ -5,10 +5,11 @@ import NowShowing from './components/NowShowing/NowShowing';
 import Footer from './components/Footer';
 import TheNew from './components/TheNew';
 import { FadeInOnScroll } from './components/animations/FadeInOnScroll';
+import AuthLayout from './layouts/AuthLayout';
 
 function App() {
   return (
-    <div>
+    <AuthLayout>
       <AppBar />
       <NewsCarousel />
       <InfoSection />
@@ -20,7 +21,7 @@ function App() {
       </FadeInOnScroll>
       <TheNew />
       <Footer />
-    </div >
+    </AuthLayout >
   );
 }
 
