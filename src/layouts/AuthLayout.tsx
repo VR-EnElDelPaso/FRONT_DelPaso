@@ -1,17 +1,17 @@
-import { useEffect, useState } from "react";
-import { User } from "../types/user";
+import { useCallback, useEffect} from "react";
+import useAuthStore from "../stores/AuthStore";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<User | null>(null)
+
+  const {
+    isAuthenticated,
+    setIsAuthenticated,
+    user,
+    setUser
+  } = useAuthStore();
 
 
-  useEffect(() => {
-    checkAuthStatus();
-  }, [])
-
-
-  const checkAuthStatus = async () => {
+  const checkAuthStatus = useCallback(async () => {
     try {
       const response = await fetch('http://localhost:4006/api/auth/status', {
         credentials: 'include' // Required for cookies
@@ -24,9 +24,15 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
     } catch (error) {
       console.error('Error checking auth status:', error);
     }
-  };
+  }, [setIsAuthenticated, setUser]);
+
+
+  useEffect(() => {
+    checkAuthStatus();
+  }, [checkAuthStatus])
 
   const handleLogin = () => {
+    // posible manera de redirección, requiere configuración en el servidor
     // window.location.href = 'http://localhost:4006/api/auth/login?redirect_uri=http://localhost:3000/auth/callback';
     window.location.href = 'http://localhost:4006/api/auth/login';
   }
