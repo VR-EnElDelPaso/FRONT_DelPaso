@@ -6,21 +6,24 @@ import MenuButton from './MenuButton';
 import useToggle from '../../hooks/useToggle';
 import { ZoomInOnScroll } from '../animations/ZoomInOnScroll';
 import useAuthStore from '../../stores/AuthStore';
+import config from '../../config';
 
 export default function AppBar() {
+    const {apiBaseUrl} = config;
+
     const {
         user,
         isAuthenticated,
     } = useAuthStore();
 
     const handleLogout = async () => {
-        window.location.href = 'http://localhost:4006/api/auth/logout';
+        window.location.href = `${apiBaseUrl}/api/auth/logout`;
     }
 
     const handleLogin = () => {
         // posible manera de redirección, requiere configuración en el servidor
         // window.location.href = 'http://localhost:4006/api/auth/login?redirect_uri=http://localhost:3000/auth/callback';
-        window.location.href = 'http://localhost:4006/api/auth/login';
+        window.location.href = `${apiBaseUrl}/api/auth/login`;
     }
 
     const [menuOpen, toggleMenu] = useToggle(false);

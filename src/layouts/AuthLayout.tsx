@@ -1,17 +1,18 @@
 import { useCallback, useEffect } from "react";
 import useAuthStore from "../stores/AuthStore";
+import config from "../config";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
+  const { apiBaseUrl } = config;
 
   const {
     setIsAuthenticated,
     setUser
   } = useAuthStore();
 
-
   const checkAuthStatus = useCallback(async () => {
     try {
-      const response = await fetch('http://localhost:4006/api/auth/status', {
+      const response = await fetch(`${apiBaseUrl}/api/auth/status`, {
         credentials: 'include' // Required for cookies
       });
       const data = await response.json();
@@ -22,7 +23,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
     } catch (error) {
       console.error('Error checking auth status:', error);
     }
-  }, [setIsAuthenticated, setUser]);
+  }, [setIsAuthenticated, setUser, apiBaseUrl]);
 
 
   useEffect(() => {
