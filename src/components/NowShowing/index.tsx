@@ -7,7 +7,7 @@ export default function NowShowing() {
             <div className="absolute top-3 right-3">
                 <MuseumStatus />
             </div>
-            <div className="p-40 pl-52">
+            <div className="sm:p-40 sm:pl-52">
                 <div className="flex items-center">
                     <span className="text-3xl mr-2">•</span>
                     <p className="text-sm font-bold tracking-widest uppercase">Actuales</p>
