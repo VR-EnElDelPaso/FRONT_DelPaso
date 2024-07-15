@@ -25,7 +25,7 @@ export default function Carousel() {
     
     return (
         <div className="relative w-full mt-4 sm:mt-8">
-            <div className="relative w-full h-64 sm:h-80 md:h-96 overflow-hidden mb-8">
+            <div className="relative w-full h-[50vh] min-h-[300px] max-h-[500px] overflow-hidden mb-4">
                 <AnimatePresence initial={false} custom={direction}>
                     <motion.div
                         key={page}
