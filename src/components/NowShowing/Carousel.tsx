@@ -8,24 +8,24 @@ import { variants, swipeConfidenceThreshold, swipePower } from './animations';
 
 export default function Carousel() {
     const [[page, direction], setPage] = useState([0, 0]);
-
+    
     const imageIndex = wrap(0, slides.length, page);
-
+    
     const paginate = useCallback((newDirection: number) => {
-        setPage((prevPage) => [prevPage[0] + newDirection, newDirection]);
-      }, [setPage]);
-
+        setPage([page + newDirection, newDirection]);
+    }, [page]);
+    
     useEffect(() => {
         const interval = setInterval(() => {
             paginate(1);
-        }, 5000); // Cambia de slide cada 5 segundos
-
-        return () => clearInterval(interval); // Limpiar el intervalo cuando el componente se desmonte
-    }, [paginate]); // Dependencia para actualizar el intervalo en cada cambio de página
-
+        }, 5000);
+        
+        return () => clearInterval(interval);
+    }, [paginate]);
+    
     return (
-        <div className="relative w-full h-full mt-8">
-            <div className="relative w-full h-96 overflow-hidden">
+        <div className="relative w-full mt-4 sm:mt-8">
+            <div className="relative w-full h-[50vh] min-h-[300px] max-h-[500px] overflow-hidden mb-4">
                 <AnimatePresence initial={false} custom={direction}>
                     <motion.div
                         key={page}
@@ -43,7 +43,7 @@ export default function Carousel() {
                         dragElastic={1}
                         onDragEnd={(_, { offset, velocity }) => {
                             const swipe = swipePower(offset.x, velocity.x);
-
+                            
                             if (swipe < -swipeConfidenceThreshold) {
                                 paginate(1);
                             } else if (swipe > swipeConfidenceThreshold) {
@@ -61,13 +61,16 @@ export default function Carousel() {
                     </motion.div>
                 </AnimatePresence>
             </div>
-            <CarouselControls 
-                nextSlide={() => paginate(1)} 
-                prevSlide={() => paginate(-1)} 
-                currentSlide={imageIndex} 
-                totalSlides={slides.length} 
-                setCurrentSlide={(index) => setPage([index, 0])}
-            />
+            
+            <div className="relative">
+                <CarouselControls 
+                    nextSlide={() => paginate(1)}
+                    prevSlide={() => paginate(-1)}
+                    currentSlide={imageIndex}
+                    totalSlides={slides.length}
+                    setCurrentSlide={(index) => setPage([index, 0])}
+                />
+            </div>
         </div>
     );
 }
