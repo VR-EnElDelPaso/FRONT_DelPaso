@@ -11,9 +11,9 @@ export default function Carousel() {
     
     const imageIndex = wrap(0, slides.length, page);
     
-    const paginate = (newDirection: number) => {
+    const paginate = useCallback((newDirection: number) => {
         setPage([page + newDirection, newDirection]);
-    };
+    }, [page]);
     
     useEffect(() => {
         const interval = setInterval(() => {
@@ -21,7 +21,7 @@ export default function Carousel() {
         }, 5000);
         
         return () => clearInterval(interval);
-    }, [page]);
+    }, [paginate]);
     
     return (
         <div className="relative w-full mt-4 sm:mt-8">
