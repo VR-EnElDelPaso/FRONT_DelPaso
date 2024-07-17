@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { wrap } from 'popmotion';
 import Slide from './Slide';
@@ -41,7 +41,7 @@ export default function Carousel() {
                         drag="x"
                         dragConstraints={{ left: 0, right: 0 }}
                         dragElastic={1}
-                        onDragEnd={(e, { offset, velocity }) => {
+                        onDragEnd={(_, { offset, velocity }) => {
                             const swipe = swipePower(offset.x, velocity.x);
                             
                             if (swipe < -swipeConfidenceThreshold) {
