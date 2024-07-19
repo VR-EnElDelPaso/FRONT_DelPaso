@@ -2,7 +2,7 @@ import { FaRegClock, FaLocationDot } from "react-icons/fa6";
 
 export default function InfoSection() {
   return (
-    <div className="bg-gray-300 py-6">
+    <div className="bg-gray-100 py-6">
         <div className="flex flex-col p-5 space-y-4 ml-12 md:flex-row md:space-y-0 md:space-x-4">
             <FaRegClock className="text-2xl hidden md:block" />
                 <div className="flex flex-col">
