@@ -6,7 +6,9 @@ export default function AppLayout() {
   return (
     <>
       <AppBar />
-      <Outlet />
+      <div className="min-h-[calc(100svh-100px)]">
+        <Outlet />
+      </div>
       <Footer />
     </>
   )
