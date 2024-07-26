@@ -12,6 +12,8 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
   const checkAuthStatus = useCallback(async () => {
     try {
+      console.log(apiBaseUrl);
+      
       const response = await fetch(`${apiBaseUrl}/api/auth/status`, {
         credentials: 'include' // Required for cookies
       });
