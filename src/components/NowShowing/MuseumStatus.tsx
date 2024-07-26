@@ -18,12 +18,21 @@ function MuseumStatus() {
     const { text, bg, label } = getStatus(isOpen, isClosingSoon);
 
     return (
-        <div className={`flex items-center text-base font-bold ${text}`}>
+        <motion.div 
+            className={`flex items-center justify-end space-x-2 text-base font-bold ${text} p-2 rounded-full bg-gray-50 shadow-md`}
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+        >
             <StatusIndicator color={bg} />
-            <div>
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.2, duration: 0.5 }}
+            >
                 {label}
-            </div>
-        </div>
+            </motion.div>
+        </motion.div>
     );
 }
 
@@ -33,12 +42,20 @@ type StatusIndicatorProps = {
 
 const StatusIndicator = ({ color }: StatusIndicatorProps) => (
     <motion.div
-        className={`w-3 h-3 rounded-full mr-2 ${color}`}
-        animate={{ scale: [0.5, 0.8, 0.5] }}
+        className={`w-4 h-4 rounded-full ${color}`}
+        animate={{ 
+            scale: [0.5, 1.1, 0.5],
+            boxShadow: [
+                '0 0 0 0 rgba(0, 0, 0, 0.3)',
+                '0 0 0 10px rgba(0, 0, 0, 0)',
+                '0 0 0 0 rgba(0, 0, 0, 0.3)'
+            ]
+        }}
         transition={{ 
-            duration: 3, 
+            duration: 2, 
             repeat: Infinity,
-            repeatType: 'loop',
+            repeatType: 'reverse',
+            ease: "easeInOut"
         }}
     />
 );
