@@ -1,12 +1,30 @@
-import { FaUser } from 'react-icons/fa';
+import { FaSignOutAlt, FaUser } from 'react-icons/fa';
 import { IoLanguage } from 'react-icons/io5';
 import NavLink from './NavLink';
 import SocialMediaIcons from '../SocialMediaIcons/SocialMediaIcons';
 import MenuButton from './MenuButton';
 import useToggle from '../../hooks/useToggle';
 import { ZoomInOnScroll } from '../animations/ZoomInOnScroll';
+import useAuthStore from '../../stores/AuthStore';
 
 export default function AppBar() {
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL as string;
+
+    const {
+        user,
+        isAuthenticated,
+    } = useAuthStore();
+
+    const handleLogout = async () => {
+        window.location.href = `${apiBaseUrl}/api/auth/logout`;
+    }
+
+    const handleLogin = () => {
+        // posible manera de redirección, requiere configuración en el servidor
+        // window.location.href = 'http://localhost:4006/api/auth/login?redirect_uri=http://localhost:3000/auth/callback';
+        window.location.href = `${apiBaseUrl}/api/auth/login`;
+    }
+
     const [menuOpen, toggleMenu] = useToggle(false);
 
     return (
@@ -27,9 +45,21 @@ export default function AppBar() {
                         <button aria-label="Cambiar idioma" className="cursor-pointer hover:text-gray-600">
                             <IoLanguage className="text-3xl" />
                         </button>
-                        <button aria-label="Iniciar sesión" className="cursor-pointer hover:text-gray-600">
-                            <FaUser className="text-3xl" />
-                        </button>
+                        {
+                            isAuthenticated ? (<>
+                                <div className='flex justify-center items-center gap-1'>
+                                    <FaUser className="text-xl" />
+                                    <h4>{user?.displayName}</h4>
+                                </div>
+                                <button onClick={handleLogout} className="bg-black bg-opacity-75 text-white px-4 py-1 rounded-md transition duration-200 hover:bg-opacity-100 font-normal">
+                                    <FaSignOutAlt className="mr-1" />
+                                </button>
+                            </>) : (<>
+                                <button onClick={handleLogin} className="bg-black bg-opacity-75 text-white px-4 py-1 rounded-md transition duration-200 hover:bg-opacity-100 font-normal">
+                                    Iniciar sesión
+                                </button>
+                            </>)
+                        }
                     </div>
                     <div className="lg:hidden flex items-center">
                         <MenuButton isOpen={menuOpen} onClick={toggleMenu} />
@@ -41,6 +71,23 @@ export default function AppBar() {
                         <NavLink href="#">Acerca del Museo</NavLink>
                         <NavLink href="#">Ayuda</NavLink>
                         <NavLink href="#">Idioma</NavLink>
+                        <div className='flex flex-col gap-1'>
+                            {
+                                isAuthenticated ? (<>
+                                    <div className='flex justify-center items-center gap-1'>
+                                        <FaUser className="text-xl" />
+                                        <h4>{user?.displayName}</h4>
+                                    </div>
+                                    <button onClick={handleLogout} className="bg-black bg-opacity-75 text-white px-4 py-1 rounded-md transition duration-200 hover:bg-opacity-100 font-normal">
+                                        Cerrar sesión
+                                    </button>
+                                </>) : (<>
+                                    <button onClick={handleLogin} className="bg-black bg-opacity-75 text-white px-4 py-1 rounded-md transition duration-200 hover:bg-opacity-100 font-normal">
+                                        Iniciar sesión
+                                    </button>
+                                </>)
+                            }
+                        </div>
                         <SocialMediaIcons containerClass="flex space-x-5 pb-4" iconClass="text-3xl" />
                     </div>
                 )}
