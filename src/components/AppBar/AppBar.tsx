@@ -6,10 +6,9 @@ import MenuButton from './MenuButton';
 import useToggle from '../../hooks/useToggle';
 import { ZoomInOnScroll } from '../animations/ZoomInOnScroll';
 import useAuthStore from '../../stores/AuthStore';
-import config from '../../config';
 
 export default function AppBar() {
-    const {apiBaseUrl} = config;
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL as string;
 
     const {
         user,

@@ -1,9 +1,9 @@
 import { useCallback, useEffect } from "react";
 import useAuthStore from "../stores/AuthStore";
-import config from "../config";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
-  const { apiBaseUrl } = config;
+
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL as string
 
   const {
     setIsAuthenticated,
