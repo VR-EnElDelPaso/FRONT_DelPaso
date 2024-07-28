@@ -4,7 +4,7 @@ export const es = {
         "About the Museum": "Acerca del Museo",
         "Help": "Ayuda",
         "Change language": "Cambiar idioma",
-        "Sign in": "Iniciar sesión",
-        "Sign out": "Cerrar sesión",
+        "Login": "Iniciar sesión",
+        "Logout": "Cerrar sesión",
     }
 }

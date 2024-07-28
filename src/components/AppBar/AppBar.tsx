@@ -40,8 +40,8 @@ export default function AppBar() {
                     </div>
                     <div className="font-bold hidden lg:flex space-x-20">
                         <NavLink href="#">{t('Home')}</NavLink>
-                        <NavLink href="#">Acerca del Museo</NavLink>
-                        <NavLink href="#">Ayuda</NavLink>
+                        <NavLink href="#">{t('About the Museum')}</NavLink>
+                        <NavLink href="#">{t('Help')}</NavLink>
                     </div>
                     <div className="hidden lg:flex space-x-5">
                         <LanguageSelector />
@@ -56,7 +56,7 @@ export default function AppBar() {
                                 </button>
                             </>) : (<>
                                 <button onClick={handleLogin} className="bg-black bg-opacity-75 text-white px-4 py-1 rounded-md transition duration-200 hover:bg-opacity-100 font-normal">
-                                    Iniciar sesión
+                                    {t('Login')}
                                 </button>
                             </>)
                         }
