@@ -67,10 +67,10 @@ export default function AppBar() {
                 </div>
                 {menuOpen && (
                     <div className=" font-bold lg:hidden mt-4 flex flex-col space-y-12 items-center">
-                        <NavLink href="#">Inicio</NavLink>
-                        <NavLink href="#">Acerca del Museo</NavLink>
-                        <NavLink href="#">Ayuda</NavLink>
-                        <NavLink href="#">Idioma</NavLink>
+                        <NavLink href="#">{t('Home')}</NavLink>
+                        <NavLink href="#">{t('About the Museum')}</NavLink>
+                        <NavLink href="#">{t('Help')}</NavLink>
+                        <LanguageSelector />
                         <div className='flex flex-col gap-1'>
                             {
                                 isAuthenticated ? (<>
@@ -79,11 +79,11 @@ export default function AppBar() {
                                         <h4>{user?.displayName}</h4>
                                     </div>
                                     <button onClick={handleLogout} className="bg-black bg-opacity-75 text-white px-4 py-1 rounded-md transition duration-200 hover:bg-opacity-100 font-normal">
-                                        Cerrar sesión
+                                        {t('Logout')}
                                     </button>
                                 </>) : (<>
                                     <button onClick={handleLogin} className="bg-black bg-opacity-75 text-white px-4 py-1 rounded-md transition duration-200 hover:bg-opacity-100 font-normal">
-                                        Iniciar sesión
+                                        {t('Login')}
                                     </button>
                                 </>)
                             }
