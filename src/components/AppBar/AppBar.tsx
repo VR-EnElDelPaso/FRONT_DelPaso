@@ -1,14 +1,16 @@
 import { FaSignOutAlt, FaUser } from 'react-icons/fa';
-import { IoLanguage } from 'react-icons/io5';
 import NavLink from './NavLink';
 import SocialMediaIcons from '../SocialMediaIcons/SocialMediaIcons';
 import MenuButton from './MenuButton';
 import useToggle from '../../hooks/useToggle';
 import { ZoomInOnScroll } from '../animations/ZoomInOnScroll';
 import useAuthStore from '../../stores/AuthStore';
+import { useTranslation } from 'react-i18next';
+import LanguageSelector from '../../translate/i18n.changeLanguage';
 
 export default function AppBar() {
     const apiBaseUrl = import.meta.env.VITE_API_BASE_URL as string;
+    const { t } = useTranslation();
 
     const {
         user,
@@ -37,14 +39,12 @@ export default function AppBar() {
                         </a>
                     </div>
                     <div className="font-bold hidden lg:flex space-x-20">
-                        <NavLink href="#">Inicio</NavLink>
+                        <NavLink href="#">{t('Home')}</NavLink>
                         <NavLink href="#">Acerca del Museo</NavLink>
                         <NavLink href="#">Ayuda</NavLink>
                     </div>
                     <div className="hidden lg:flex space-x-5">
-                        <button aria-label="Cambiar idioma" className="cursor-pointer hover:text-gray-600">
-                            <IoLanguage className="text-3xl" />
-                        </button>
+                        <LanguageSelector />
                         {
                             isAuthenticated ? (<>
                                 <div className='flex justify-center items-center gap-1'>
