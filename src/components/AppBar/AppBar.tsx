@@ -1,14 +1,16 @@
 import { FaSignOutAlt, FaUser } from 'react-icons/fa';
-import { IoLanguage } from 'react-icons/io5';
 import NavLink from './NavLink';
 import SocialMediaIcons from '../SocialMediaIcons/SocialMediaIcons';
 import MenuButton from './MenuButton';
 import useToggle from '../../hooks/useToggle';
 import { ZoomInOnScroll } from '../animations/ZoomInOnScroll';
 import useAuthStore from '../../stores/AuthStore';
+import { useTranslation } from 'react-i18next';
+import LanguageSelector from '../../translate/i18n.changeLanguage';
 
 export default function AppBar() {
     const apiBaseUrl = import.meta.env.VITE_API_BASE_URL as string;
+    const { t } = useTranslation();
 
     const {
         user,
@@ -37,14 +39,12 @@ export default function AppBar() {
                         </a>
                     </div>
                     <div className="font-bold hidden lg:flex space-x-20">
-                        <NavLink href="#">Inicio</NavLink>
-                        <NavLink href="#">Acerca del Museo</NavLink>
-                        <NavLink href="#">Ayuda</NavLink>
+                        <NavLink href="#">{t('Home')}</NavLink>
+                        <NavLink href="#">{t('About the Museum')}</NavLink>
+                        <NavLink href="#">{t('Help')}</NavLink>
                     </div>
                     <div className="hidden lg:flex space-x-5">
-                        <button aria-label="Cambiar idioma" className="cursor-pointer hover:text-gray-600">
-                            <IoLanguage className="text-3xl" />
-                        </button>
+                        <LanguageSelector />
                         {
                             isAuthenticated ? (<>
                                 <div className='flex justify-center items-center gap-1'>
@@ -56,7 +56,7 @@ export default function AppBar() {
                                 </button>
                             </>) : (<>
                                 <button onClick={handleLogin} className="bg-black bg-opacity-75 text-white px-4 py-1 rounded-md transition duration-200 hover:bg-opacity-100 font-normal">
-                                    Iniciar sesión
+                                    {t('Login')}
                                 </button>
                             </>)
                         }
@@ -67,10 +67,10 @@ export default function AppBar() {
                 </div>
                 {menuOpen && (
                     <div className=" font-bold lg:hidden mt-4 flex flex-col space-y-12 items-center">
-                        <NavLink href="#">Inicio</NavLink>
-                        <NavLink href="#">Acerca del Museo</NavLink>
-                        <NavLink href="#">Ayuda</NavLink>
-                        <NavLink href="#">Idioma</NavLink>
+                        <NavLink href="#">{t('Home')}</NavLink>
+                        <NavLink href="#">{t('About the Museum')}</NavLink>
+                        <NavLink href="#">{t('Help')}</NavLink>
+                        <LanguageSelector />
                         <div className='flex flex-col gap-1'>
                             {
                                 isAuthenticated ? (<>
@@ -79,11 +79,11 @@ export default function AppBar() {
                                         <h4>{user?.displayName}</h4>
                                     </div>
                                     <button onClick={handleLogout} className="bg-black bg-opacity-75 text-white px-4 py-1 rounded-md transition duration-200 hover:bg-opacity-100 font-normal">
-                                        Cerrar sesión
+                                        {t('Logout')}
                                     </button>
                                 </>) : (<>
                                     <button onClick={handleLogin} className="bg-black bg-opacity-75 text-white px-4 py-1 rounded-md transition duration-200 hover:bg-opacity-100 font-normal">
-                                        Iniciar sesión
+                                        {t('Login')}
                                     </button>
                                 </>)
                             }
