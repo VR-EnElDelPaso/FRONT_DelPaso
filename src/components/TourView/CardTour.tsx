@@ -1,6 +1,6 @@
 import React from 'react';
 import { dateFormatter } from "../../utils/dateFormatter";
-import { FaArrowRight } from "react-icons/fa";
+import { FaArrowRight, FaShare, FaEnvelope } from "react-icons/fa";
 
 {/* Interfaces */}
 export interface CardTourProps {
@@ -53,8 +53,8 @@ const CardImage: React.FC<CardImageProps> = ({ imagePath, title }) => (
 );
 
 const CardHeader: React.FC<CardHeaderProps> = ({ date, title }) => (
-    <div>
-        <h3 className="text-gray-500 text-sm mb-1">{dateFormatter(date)}</h3>
+    <div className='flex flex-col'>
+        <h3 className="flex justify-end text-gray-500 text-sm mb-1">{dateFormatter(date)}</h3>
         <h2 className="font-kaiseiDecol font-medium text-2xl sm:text-3xl text-gray-900 leading-tight mb-4">{title}</h2>
     </div>
 );
@@ -64,14 +64,21 @@ const CardDescription: React.FC<CardDescriptionProps> = ({ description }) => (
 );
 
 const HoverButton: React.FC<HoverButtonProps> = ({ text }) => (
-    <button className="px-3 py-1 border-black border-b-2 relative overflow-hidden group">
+    <button className="hidden md:inline-block px-3 py-1 border-black border-b-2 relative overflow-hidden group">
         <span className="relative z-10 transition-transform duration-300 group-hover:-translate-y-full block">{text}</span>
         <span className="absolute inset-0 z-0 text-white bg-black transition-transform duration-300 translate-y-full group-hover:translate-y-0 flex items-center justify-center">{text}</span>
     </button>
 );
 
+const MobileButton: React.FC<HoverButtonProps> = ({ text }) => (
+    <button className="md:hidden inline-flex items-center justify-center px-3 py-1 border border-black rounded-full text-sm">
+        {text === "Compartir" ? <FaShare className="mr-2" /> : <FaEnvelope className="mr-2" />}
+        {text}
+    </button>
+);
+
 const PriceTag: React.FC<PriceTagProps> = ({ prize }) => (
-    <p className="font-inter font-semibold text-lime-500 text-lg">
+    <p className="font-inter font-semibold text-lime-500 text-lg text-right">
         ${prize} <span className="text-sm">MXN</span>
     </p>
 );
@@ -79,16 +86,14 @@ const PriceTag: React.FC<PriceTagProps> = ({ prize }) => (
 const BuyButton: React.FC<BuyButtonProps> = ({ id, onBuy }) => (
     <button 
         onClick={() => onBuy(id)}
-        className="w-full mt-2 p-2 border-black border-2 rounded-3xl font-semibold relative overflow-hidden group"
+        className="w-full md:w-auto mt-4 md:mt-0 p-2 md:px-4 border-black border-2 rounded-3xl font-semibold relative overflow-hidden group"
     >
         <span className="relative z-10 transition-all duration-300 group-hover:pr-8">Comprar recorrido</span>
         <FaArrowRight className="absolute right-4 top-1/2 transform -translate-y-1/2 opacity-0 transition-all duration-300 group-hover:opacity-100" />
     </button>
 );
 
-{/* Contenido de la Card */}
 const CardContent: React.FC<CardContentProps> = ({ id, date, title, description, prize }) => {
-    // Simulación de compra
     const handleBuy = (tourId: number) => {
         console.log(`Comprando el recorrido ${tourId}`);
     };
@@ -100,12 +105,21 @@ const CardContent: React.FC<CardContentProps> = ({ id, date, title, description,
                 <CardDescription description={description} />
             </div>
             <div>
-                <div className="flex justify-between items-center mb-4">
-                    <div className="text-m">
-                        <HoverButton text="Compartir" />
-                        <HoverButton text="Contacto" />
+                <div className="flex flex-col md:flex-row justify-between items-center mb-4">
+                    <div className="flex justify-between w-full md:w-auto mb-4 md:mb-0">
+                        <div className="flex space-x-2 md:space-x-4">
+                            <HoverButton text="Compartir" />
+                            <HoverButton text="Contacto" />
+                            <MobileButton text="Compartir" />
+                            <MobileButton text="Contacto" />
+                        </div>
+                        <div className="md:hidden">
+                            <PriceTag prize={prize} />
+                        </div>
                     </div>
-                    <PriceTag prize={prize} />
+                    <div className="hidden md:block">
+                        <PriceTag prize={prize} />
+                    </div>
                 </div>
                 <BuyButton id={id} onBuy={handleBuy} />
             </div>
