@@ -7,10 +7,14 @@ import { ZoomInOnScroll } from '../animations/ZoomInOnScroll';
 import useAuthStore from '../../stores/AuthStore';
 import { useTranslation } from 'react-i18next';
 import LanguageSelector from '../../translate/i18n.changeLanguage';
+import { useNavigate } from 'react-router-dom';
 
 export default function AppBar() {
     const apiBaseUrl = import.meta.env.VITE_API_BASE_URL as string;
     const { t } = useTranslation();
+    const navigate = useNavigate();
+
+    
 
     const {
         user,
@@ -24,7 +28,8 @@ export default function AppBar() {
     const handleLogin = () => {
         // posible manera de redirección, requiere configuración en el servidor
         // window.location.href = 'http://localhost:4006/api/auth/login?redirect_uri=http://localhost:3000/auth/callback';
-        window.location.href = `${apiBaseUrl}/api/auth/login`;
+        // window.location.href = `${apiBaseUrl}/api/auth/login`;  // auth con SAML
+        navigate('/login')
     }
 
     const [menuOpen, toggleMenu] = useToggle(false);
