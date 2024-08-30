@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import Home from "../views/Home";
+import Tour from "../views/Tour";
 import AppLayout from "../layouts/AppLayout";
 
 const router = createBrowserRouter([
@@ -10,6 +11,10 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Home />
+      },
+      {
+        path: "/tour/:id",
+        element: <Tour />
       },
       {
         path: "/test",
