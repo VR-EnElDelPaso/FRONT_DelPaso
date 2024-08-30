@@ -1,8 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
-import Home from "../views/Home";
-import Tour from "../views/Tour";
+import HomePage from "../pages/Home";
+import TourPage from "../pages/Tour";
 import AppLayout from "../layouts/AppLayout";
-import HomePage from "../views/Login";
+import LoginPage from "../pages/Login";
 
 const router = createBrowserRouter([
   { 
@@ -11,11 +11,11 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Home />
+        element: <HomePage />
       },
       {
         path: "/tour/:id",
-        element: <Tour />
+        element: <TourPage />
       },
       {
         path: "/test",
@@ -23,7 +23,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/login",
-        element: <HomePage/>
+        element: <LoginPage/>
       },
     ]
   },

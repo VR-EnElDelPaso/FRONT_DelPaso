@@ -1,5 +1,5 @@
 
-function HomePage() {
+function LoginPage() {
   return (
     <div>
       <h1>Hello Page</h1>
@@ -7,4 +7,4 @@ function HomePage() {
   );
 }
 
-export default HomePage;
+export default LoginPage;

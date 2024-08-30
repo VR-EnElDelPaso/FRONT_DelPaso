@@ -1,9 +1,9 @@
 import TourView from "../components/TourView";
 
-function Tour() {
+function TourPage() {
   return (
     <TourView />
   );
 }
 
-export default Tour;
+export default TourPage;
