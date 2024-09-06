@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { dateFormatter } from "../../utils/dateFormatter";
-import { FaArrowRight, FaShare, FaEnvelope } from "react-icons/fa";
+import { FaShare, FaEnvelope } from "react-icons/fa";
 import { Wallet } from '@mercadopago/sdk-react';
+import { createPreference } from '../../apis/Preferences';
 
 {/* Interfaces */}
 export interface CardTourProps {
-    id: number;
+    id: string;
     date: string;
     title: string;
     imagePath: string;
@@ -33,11 +34,6 @@ interface HoverButtonProps {
 
 interface PriceTagProps {
     prize: number;
-}
-
-interface BuyButtonProps {
-    id: number;
-    onBuy: (id: number) => void;
 }
 
 type CardContentProps = Omit<CardTourProps, 'imagePath'>;
@@ -84,20 +80,20 @@ const PriceTag: React.FC<PriceTagProps> = ({ prize }) => (
     </p>
 );
 
-const BuyButton: React.FC<BuyButtonProps> = ({ id, onBuy }) => (
-    <button 
-        onClick={() => onBuy(id)}
-        className="w-full md:w-auto mt-4 md:mt-0 p-2 md:px-4 border-black border-2 rounded-3xl font-semibold relative overflow-hidden group"
-    >
-        <span className="relative z-10 transition-all duration-300 group-hover:pr-8">Comprar recorrido</span>
-        <FaArrowRight className="absolute right-4 top-1/2 transform -translate-y-1/2 opacity-0 transition-all duration-300 group-hover:opacity-100" />
-    </button>
-);
-
 const CardContent: React.FC<CardContentProps> = ({ id, date, title, description, prize }) => {
-    const handleBuy = (tourId: number) => {
-        console.log(`Comprando el recorrido ${tourId}`);
+  const [preferenceId, setPreferenceId] = useState();
+
+  useEffect(() => {
+    const fetchPreference = async () => {
+      try {
+        const response = await createPreference(id);
+        setPreferenceId(response.data.preferenceId);
+      } catch (error) {
+        console.error('Error fetching preference:', error);
+      }
     };
+    fetchPreference();
+  }, [id]);
 
     return (
         <div className="w-full md:w-7/12 flex flex-col justify-between p-4 md:p-6">
@@ -122,10 +118,11 @@ const CardContent: React.FC<CardContentProps> = ({ id, date, title, description,
                         <PriceTag prize={prize} />
                     </div>
                 </div>
-                {/* <BuyButton id={id} onBuy={handleBuy} /> */}
-                <Wallet
-                  initialization={{ preferenceId: '<Preference ID>' }}
-                />
+                {preferenceId &&(
+                  <Wallet
+                    initialization={{ preferenceId }}
+                  />
+                )}
             </div>
         </div>
     );

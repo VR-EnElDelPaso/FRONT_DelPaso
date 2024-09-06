@@ -7,11 +7,7 @@ const Tour: React.FC = () => {
   
   if (!id) return <div>ID de tour no proporcionado</div>;
 
-  const tourId = parseInt(id, 10);
-
-  if (isNaN(tourId)) return <div>ID de tour inválido</div>;
-
-  return <TourView tourId={tourId} />;
+  return <TourView tourId={id} />;
 };
 
 export default Tour;

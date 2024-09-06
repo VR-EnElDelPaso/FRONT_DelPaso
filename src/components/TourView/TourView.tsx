@@ -4,24 +4,24 @@ import { FadeInOnScroll } from "../animations/FadeInOnScroll";
 
 const tourData: CardTourProps[] = [
     {
-        id: 1,
-        date: '2024-05-07',
-        title: 'Teresa Olmedo. PALABRALMA',
-        imagePath: '/PA_Obra31.jpg',
-        description: 'En este recorrido conocerás la obra de Teresa Olmedo, una artista que se especializa en el arte textil, con un fuerte discurso concientizador de temas de interés social.',
-        prize: 50
+      id: "1a79bf61-4694-47c1-822d-761dad13a5cd",
+      date: '2024-05-07',
+      title: 'Teresa Olmedo. PALABRALMA',
+      imagePath: '/PA_Obra31.jpg',
+      description: 'En este recorrido conocerás la obra de Teresa Olmedo, una artista que se especializa en el arte textil, con un fuerte discurso concientizador de temas de interés social.',
+      prize: 50
     },
     {
-        id: 2,
-        date: '2024-06-07',
-        title: 'Teresa Olmedo. AMAR',
-        imagePath: '/PA_Obra23.jpg',
-        description: 'En este recorrido conocerás la obra de Teresa Olmedo, una artista que se especializa en el arte textil, con un fuerte discurso concientizador de temas de interés social.',
-        prize: 50
+      id: "a63d47b7-8e2c-4112-866c-5dedg718b5e6",
+      date: '2024-06-07',
+      title: 'Teresa Olmedo. AMAR',
+      imagePath: '/PA_Obra23.jpg',
+      description: 'En este recorrido conocerás la obra de Teresa Olmedo, una artista que se especializa en el arte textil, con un fuerte discurso concientizador de temas de interés social.',
+      prize: 50
     },
 ];
 
-const fetchTourById = (id: number): Promise<CardTourProps | undefined> => {
+const fetchTourById = (id: string): Promise<CardTourProps | undefined> => {
     return new Promise((resolve) => {
         setTimeout(() => {
             const tour = tourData.find(tour => tour.id === id);
@@ -31,7 +31,7 @@ const fetchTourById = (id: number): Promise<CardTourProps | undefined> => {
 };
 
 interface TourViewProps {
-    tourId: number;
+    tourId: string;
 }
 
 const TourView: React.FC<TourViewProps> = ({ tourId }) => {
