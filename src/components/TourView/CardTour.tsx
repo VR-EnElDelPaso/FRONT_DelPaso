@@ -1,6 +1,7 @@
 import React from 'react';
 import { dateFormatter } from "../../utils/dateFormatter";
 import { FaArrowRight, FaShare, FaEnvelope } from "react-icons/fa";
+import { Wallet } from '@mercadopago/sdk-react';
 
 {/* Interfaces */}
 export interface CardTourProps {
@@ -121,7 +122,10 @@ const CardContent: React.FC<CardContentProps> = ({ id, date, title, description,
                         <PriceTag prize={prize} />
                     </div>
                 </div>
-                <BuyButton id={id} onBuy={handleBuy} />
+                {/* <BuyButton id={id} onBuy={handleBuy} /> */}
+                <Wallet
+                  initialization={{ preferenceId: '<Preference ID>' }}
+                />
             </div>
         </div>
     );
