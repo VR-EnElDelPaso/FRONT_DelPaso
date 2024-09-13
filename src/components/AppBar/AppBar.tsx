@@ -4,33 +4,19 @@ import SocialMediaIcons from '../SocialMediaIcons/SocialMediaIcons';
 import MenuButton from './MenuButton';
 import useToggle from '../../hooks/useToggle';
 import { ZoomInOnScroll } from '../animations/ZoomInOnScroll';
-import useAuthStore from '../../stores/AuthStore';
 import { useTranslation } from 'react-i18next';
 import LanguageSelector from '../../translate/i18n.changeLanguage';
 import { useNavigate } from 'react-router-dom';
+import {useAuth} from '../../hooks/useAuth';
 
 export default function AppBar() {
-    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL as string;
-    const { t } = useTranslation();
     const navigate = useNavigate();
+    const { t } = useTranslation();
+    const {logout, isAuthenticated, user} = useAuth();
 
+    const handleLogout = () => logout();
     
-
-    const {
-        user,
-        isAuthenticated,
-    } = useAuthStore();
-
-    const handleLogout = async () => {
-        window.location.href = `${apiBaseUrl}/api/auth/logout`;
-    }
-
-    const handleLogin = () => {
-        // posible manera de redirección, requiere configuración en el servidor
-        // window.location.href = 'http://localhost:4006/api/auth/login?redirect_uri=http://localhost:3000/auth/callback';
-        // window.location.href = `${apiBaseUrl}/api/auth/login`;  // auth con SAML
-        navigate('/login')
-    }
+    const handleLogin = () => navigate('/login');
 
     const [menuOpen, toggleMenu] = useToggle(false);
 
@@ -54,7 +40,7 @@ export default function AppBar() {
                             isAuthenticated ? (<>
                                 <div className='flex justify-center items-center gap-1'>
                                     <FaUser className="text-xl" />
-                                    <h4>{user?.displayName}</h4>
+                                    <h4>{user?.display_name}</h4>
                                 </div>
                                 <button onClick={handleLogout} className="bg-black bg-opacity-75 text-white px-4 py-1 rounded-md transition duration-200 hover:bg-opacity-100 font-normal">
                                     <FaSignOutAlt className="mr-1" />
@@ -81,7 +67,7 @@ export default function AppBar() {
                                 isAuthenticated ? (<>
                                     <div className='flex justify-center items-center gap-1'>
                                         <FaUser className="text-xl" />
-                                        <h4>{user?.displayName}</h4>
+                                        <h4>{user?.display_name}</h4>
                                     </div>
                                     <button onClick={handleLogout} className="bg-black bg-opacity-75 text-white px-4 py-1 rounded-md transition duration-200 hover:bg-opacity-100 font-normal">
                                         {t('Logout')}

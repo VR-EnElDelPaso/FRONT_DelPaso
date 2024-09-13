@@ -1,34 +1,20 @@
-export interface User {
-  issuer:          string;
-  inResponseTo:    string;
-  sessionIndex:    string;
-  nameID:          string;
-  nameIDFormat:    string;
-  spNameQualifier: string;
-  uCorreo:         string;
-  uNombre:         string;
-  uDependencia:    string;
-  uCuenta:         string;
-  uTipo:           string;
-  cn:              string;
-  sn:              string;
-  displayName:     string;
-  TipoCuenta:      string;
-  UO:              string;
-  ImmutableID:     string;
-  attributes:      Attributes;
+export default interface User {
+  id: string;
+  account_number: number;
+  name: string;
+  display_name: string;
+  email: string;
+  type: UserType;
+  created_at: string;
+  updated_at: string;
+  iat: number;
+  exp: number;
 }
 
-export interface Attributes {
-  uCorreo:      string;
-  uNombre:      string;
-  uDependencia: string;
-  uCuenta:      string;
-  uTipo:        string;
-  cn:           string;
-  sn:           string;
-  displayName:  string;
-  TipoCuenta:   string;
-  UO:           string;
-  ImmutableID:  string;
+enum UserType {
+  ADMIN = 'ADMIN',
+  VISITOR = 'VISITOR',
+  UDC_STUDENT = 'UDC_STUDENT',
+  UDC_EMPLOYEE = 'UDC_EMPLOYEE',
 }
+
