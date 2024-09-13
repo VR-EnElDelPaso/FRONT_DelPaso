@@ -3,15 +3,17 @@ import { dateFormatter } from "../../utils/dateFormatter";
 import { FaShare, FaEnvelope } from "react-icons/fa";
 import { Wallet } from '@mercadopago/sdk-react';
 import { createPreference } from '../../apis/Preferences';
+import image from '/PA_Obra13.jpg';
 
 {/* Interfaces */}
 export interface CardTourProps {
-    id: string;
-    date: string;
-    title: string;
-    imagePath: string;
-    description: string;
-    prize: number;
+  id: string;
+  name: string;
+  description: string;
+  price: string;
+  url?: string;
+  image_url?: string;
+  created_at: string;
 }
 
 interface CardImageProps {
@@ -33,7 +35,7 @@ interface HoverButtonProps {
 }
 
 interface PriceTagProps {
-    prize: number;
+    price: string;
 }
 
 type CardContentProps = Omit<CardTourProps, 'imagePath'>;
@@ -74,13 +76,13 @@ const MobileButton: React.FC<HoverButtonProps> = ({ text }) => (
     </button>
 );
 
-const PriceTag: React.FC<PriceTagProps> = ({ prize }) => (
+const PriceTag: React.FC<PriceTagProps> = ({ price }) => (
     <p className="font-inter font-semibold text-lime-500 text-lg text-right">
-        ${prize} <span className="text-sm">MXN</span>
+        ${price} <span className="text-sm">MXN</span>
     </p>
 );
 
-const CardContent: React.FC<CardContentProps> = ({ id, date, title, description, prize }) => {
+const CardContent: React.FC<CardContentProps> = ({ id, name, created_at, description, price }) => {
   const [preferenceId, setPreferenceId] = useState();
 
   useEffect(() => {
@@ -88,6 +90,7 @@ const CardContent: React.FC<CardContentProps> = ({ id, date, title, description,
       try {
         const response = await createPreference(id);
         setPreferenceId(response.data.preferenceId);
+        console.log('preference', response);
       } catch (error) {
         console.error('Error fetching preference:', error);
       }
@@ -98,7 +101,7 @@ const CardContent: React.FC<CardContentProps> = ({ id, date, title, description,
     return (
         <div className="w-full md:w-7/12 flex flex-col justify-between p-4 md:p-6">
             <div>
-                <CardHeader date={date} title={title} />
+                <CardHeader date={created_at} title={name} />
                 <CardDescription description={description} />
             </div>
             <div>
@@ -111,29 +114,31 @@ const CardContent: React.FC<CardContentProps> = ({ id, date, title, description,
                             <MobileButton text="Contacto" />
                         </div>
                         <div className="md:hidden">
-                            <PriceTag prize={prize} />
+                            <PriceTag price={price} />
                         </div>
                     </div>
                     <div className="hidden md:block">
-                        <PriceTag prize={prize} />
+                        <PriceTag price={price} />
                     </div>
                 </div>
                 {preferenceId &&(
-                  <Wallet
-                    initialization={{ preferenceId }}
-                  />
+                    <>
+                    <Wallet
+                      initialization={{ preferenceId }}
+                      onError={(error) => console.error('Error initializing wallet:', error)}
+                      />
+                    </>
                 )}
             </div>
         </div>
     );
 };
-
 {/* Componente principal */}
-const CardTour: React.FC<CardTourProps> = ({ id, title, description, imagePath, prize, date }) => {
+const CardTour: React.FC<CardTourProps> = ({ id, name, description, price, created_at }) => {
     return (
         <div className="mb-4 max-w-sm md:max-w-6xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden flex flex-col md:flex-row lg:space-x-20">
-            <CardImage imagePath={imagePath} title={title} />
-            <CardContent id={id} date={date} title={title} description={description} prize={prize} />
+            <CardImage imagePath={image} title={name} />
+            <CardContent id={id} created_at={created_at} name={name} description={description} price={price} />
         </div>
     )
 }
