@@ -3,15 +3,20 @@ import HomePage from "../pages/Home";
 import TourPage from "../pages/Tour";
 import LoginPage from "../pages/Login";
 import AppLayout from "../layouts/AppLayout";
+import CartPage from "../pages/Cart";
 
 const router = createBrowserRouter([
-  { 
+  {
     path: "/",
     element: <AppLayout />,
     children: [
       {
         index: true,
         element: <HomePage />
+      },
+      {
+        path: "/cart",
+        element: <CartPage />
       },
       {
         path: "/tour/:id",
@@ -23,7 +28,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/login",
-        element: <LoginPage/>
+        element: <LoginPage />
       },
     ]
   },
