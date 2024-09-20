@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import CardTour, { CardTourProps } from "./CardTour";
+import CardTour, { CardTourProps } from "./CardTour/CardTour";
 import { getTours } from '../../apis/Tours';
 import { FadeInOnScroll } from "../animations/FadeInOnScroll";
 
