@@ -11,7 +11,16 @@ export default {
       },
       backgroundColor: {
         secondary: '#5F5EA3',
-      }
+        primary: '#B33424',
+        primaryHover: '#A52A1A',
+      },
+      borderColor: {
+        primary: '#B33424',
+      },
+      textColor: {
+        primary: '#B33424',
+        secondary: '#5F5EA3',
+      },
     },
   },
   plugins: [],
