@@ -1,6 +1,7 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FaArrowRight, FaShare, FaEnvelope, FaShoppingCart } from "react-icons/fa";
-import { dateFormatter } from "../../../utils/dateFormatter";
+import { dateFormatter } from "../../utils/dateFormatter";
 import image from '/PA_Obra13.jpg';
 import { 
   TourId, 
@@ -9,9 +10,9 @@ import {
   CardDescriptionProps,
   ActionButtonProps,
   PriceTagProps,
-  BuyButtonProps,
-  CardTourProps
+  BuyButtonProps
 } from './types';
+import { Tour } from '../../types/tour';
 
 // Sub-components
 const CardImage: React.FC<CardImageProps> = ({ imagePath, title }) => (
@@ -81,11 +82,13 @@ const BuyButton: React.FC<BuyButtonProps> = ({ id, onBuy, isBuyNow = false }) =>
   </button>
 );
 
-
 // Main component
-const CardTour: React.FC<CardTourProps> = ({ id, name, description, price, created_at }) => {
+const CardTour = (tour: Tour) => {
+  const { id, name, description, price, created_at } = tour;
+  const navigate = useNavigate();
+  
   const handleBuy = (tourId: TourId) => {
-    console.log(`Comprando el recorrido ${tourId}`);
+    navigate(`/buy/${tourId}`);
   };
 
   const handleAddToCart = (tourId: TourId) => {
