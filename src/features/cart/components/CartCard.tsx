@@ -1,17 +1,25 @@
+import { CartItem } from "../types/CartItem";
+
 interface CartCardProps {
-  cartItem: {
-    name: string;
-    disponible: boolean;
-    price: number;
-    image_url: string;
-    date: Date;
-  }
+  cartItem: CartItem;
+  selectState: boolean;
+  onCheckboxChange: (name: string, isChecked: boolean) => void;
 }
 
-export const CartCard = ({ cartItem }: CartCardProps) => {
+export const CartCard = ({
+  cartItem,
+  selectState,
+  onCheckboxChange,
+}: CartCardProps) => {
+
   return (
     <>
       <div className="p-2 flex gap-4">
+        <input
+          type="checkbox"
+          checked={selectState}
+          onChange={(e) => onCheckboxChange(cartItem.id, e.target.checked)}
+        />
         <div className="w-1/4">
           <img className="rounded-md object-cover" src={cartItem.image_url} />
         </div>
@@ -19,7 +27,7 @@ export const CartCard = ({ cartItem }: CartCardProps) => {
           <div>
             <h1 className="text-2xl font-kaiseiDecol">{cartItem.name}</h1>
             <h2 className="text-green-600">
-              {cartItem.disponible ? "Disponible" : "No disponible"}
+              {cartItem.available ? "Disponible" : "No disponible"}
             </h2>
           </div>
           <div>
@@ -31,7 +39,7 @@ export const CartCard = ({ cartItem }: CartCardProps) => {
               </h2>
             </button>
           </div>
-          <h3 className="text-sm text-gray-600 font-inter font-medium">{cartItem.date.toDateString()}</h3>
+          <h3 className="text-sm text-gray-600 font-inter font-medium">{new Date(cartItem.created_at).toLocaleDateString()}</h3>
           <div className="absolute top-0 right-0 font-bold text-xl">
             ${cartItem.price}
           </div>
