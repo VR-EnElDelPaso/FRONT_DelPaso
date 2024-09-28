@@ -1,23 +1,21 @@
-import { CartItem } from "../types/CartItem";
+import { CartListItem } from "./CartList";
 
-interface CartCardProps {
-  cartItem: CartItem;
-  selectState: boolean;
+interface Props {
+  cartItem: CartListItem;
   onCheckboxChange: (name: string, isChecked: boolean) => void;
 }
 
 export const CartCard = ({
   cartItem,
-  selectState,
   onCheckboxChange,
-}: CartCardProps) => {
+}: Props) => {
 
   return (
     <>
       <div className="p-2 flex gap-4">
         <input
           type="checkbox"
-          checked={selectState}
+          checked={cartItem.isSelected}
           onChange={(e) => onCheckboxChange(cartItem.id, e.target.checked)}
         />
         <div className="w-1/4">
@@ -27,7 +25,7 @@ export const CartCard = ({
           <div>
             <h1 className="text-2xl font-kaiseiDecol">{cartItem.name}</h1>
             <h2 className="text-green-600">
-              {cartItem.available ? "Disponible" : "No disponible"}
+              {/* {cartItem.available ? "Disponible" : "No disponible"} */}
             </h2>
           </div>
           <div>
@@ -41,7 +39,7 @@ export const CartCard = ({
           </div>
           <h3 className="text-sm text-gray-600 font-inter font-medium">{new Date(cartItem.created_at).toLocaleDateString()}</h3>
           <div className="absolute top-0 right-0 font-bold text-xl">
-            ${cartItem.price}
+            {/* ${cartItem.price} */}
           </div>
           <div className="absolute bottom-0 right-0">
             <button>

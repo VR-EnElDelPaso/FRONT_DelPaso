@@ -93,9 +93,10 @@ const BuyButton: React.FC<BuyButtonProps> = ({ id, onBuy }) => (
     </button>
 );
 
-const CardContent: React.FC<CardContentProps> = ({ id, date, title, description, prize }) => {
-    const handleBuy = (tourId: number) => {
+const CardContent: React.FC<CardContentProps> = ({ id, date, title, description, prize }) => {;
+    const handleBuy = (tourId: string) => {
         console.log(`Comprando el recorrido ${tourId}`);
+        // addItemToCart("371e86c9-d6df-4870-9d7d-7ca1ccb28464");
     };
 
     return (
@@ -121,7 +122,7 @@ const CardContent: React.FC<CardContentProps> = ({ id, date, title, description,
                         <PriceTag prize={prize} />
                     </div>
                 </div>
-                <BuyButton id={id} onBuy={handleBuy} />
+                <BuyButton id={id} onBuy={() => {}} />
             </div>
         </div>
     );

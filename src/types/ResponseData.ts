@@ -1,6 +1,6 @@
 export default interface ResponseData {
-    message: string;
     ok: boolean;
+    message: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     data?: any;
 }

@@ -1,5 +1,4 @@
 import { Tour } from "../../../shared/types/Tour";
-import { CartData } from "../data/CartData";
 
 interface Props {
   selectedToursIds: string[];
@@ -18,7 +17,7 @@ export const CartSuggestions = ({
       <hr className="w-full h-0.5 bg-gray-200 border-0 rounded my-4"></hr>
       <div className="flex flex-col gap-3">
         <div className="p-2 flex flex-col gap-2">
-          <TourCard tour={CartData[0]} />
+          {/* <TourCard tour={} /> */}
         </div>
         <div className="flex">
           <button
