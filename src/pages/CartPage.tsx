@@ -84,7 +84,7 @@ export default function CartPage() {
                         />
                     </div>
                     <div className="bg-white p-2">
-                        {/* <CartSuggestions  /> */}
+                        <CartSuggestions cartListData={cartListData} quantity={1} />
                     </div>
                 </div>
             </div>

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { CartListItem } from "./CartList";
 
 interface Props {
@@ -12,13 +12,17 @@ export const CartResume = ({
 }: Props) => {
 
   const total = useMemo(() => {
-    return Number(cartItems.reduce((acc, item) => {
+    return cartItems.reduce((acc, item) => {
       if (item.isSelected) {
-        return acc + item.price;
+        return acc + Number(item.price);
       }
       return acc;
-    }, 0)).toFixed(2);
+    }, 0).toFixed(2);
   }, [cartItems]);
+
+  useEffect(() => {
+    console.log(total);
+  }, [total]);
 
   return (
     <div>

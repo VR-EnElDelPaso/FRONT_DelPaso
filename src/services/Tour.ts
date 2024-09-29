@@ -23,7 +23,7 @@ export const getTours = async (tourIds: string[]): Promise<ResponseData> => {
   const response = await axios.post(`${apiBaseUrl}/tour/from-array`, {
     ids: tourIds
   }, { headers });
-  
+
   return response.data;
 }
 
@@ -36,4 +36,13 @@ export const getTourById = async (id: string) => {
     console.error('Error fetching tour', error);
     return null;
   }
+}
+
+// todo: get tour suggestions to use en tour suggestions component
+export const getTourSuggestions = async (excludedTourIds: string[], quantity: number): Promise<ResponseData> => {
+  const response = await axios.post(`${apiBaseUrl}/tour/suggestion?take=${quantity}`, {
+    excludedIds: excludedTourIds,
+    quantity
+  }, { headers });
+  return response.data;
 }
