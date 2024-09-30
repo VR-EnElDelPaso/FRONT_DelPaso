@@ -8,7 +8,7 @@ const headers = {
 
 // Login with email and password
 export const LocalLogin = async (email: string, password: string) => (
-    axios.post(`${apiBaseUrl}/api/auth/login/local`, {
+    axios.post(`${apiBaseUrl}/auth/login/local`, {
         email,
         password
     }, { headers })
