@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { CartListItem } from "./CartList";
 
 interface Props {
@@ -20,10 +20,6 @@ export const CartResume = ({
     }, 0).toFixed(2);
   }, [cartItems]);
 
-  useEffect(() => {
-    console.log(total);
-  }, [total]);
-
   return (
     <div>
       <div className="text-center">
@@ -44,7 +40,8 @@ export const CartResume = ({
         </div>
         <div className="flex">
           <button
-            className="mx-auto px-6 bg-primary text-white p-2 rounded-xl hover:bg-primaryHover transition-colors duration-300"
+            disabled={total === '0.00'}
+            className="mx-auto px-6 bg-primary disabled:bg-red-400 text-white p-2 rounded-xl hover:bg-primaryHover transition-colors duration-300"
             onClick={onPay}
           >
             Pagar

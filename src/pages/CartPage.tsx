@@ -6,12 +6,14 @@ import { Tour } from '../shared/types/Tour';
 import { CartSuggestions } from '../features/cart/components/CartSuggestions';
 import { CartList } from "../features/cart/components/CartList";
 import { CartResume } from '../features/cart/components/CartResume';
+import { useNavigate } from 'react-router-dom';
 
 export default function CartPage() {
+    const navigate = useNavigate();
     const [fetchedTours, setFetchedTours] = useState<Tour[]>([]);
+
     const {
         cartItems,
-        addCartItem,
         setCartItem,
     } = useCartStore();
 
@@ -39,7 +41,6 @@ export default function CartPage() {
 
 
     const handleCheckboxChange = (id: string, isChecked: boolean) => {
-        console.log(id, isChecked);
         const item = cartItems.find(item => item.id === id);
         if (!item) return;
         setCartItem({ ...item, isSelected: isChecked });
@@ -51,10 +52,20 @@ export default function CartPage() {
         });
     };
 
-    const deselectAllItems = () => {
+    const unselectAllItems = () => {
         cartItems.forEach(item => {
             setCartItem({ ...item, isSelected: false });
         });
+    }
+
+    const handlePay = () => {
+        const selectedItems = cartItems.filter(item => item.isSelected).map(item => item.id);
+        
+        if (selectedItems.length === 0) {
+            alert('No hay tours seleccionados');
+            return;
+        }
+        navigate('/checkout', { state: { tourIds: selectedItems } });
     }
 
     return (
@@ -65,7 +76,7 @@ export default function CartPage() {
                         <h1 className="text-5xl font-kaiseiDecol">Carrito</h1>
                         <div className="flex mt-6 gap-2 text-blue-600">
                             <button type='button' onClick={selectAllItems} className="hover:drop-shadow-lg hover:text-blue-800">Seleccionar todos</button>
-                            <button type='button' onClick={deselectAllItems} className="hover:drop-shadow-lg hover:text-blue-800">Borrar selección</button>
+                            <button type='button' onClick={unselectAllItems} className="hover:drop-shadow-lg hover:text-blue-800">Borrar selección</button>
                         </div>
                         <hr className="w-full h-0.5 bg-gray-200 border-0 rounded my-2"></hr>
                     </div>
@@ -83,7 +94,7 @@ export default function CartPage() {
                     <div className="bg-white p-2" >
                         <CartResume
                             cartItems={cartListData}
-                            onPay={() => { addCartItem({ id: 'c76f633b-7ebd-4815-a54f-0295ec7b7a5b', isSelected: false, quantity: 1 }) }}
+                            onPay={handlePay}
                         />
                     </div>
                 </div>

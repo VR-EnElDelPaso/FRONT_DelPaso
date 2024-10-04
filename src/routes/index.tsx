@@ -4,6 +4,7 @@ import TourPage from "../pages/TourPage";
 import LoginPage from "../pages/Login";
 import AppLayout from "../layouts/AppLayout";
 import CartPage from "../pages/CartPage";
+import TestDetailShopPage from "../pages/TestDetailShop";
 
 const router = createBrowserRouter([
   {
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
       {
         path: "/cart",
         element: <CartPage />
+      },
+      {
+        path: "/checkout",
+        element: <TestDetailShopPage />
       },
       {
         path: "/tour/:id",
