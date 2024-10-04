@@ -1,0 +1,30 @@
+[
+{
+  "id": 1,
+  "imageUrl": "./PA_Obra13.jpg",
+  "title": "Rosa Villa Real - Miel",
+  "description": "En este recorrido conocerás la obra de Emilio Rosado, una artisata que se especializa en el arte textil, con un fuerte discurso concientizador de temas de interés social...",
+  "date": "07 de Mayo de 2024"
+},
+{
+  "id": 2,
+  "imageUrl": "./PA_Obra23.jpg",
+  "title": "Emilio Rosado - Jarabe",
+  "description": "En este recorrido conocerás la obra de Emilio Rosado, una artisata que se especializa en el arte textil, con un fuerte discurso concientizador de temas de interés social...",
+  "date": "07 de Mayo de 2024"
+},
+{
+  "id": 3,
+  "imageUrl": "./PA_Obra31.jpg",
+  "title": "José Velázquez - Nubes",
+  "description": "En este recorrido conocerás la obra de Emilio Rosado, una artisata que se especializa en el arte textil, con un fuerte discurso concientizador de temas de interés social...",
+  "date": "07 de Mayo de 2024"
+},
+{
+  "id": 4,
+  "imageUrl": "./PA_Obra13.jpg",
+  "title": "Rosa Villa Real - Miel",
+  "description": "En este recorrido conocerás la obra de Emilio Rosado, una artisata que se especializa en el arte textil, con un fuerte discurso concientizador de temas de interés social...",
+  "date": "07 de Mayo de 2024"
+}
+]
