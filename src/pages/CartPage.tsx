@@ -59,8 +59,8 @@ export default function CartPage() {
 
     return (
         <div className="grid place-items-center py-10 px-5">
-            <div className="flex p-2 gap-2 w-full bg-gray-100 rounded-md">
-                <div className="bg-white p-2 w-2/3">
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] p-2 gap-2 w-full bg-gray-100 rounded-md">
+                <div className="bg-white p-2 ">
                     <div className='pl-10'>
                         <h1 className="text-5xl font-kaiseiDecol">Carrito</h1>
                         <div className="flex mt-6 gap-2 text-blue-600">
@@ -76,15 +76,15 @@ export default function CartPage() {
                         />
                     </div>
                 </div>
-                <div className="flex flex-col gap-2 w-1/3 sticky top-0">
+                <div className="flex flex-col gap-2 sticky top-0">
+                    <div className="bg-white p-2">
+                        <CartSuggestions cartListData={cartListData} quantity={1} />
+                    </div>
                     <div className="bg-white p-2" >
                         <CartResume
                             cartItems={cartListData}
                             onPay={() => { addCartItem({ id: 'c76f633b-7ebd-4815-a54f-0295ec7b7a5b', isSelected: false, quantity: 1 }) }}
                         />
-                    </div>
-                    <div className="bg-white p-2">
-                        <CartSuggestions cartListData={cartListData} quantity={1} />
                     </div>
                 </div>
             </div>
