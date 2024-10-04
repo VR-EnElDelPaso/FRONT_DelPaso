@@ -1,13 +1,15 @@
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { FaSignOutAlt, FaUser } from 'react-icons/fa';
-import NavLink from './NavLink';
+
+import { useAuth } from '../../hooks/useAuth';
+import { ZoomInOnScroll } from '../animations/ZoomInOnScroll';
 import SocialMediaIcons from '../SocialMediaIcons/SocialMediaIcons';
 import MenuButton from './MenuButton';
 import useToggle from '../../hooks/useToggle';
-import { ZoomInOnScroll } from '../animations/ZoomInOnScroll';
-import { useTranslation } from 'react-i18next';
 import LanguageSelector from '../../translate/i18n.changeLanguage';
-import { useNavigate } from 'react-router-dom';
-import {useAuth} from '../../hooks/useAuth';
+import CartButton from "../../features/cart/components/CartButton"
+import NavLink from './NavLink';
 
 export default function AppBar() {
     const navigate = useNavigate();
@@ -35,6 +37,7 @@ export default function AppBar() {
                         <NavLink href="#">{t('Help')}</NavLink>
                     </div>
                     <div className="hidden lg:flex space-x-5">
+                        <CartButton />
                         <LanguageSelector />
                         {
                             isAuthenticated ? (<>
@@ -42,7 +45,7 @@ export default function AppBar() {
                                     <FaUser className="text-xl" />
                                     <h4>{user?.display_name}</h4>
                                 </div>
-                                <button onClick={handleLogout} className="bg-black bg-opacity-75 text-white px-4 py-1 rounded-md transition duration-200 hover:bg-opacity-100 font-normal">
+                                <button title='sign out' onClick={handleLogout} className="bg-black bg-opacity-75 text-white px-4 py-1 rounded-md transition duration-200 hover:bg-opacity-100 font-normal">
                                     <FaSignOutAlt className="mr-1" />
                                 </button>
                             </>) : (<>

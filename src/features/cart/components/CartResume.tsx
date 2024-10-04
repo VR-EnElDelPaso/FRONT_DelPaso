@@ -1,20 +1,28 @@
-import { useEffect, useState } from "react";
-import { CartItem } from "../types/CartItem";
+import { useEffect, useMemo } from "react";
+import { CartListItem } from "./CartList";
 
 interface Props {
-  products: CartItem[];
+  cartItems: CartListItem[];
   onPay: () => void;
 }
 
 export const CartResume = ({
-  products = [],
-  onPay = () => {},
+  cartItems = [],
+  onPay,
 }: Props) => {
-  const [total, setTotal] = useState(0);
+
+  const total = useMemo(() => {
+    return cartItems.reduce((acc, item) => {
+      if (item.isSelected) {
+        return acc + Number(item.price);
+      }
+      return acc;
+    }, 0).toFixed(2);
+  }, [cartItems]);
 
   useEffect(() => {
-    setTotal(products.reduce((acc, product) => acc + product.price, 0));
-  }, [products]);
+    console.log(total);
+  }, [total]);
 
   return (
     <div>
@@ -25,14 +33,14 @@ export const CartResume = ({
       <div className="p-2 flex flex-col gap-2">
         <div className="flex">
           <h2 className=" font-inter">{`
-            Subtotal (${products.length} productos)
+            Subtotal (${cartItems.length} productos)
           `}</h2>
-          <h2 className="ml-auto font-bold">${total.toFixed(2)}</h2>
+          <h2 className="ml-auto font-bold">${total}</h2>
         </div>
         <hr className="w-full h-0.5 bg-gray-200 border-0 rounded my-4"></hr>
         <div className="flex">
           <h2 className=" font-inter">Total</h2>
-          <h2 className="ml-auto font-bold">${total.toFixed(2)}</h2>
+          <h2 className="ml-auto font-bold">${total}</h2>
         </div>
         <div className="flex">
           <button

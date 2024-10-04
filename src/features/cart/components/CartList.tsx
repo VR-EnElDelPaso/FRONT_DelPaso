@@ -1,14 +1,17 @@
-import { CartCard, CartItem } from "./CartCard";
+import { CartCard } from "./CartCard";
+import { Tour } from "../../../shared/types/Tour";
+
+export interface CartListItem extends Tour {
+  isSelected: boolean;
+}
 
 interface Props {
-  cartItems: CartItem[];
-  selectedItems: { [key: string]: boolean };
+  cartItems: CartListItem[];
   onCheckboxChange: (id: string, isChecked: boolean) => void;
 }
 
 export const CartList = ({
   cartItems,
-  selectedItems,
   onCheckboxChange,
 }: Props) => {
   return (
@@ -17,7 +20,6 @@ export const CartList = ({
         <CartCard
           key={cartItem.id}
           cartItem={cartItem}
-          selectState={selectedItems[cartItem.id] || false}
           onCheckboxChange={onCheckboxChange}
         />
       ))}

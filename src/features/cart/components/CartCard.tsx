@@ -1,40 +1,47 @@
-import { CartItem } from "../types/CartItem";
+import { useNavigate } from "react-router-dom";
 
-interface CartCardProps {
-  cartItem: CartItem;
-  selectState: boolean;
+import { CartListItem } from "./CartList";
+import { useCartStore } from "../../../stores/useCartStore";
+
+interface Props {
+  cartItem: CartListItem;
   onCheckboxChange: (name: string, isChecked: boolean) => void;
 }
 
 export const CartCard = ({
   cartItem,
-  selectState,
   onCheckboxChange,
-}: CartCardProps) => {
+}: Props) => {
+  const navigate = useNavigate();
+  const { removeCartItem } = useCartStore();
+
+  const handleDelete = () => {
+    removeCartItem(cartItem.id);
+  }
+
+  const handleMoreInfo = () => {
+    navigate(`/tour/${cartItem.id}`);
+  }
 
   return (
     <>
       <div className="p-2 flex gap-4">
         <input
+          title="Seleccionar"
           type="checkbox"
-          checked={selectState}
+          checked={cartItem.isSelected}
           onChange={(e) => onCheckboxChange(cartItem.id, e.target.checked)}
         />
         <div className="w-1/4">
-          <img className="rounded-md object-cover" src={cartItem.image_url} />
+          <img alt="tour image" className="rounded-md object-cover" src={cartItem.image_url} />
         </div>
         <div className="relative h-auto w-full flex flex-col justify-around">
           <div>
             <h1 className="text-2xl font-kaiseiDecol">{cartItem.name}</h1>
-            <h2 className="text-green-600">
-              {cartItem.available ? "Disponible" : "No disponible"}
-            </h2>
           </div>
           <div>
-            <button>
-              <h2
-                className="text-sm text-gray-600 font-inter font-medium hover:drop-shadow-lg hover:text-gray-800"
-              >
+            <button onClick={handleMoreInfo}>
+              <h2 className="text-sm text-gray-600 font-inter font-medium hover:drop-shadow-lg hover:text-gray-800">
                 Más información
               </h2>
             </button>
@@ -44,7 +51,7 @@ export const CartCard = ({
             ${cartItem.price}
           </div>
           <div className="absolute bottom-0 right-0">
-            <button>
+            <button onClick={handleDelete}>
               <h2 className="text-sm text-red-500 font-inter font-medium hover:drop-shadow-lg hover:text-red-700">
                 Eliminar
               </h2>
