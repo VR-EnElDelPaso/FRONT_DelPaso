@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { CartList } from "../features/cart/components/CartList";
-import { CartResume } from '../features/cart/components/CartResume';
-import { CartSuggestions } from '../features/cart/components/CartSuggestions';
+
 import { useCartStore } from '../stores/useCartStore';
 import { getTours } from '../services/Tour';
 import { Tour } from '../shared/types/Tour';
+import { CartSuggestions } from '../features/cart/components/CartSuggestions';
+import { CartList } from "../features/cart/components/CartList";
+import { CartResume } from '../features/cart/components/CartResume';
 
 export default function CartPage() {
     const [fetchedTours, setFetchedTours] = useState<Tour[]>([]);
@@ -60,12 +61,11 @@ export default function CartPage() {
         <div className="grid place-items-center py-10 px-5">
             <div className="flex p-2 gap-2 w-full bg-gray-100 rounded-md">
                 <div className="bg-white p-2 w-2/3">
-                    <div>
+                    <div className='pl-10'>
                         <h1 className="text-5xl font-kaiseiDecol">Carrito</h1>
                         <div className="flex mt-6 gap-2 text-blue-600">
-                            <button onClick={selectAllItems} className="hover:drop-shadow-lg hover:text-blue-800">Seleccionar todos</button>
-                            <button onClick={deselectAllItems} className="hover:drop-shadow-lg hover:text-blue-800">Borrar selección</button>
-                            {/* <button onClick={showSelectedItems} className="hover:drop-shadow-lg hover:text-blue-800">Mostrar seleccionados</button> */}
+                            <button type='button' onClick={selectAllItems} className="hover:drop-shadow-lg hover:text-blue-800">Seleccionar todos</button>
+                            <button type='button' onClick={deselectAllItems} className="hover:drop-shadow-lg hover:text-blue-800">Borrar selección</button>
                         </div>
                         <hr className="w-full h-0.5 bg-gray-200 border-0 rounded my-2"></hr>
                     </div>
