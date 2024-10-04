@@ -1,13 +1,15 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { createPreferences } from "../services/Preference";
 import { Wallet } from "@mercadopago/sdk-react";
 import { getTours } from "../services/Tour";
 import { Tour } from "../shared/types/Tour";
+import { MdOutlineCancel } from "react-icons/md"; 
 import Skeleton from "../shared/components/Skeleton";
 
 export function CheckoutPage() {
   const { state: { tourIds } } = useLocation();
+  const navigate = useNavigate();
   const [isLoadingPreference, setIsLoadingPreference] = useState<boolean>(true);
   const [tours, setTours] = useState<Tour[]>([]);
   const [isToursLoading, setIsToursLoading] = useState<boolean>(true);
@@ -100,6 +102,13 @@ export function CheckoutPage() {
                 <Wallet
                   initialization={{ preferenceId: preferenceId! }}
                 />
+                {/* Back button */}
+                <button
+                  onClick={() => navigate(-1)}
+                  className="flex justify-center items-center gap-2 text-red-600 w-full mt-6 py-2 border border-red-600 hover:bg-red-600 hover:text-white rounded-lg transition-all duration-300"
+                >
+                  <MdOutlineCancel className="text-xl" /> Cancelar
+                </button>
               </div>
             )
             : (

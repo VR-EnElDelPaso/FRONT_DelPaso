@@ -7,6 +7,7 @@ const Tour = () => {
   const { id } = useParams<{ id: string }>();
   const tourData = useFetchTourById(id || '');
 
+  console.log(tourData);
   if (!tourData) return <div>Cargando...</div>;
 
   return (

@@ -13,6 +13,7 @@ import {
   BuyButtonProps
 } from './types';
 import { Tour } from '../../types/tour';
+import { useCartStore } from '../../stores/useCartStore';
 
 // Sub-components
 const CardImage: React.FC<CardImageProps> = ({ imagePath, title }) => (
@@ -86,13 +87,14 @@ const BuyButton: React.FC<BuyButtonProps> = ({ id, onBuy, isBuyNow = false }) =>
 const CardTour = (tour: Tour) => {
   const { id, name, description, price, created_at } = tour;
   const navigate = useNavigate();
+  const { setCartItem } = useCartStore();
   
-  const handleBuy = (tourId: TourId) => {
-    navigate(`/buy/${tourId}`, { state: { tour } });
+  const handleBuy = () => {
+    navigate(`/checkout`, { state: { tourIds: [tour.id] } });
   }
 
   const handleAddToCart = (tourId: TourId) => {
-    console.log(`Agregando al carrito el recorrido ${tourId}`);
+    setCartItem({ id: tourId, isSelected: true, quantity: 1 });
   };
 
   const handleShare = () => {
