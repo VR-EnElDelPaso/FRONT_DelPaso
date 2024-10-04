@@ -9,13 +9,8 @@ const headers = {
 
 //get all tours
 export const getAllTours = async () => {
-  try {
-    const response = await axios.get(`${apiBaseUrl}/tour`, { headers });
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching tours', error);
-    return [];
-  }
+  const response = await axios.get(`${apiBaseUrl}/tour`, { headers });
+  return response.data;   
 };
 
 //get tours
@@ -30,7 +25,7 @@ export const getTours = async (tourIds: string[]): Promise<ResponseData> => {
 //get tour by id
 export const getTourById = async (id: string) => {
   try {
-    const response = await axios.get(`${apiBaseUrl}/api/tour/${id}`, { headers });
+    const response = await axios.get(`${apiBaseUrl}/tour/${id}`, { headers });
     return response.data;
   } catch (error) {
     console.error('Error fetching tour', error);

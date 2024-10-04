@@ -1,17 +1,19 @@
 import { useEffect, useState } from "react";
 
-import { getTours } from '../apis/Tours';
+import { getAllTours } from '../services/Tour';
 
 const useFetchTours = () => {
   const [tours, setTours] = useState([]);
 
   useEffect(() => {
-    getTours().then((tours) => {
-      setTours(tours.data);
+    getAllTours().then((tours) => {
+      console.log(tours);
+      setTours(tours);
     })
   }, []);
 
   return tours;
 }
+
 
 export default useFetchTours;
