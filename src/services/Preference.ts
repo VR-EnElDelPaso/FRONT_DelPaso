@@ -10,3 +10,8 @@ export const createPreferences = async (tourIds: string[]): Promise<ResponseData
   })
   return response.data
 }
+
+export const createPreference = async (tourId: string): Promise<ResponseData> => {
+  const response = await axios.post(`${apiBaseUrl}/preference/${tourId}`)
+  return response.data
+}

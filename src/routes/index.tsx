@@ -4,7 +4,7 @@ import TourPage from "../pages/TourPage";
 import LoginPage from "../pages/Login";
 import AppLayout from "../layouts/AppLayout";
 import CartPage from "../pages/CartPage";
-import TestDetailShopPage from "../pages/TestDetailShop";
+import { CheckoutPage } from "../pages/Checkout";
 
 const router = createBrowserRouter([
   {
@@ -21,7 +21,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/checkout",
-        element: <TestDetailShopPage />
+        element: <CheckoutPage />
       },
       {
         path: "/tour/:id",
