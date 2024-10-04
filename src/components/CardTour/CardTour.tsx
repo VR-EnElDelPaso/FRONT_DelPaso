@@ -88,8 +88,8 @@ const CardTour = (tour: Tour) => {
   const navigate = useNavigate();
   
   const handleBuy = (tourId: TourId) => {
-    navigate(`/buy/${tourId}`);
-  };
+    navigate(`/buy/${tourId}`, { state: { tour } });
+  }
 
   const handleAddToCart = (tourId: TourId) => {
     console.log(`Agregando al carrito el recorrido ${tourId}`);
