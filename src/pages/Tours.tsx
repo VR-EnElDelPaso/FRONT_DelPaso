@@ -21,6 +21,7 @@ const Tours = () => {
         <div className='flex items-center space-x-3'>
           <p className="whitespace-nowrap">Filtrar por:</p>
           <select 
+            title="Filtrar por"
             className="w-full md:w-auto py-2 pl-2 pr-4 text-gray-700 bg-slate-100 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[rgba(179,52,36,0.75)]"
           >
             <option value="all">Museo</option>
