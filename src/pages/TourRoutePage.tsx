@@ -1,8 +1,15 @@
+// src/pages/TourRoutePage.tsx
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import Dialog from "../shared/components/Tour/Dialog";
 import TourIframe from "../shared/components/Tour/TourIframe";
+import useFetchTourById from "../hooks/useFetchTourById";
+import { dateFormatter } from "../utils/dateFormatter";
 
 export default function TourRoutePage() {
+  const { id } = useParams();
+  const tour = useFetchTourById(id || "");
+
   const [isBlurred, setIsBlurred] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -10,19 +17,21 @@ export default function TourRoutePage() {
     console.log("Form submitted:", data);
   };
 
+  // Loading and error handling
+  if (!tour) return <div>Cargando...</div>;
+
   return (
     <div className="relative font-inter text-dark">
       {/* Tour iframe */}
       <TourIframe
-        src="https://kuula.co/share/collection/7cp8f?logo=0&info=0&fs=1&vr=1&sd=1&initload=0&thumbs=1"
+        src={tour.url}
         isBlurred={isBlurred}
         onStart={() => setIsBlurred(false)}
       />
 
       {/* Content */}
-      <section className="m-4 my-8 md:mx-16">
+      <section className="mx-6 my-8 md:mx-24">
         <div className="flex justify-end mb-8 md:mb-2">
-          {/* Button */}
           <button
             className="px-6 py-2 text-white font-bold rounded-lg text-sm hover:bg-opacity-90 transition-colors duration-200 bg-primary/90"
             onClick={() => setIsDialogOpen(true)}
@@ -33,22 +42,11 @@ export default function TourRoutePage() {
 
         {/* Texts */}
         <h2 className="text-4xl font-kaiseiDecol mb-2 font-medium">
-          Rosa Villa Real - Miel
+          {tour.name}
         </h2>
         <div className="max-w-4xl font-light text-base space-y-8 my-4">
-          <p>
-            En este recorrido conocerás la obra de Emilio Rosado, una artista
-            que se especializa en el arte textil, con un fuerte discurso
-            concientizador de temas de interés social en este recorrido
-            conocerás la obra de Emilio Rosado, una artista que se especializa
-            en el arte textil, con un fuerte discurso concientizador de temas de
-            interés social.
-          </p>
-          <p>
-            En este recorrido conocerás la obra de Emilio Rosado, una artista
-            que se especializa en el arte textil, con un fuerte discurso
-            concientizador de temas de interés social.
-          </p>
+          <p>{tour.description}</p>
+          <p className="uppercase text-sm">{dateFormatter(tour.created_at)}</p>
         </div>
 
         <Dialog
