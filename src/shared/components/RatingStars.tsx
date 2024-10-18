@@ -22,7 +22,7 @@ export default function RatingStars({ onChange, value = 0 }: RatingStarsProps) {
           key={rating}
           className={`w-6 h-6 cursor-pointer transition-colors ${
             rating <= (hoverRating || selectedRating)
-              ? "fill-primary text-primary"
+              ? "text-primary"
               : "text-primary/60"
           }`}
           onMouseEnter={() => setHoverRating(rating)}
