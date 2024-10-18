@@ -27,7 +27,7 @@ export default function Dialog({ isOpen, onClose, onSubmit }: DialogProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center px-2">
       <div className="fixed inset-0 bg-black/50" onClick={onClose} />
       <div className="relative bg-white rounded-lg p-6 w-full max-w-5xl">
         <h2 className="text-3xl font-medium mb-8 text-dark font-kaiseiDecol">
