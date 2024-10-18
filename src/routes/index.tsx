@@ -7,6 +7,7 @@ import AppLayout from "../layouts/AppLayout";
 import Tours from "../pages/Tours";
 import CartPage from "../pages/CartPage";
 import { CheckoutPage } from "../pages/Checkout";
+import TourRoutePage from "../pages/TourRoutePage";
 
 const router = createBrowserRouter([
   {
@@ -15,33 +16,37 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <HomePage />
+        element: <HomePage />,
       },
       {
         path: "/cart",
-        element: <CartPage />
+        element: <CartPage />,
       },
       {
         path: "/checkout",
-        element: <CheckoutPage />
+        element: <CheckoutPage />,
       },
       {
         path: "/tour/:id",
-        element: <TourPage />
+        element: <TourPage />,
       },
       {
         path: "/tours",
-        element: <Tours />
+        element: <Tours />,
       },
       {
         path: "/test",
-        element: <div>Test</div>
+        element: <div>Test</div>,
       },
       {
         path: "/login",
-        element: <LoginPage />
+        element: <LoginPage />,
       },
-    ]
+      {
+        path: "/tour-route/:id",
+        element: <TourRoutePage />,
+      },
+    ],
   },
 ]);
 
