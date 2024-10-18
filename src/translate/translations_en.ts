@@ -1,7 +1,7 @@
 export const en = {
     translation: {
         "Home": "Home",
-        "About the Museum": "About the Museum",
+        "About Muvi": "About Muvi",
         "Help": "Help",
         "Change language": "Change language",
         "Login": "Login",
