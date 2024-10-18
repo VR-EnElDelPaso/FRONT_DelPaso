@@ -20,11 +20,11 @@ export default function TourRoutePage() {
       />
 
       {/* Content */}
-      <section className="m-4 md:m-16">
-        <div className="flex justify-end mb-16 md:mb-2">
+      <section className="m-4 my-8 md:mx-16">
+        <div className="flex justify-end mb-8 md:mb-2">
           {/* Button */}
           <button
-            className="mt-4 md:mt-0 px-6 py-2 text-white font-bold rounded-lg text-sm hover:bg-opacity-90 transition-colors duration-200 bg-primary/90"
+            className="px-6 py-2 text-white font-bold rounded-lg text-sm hover:bg-opacity-90 transition-colors duration-200 bg-primary/90"
             onClick={() => setIsDialogOpen(true)}
           >
             Marcar como terminado
