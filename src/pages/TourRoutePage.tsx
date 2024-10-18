@@ -1,13 +1,10 @@
 import { useState } from "react";
-import Dialog from "../shared/components/Dialog";
+import Dialog from "../shared/components/Tour/Dialog";
+import TourIframe from "../shared/components/Tour/TourIframe";
 
 export default function TourRoutePage() {
   const [isBlurred, setIsBlurred] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-  const handleClick = () => {
-    setIsBlurred(false);
-  };
 
   const handleSubmit = (data: { rating: number; comment: string }) => {
     console.log("Form submitted:", data);
@@ -15,39 +12,19 @@ export default function TourRoutePage() {
 
   return (
     <div className="relative font-inter text-dark">
-      {/* Iframe */}
-      <section className="relative">
-        <iframe
-          className={`transition-opacity duration-500 ${
-            isBlurred ? "blur-md opacity-50" : "blur-0 opacity-100"
-          }`}
-          width="100%"
-          height="640"
-          frameBorder="0"
-          allow="xr-spatial-tracking; gyroscope; accelerometer"
-          allowFullScreen
-          scrolling="no"
-          src="https://kuula.co/share/collection/7cp8f?logo=0&info=0&fs=1&vr=1&sd=1&initload=0&thumbs=1"
-        ></iframe>
-        {isBlurred && (
-          <div
-            className="absolute inset-0 flex flex-col items-center justify-center text-white bg-black bg-opacity-50 cursor-pointer text-center"
-            onClick={handleClick}
-          >
-            <h2 className="font-semibold tracking-widest">SOLO EN MUVi</h2>
-            <h1 className="text-3xl md:text-5xl font-medium font-kaiseiDecol mt-2">
-              Empezar este recorrido
-            </h1>
-          </div>
-        )}
-      </section>
+      {/* Tour iframe */}
+      <TourIframe
+        src="https://kuula.co/share/collection/7cp8f?logo=0&info=0&fs=1&vr=1&sd=1&initload=0&thumbs=1"
+        isBlurred={isBlurred}
+        onStart={() => setIsBlurred(false)}
+      />
 
       {/* Content */}
-      <section className="m-16">
+      <section className="m-4 md:m-16">
         <div className="flex justify-end mb-16 md:mb-2">
           {/* Button */}
           <button
-            className="mt-4 md:mt-0 px-6 py-2 text-white font-bold rounded-lg text-sm hover:bg-opacity-90 transition-colors duration-200 bg-[rgba(179,52,36,0.75)]"
+            className="mt-4 md:mt-0 px-6 py-2 text-white font-bold rounded-lg text-sm hover:bg-opacity-90 transition-colors duration-200 bg-primary/90"
             onClick={() => setIsDialogOpen(true)}
           >
             Marcar como terminado

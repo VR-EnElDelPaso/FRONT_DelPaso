@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import RatingStars from "./RatingStars";
+import RatingStars from "../RatingStars";
 
 interface DialogProps {
   isOpen: boolean;
