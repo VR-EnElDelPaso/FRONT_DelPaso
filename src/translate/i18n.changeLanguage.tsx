@@ -29,7 +29,7 @@ function LanguageSelector() {
         <div className="relative">
             <button 
                 aria-label="Cambiar idioma" 
-                className="flex items-center space-x-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 py-2 px-3 rounded-lg text-sm transition duration-300 shadow-sm"
+                className="flex items-center space-x-2 bg-white border border-gray-300 hover:bg-gray-200 text-gray-700 py-2 px-3 rounded-lg text-sm transition duration-300 shadow-sm"
                 onClick={() => setIsOpen(!isOpen)}
             >
                 <Flag code={currentLanguage.code} />
@@ -41,7 +41,7 @@ function LanguageSelector() {
                     {languages.map(({ lang, code, label }) => (
                         <button 
                             key={lang}
-                            className={`flex items-center w-full px-4 py-3 text-sm text-left hover:bg-gray-50 transition duration-150 ${i18n.language === lang ? 'bg-gray-100' : ''}`}
+                            className={`flex items-center w-full px-4 py-3 text-sm text-left hover:bg-gray-200 transition duration-150 ${i18n.language === lang ? 'bg-gray-100' : ''}`}
                             onClick={() => changeLanguage(lang)}
                         >
                             <Flag code={code} />

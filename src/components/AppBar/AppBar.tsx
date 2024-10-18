@@ -42,7 +42,7 @@ export default function AppBar() {
               
               {/* Menú */}
               <div className="flex gap-10 items-center">
-                <NavLink href="#">{t('Home')}</NavLink>
+                <NavLink href="/">{t('Home')}</NavLink>
                 <NavLink href="#">{t('About Muvi')}</NavLink>
                 <NavLink href="#">{t('Help')}</NavLink>
               </div>
