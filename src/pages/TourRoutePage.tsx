@@ -1,13 +1,16 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import Dialog from "../shared/components/Dialog";
 
 export default function TourRoutePage() {
   const [isBlurred, setIsBlurred] = useState(true);
-
-  const navigate = useNavigate();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleClick = () => {
     setIsBlurred(false);
+  };
+
+  const handleSubmit = (data: { rating: number; comment: string }) => {
+    console.log("Form submitted:", data);
   };
 
   return (
@@ -45,7 +48,7 @@ export default function TourRoutePage() {
           {/* Button */}
           <button
             className="mt-4 md:mt-0 px-6 py-2 text-white font-bold rounded-lg text-sm hover:bg-opacity-90 transition-colors duration-200 bg-[rgba(179,52,36,0.75)]"
-            onClick={() => navigate(`/`)}
+            onClick={() => setIsDialogOpen(true)}
           >
             Marcar como terminado
           </button>
@@ -71,7 +74,11 @@ export default function TourRoutePage() {
           </p>
         </div>
 
-        <p className="uppercase text-sm text-gray-500">07 de Mayo de 2024</p>
+        <Dialog
+          isOpen={isDialogOpen}
+          onClose={() => setIsDialogOpen(false)}
+          onSubmit={handleSubmit}
+        />
       </section>
     </div>
   );
