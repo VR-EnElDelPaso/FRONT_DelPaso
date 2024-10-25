@@ -87,7 +87,7 @@ export default function Dialog({ isOpen, onClose, onSubmit }: DialogProps) {
       <div className="relative bg-white rounded-lg p-6 w-full max-w-5xl shadow-xl">
         <div className="space-y-6">
           <h2 className="text-3xl font-medium text-dark font-kaiseiDecol">
-            ¿Qué te pareció el recorrido?
+            Comparte tu experiencia en este recorrido
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-6">
