@@ -21,6 +21,10 @@ export default {
         secondary: "#5F5EA3",
         dark: "#333333",
       },
+      fill: {
+        primary: "#B33424",
+        secondary: "#5F5EA3",
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
