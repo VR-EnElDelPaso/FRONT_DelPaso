@@ -4,7 +4,7 @@ import SocialMediaIcons from '../SocialMediaIcons/SocialMediaIcons';
 import { FadeInOnScroll } from '../animations/FadeInOnScroll';
 
 export default function Footer() {
-
+  
   return (
 
     <div className="bg-secondary overflow-hidden font-inter text-white">
@@ -41,7 +41,7 @@ export default function Footer() {
               <h4 className="text-xl font-semibold">Ubicación</h4>
               <div className='p-4'>
                 <p>C. 27 de Septiembre No. 119, Centro, C.P. 28000, Colima, Colima, México</p>
-                <iframe className='md:w-3/4 w-full rounded-xl mt-4' src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d941.7221742361119!2d-103.72468924398711!3d19.24368197467158!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x84255aac6a222821%3A0x69cd49bd530cb8d0!2sMuseo%20Universitario%20Fernando%20del%20Paso!5e0!3m2!1sen!2smx!4v1718795745682!5m2!1sen!2smx" loading="eager"></iframe>
+                <iframe className='md:w-3/4 w-full rounded-xl mt-4' src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d941.7221742361119!2d-103.72468924398711!3d19.24368197467158!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x84255aac6a222821%3A0x69cd49bd530cb8d0!2sMuseo%20Universitario%20Fernando%20del%20Paso!5e0!3m2!1sen!2smx!4v1718795745682!5m2!1sen!2smx" loading="lazy"></iframe>
               </div>
             </div>
           </div>

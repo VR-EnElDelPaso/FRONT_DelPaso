@@ -56,6 +56,7 @@ export default function TheNew() {
           <div className="sm:hidden grid sm:grid-cols-2 grid-cols-1 gap-14">
             {newCards.map((newCard, index) => (
               <FadeInOnScroll
+                key={index}
                 distance={20}
                 duration={2}
               >

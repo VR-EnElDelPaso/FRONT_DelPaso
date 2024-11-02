@@ -1,7 +1,14 @@
 import Carousel from "./Carousel";
 import MuseumStatus from "./MuseumStatus";
+import { useNavigate } from "react-router-dom";
 
 export default function NowShowing() {
+    const navigate = useNavigate();
+  
+    const handleRedirect = () => {
+      navigate('/tours');
+    }
+
     return (
         <div className="container mx-auto">
             {/* MuseumStatus */}
@@ -19,8 +26,13 @@ export default function NowShowing() {
                 </div>
                 
                 {/* Carousel */}
-                <div className="flex-col md:flex-row p-4 mb-4">
+                <div className="flex-col md:flex-row">
                     <Carousel />
+                </div>
+
+                {/* Button */}
+                <div className="flex justify-center p-4">
+                    <button className="bg-black text-white font-bold py-2 px-4 rounded-full" onClick={handleRedirect}>Ver todos</button>
                 </div>
             </div>
         </div>

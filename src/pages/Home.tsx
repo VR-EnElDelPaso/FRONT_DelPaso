@@ -4,7 +4,7 @@ import NowShowing from '../components/NowShowing';
 import TheNew from '../components/TheNew';
 import { FadeInOnScroll } from '../components/animations/FadeInOnScroll';
 
-function Home() {
+function HomePage() {
   return (
     <div>
       <NewsCarousel />
@@ -20,4 +20,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default HomePage;
