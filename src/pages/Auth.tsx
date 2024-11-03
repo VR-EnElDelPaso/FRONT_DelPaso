@@ -6,6 +6,7 @@ import SignUpForm from "@/components/Auth/SignUpForm/index";
 
 const Auth = () => {
   const [isSignIn, setIsSignIn] = useState(true);
+  const [resetRecovery, setResetRecovery] = useState(false);
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -16,6 +17,15 @@ const Auth = () => {
       navigate(from, { replace: true });
     }
   }, [isAuthenticated, navigate, from]);
+
+  const handleToggleForm = (showSignIn: boolean) => {
+    setIsSignIn(showSignIn);
+    if (showSignIn) {
+      setResetRecovery(true);
+      // Reset the flag after a brief delay to allow for the next toggle
+      setTimeout(() => setResetRecovery(false), 100);
+    }
+  };
 
   const commonTransition = "transition-all duration-500 ease-in-out";
 
@@ -29,17 +39,17 @@ const Auth = () => {
           className={`absolute top-0 h-full ${commonTransition} sm:left-0 w-full sm:w-1/2
             ${
               !isSignIn
-                ? `sm:translate-x-full sm:scale-100 opacity-100 z-20`
+                ? "sm:translate-x-full sm:scale-100 opacity-100 z-20"
                 : "sm:translate-x-0 sm:scale-95 sm:opacity-0 sm:-z-10 opacity-0 -z-10"
             }`}
         >
           <div className="h-full flex flex-col items-center justify-center">
             <div className="flex-1 w-full">
-              <SignUpForm onToggleForm={() => setIsSignIn(true)} />
+              <SignUpForm onToggleForm={() => handleToggleForm(true)} />
             </div>
             <div className="flex justify-center pb-8">
               <button
-                onClick={() => setIsSignIn(true)}
+                onClick={() => handleToggleForm(true)}
                 className="text-white text-sm tracking-wider transform transition-all duration-300 hover:scale-105 active:scale-95"
               >
                 <span className="text-neutral-300">¿Tienes cuenta?</span> Inicia
@@ -60,11 +70,11 @@ const Auth = () => {
         >
           <div className="h-full flex flex-col items-center justify-center">
             <div className="flex-1 w-full">
-              <SignInForm />
+              <SignInForm resetRecovery={resetRecovery} />
             </div>
             <div className="flex justify-center pb-8">
               <button
-                onClick={() => setIsSignIn(false)}
+                onClick={() => handleToggleForm(false)}
                 className="text-white text-sm tracking-wider transform transition-all duration-300 hover:scale-105 active:scale-95"
               >
                 <span className="text-neutral-300">¿No tienes cuenta?</span>{" "}
