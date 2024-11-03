@@ -3,6 +3,7 @@ import { useAuth } from "../hooks/useAuth";
 import { useNavigate, useLocation } from "react-router-dom";
 import { SignInForm } from "@/components/Auth/SignInForm";
 import SignUpForm from "@/components/Auth/SignUpForm/index";
+import Udc from "@/assets/images/udc.png";
 
 const Auth = () => {
   const [isSignIn, setIsSignIn] = useState(true);
@@ -100,7 +101,7 @@ const Auth = () => {
               />
             </div>
             <img
-              src="/src/assets/images/udc.png"
+              src={Udc}
               alt="UDC Logo"
               className="object-contain max-w-[40%] mb-4"
             />
