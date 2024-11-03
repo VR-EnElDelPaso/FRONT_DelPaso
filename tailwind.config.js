@@ -4,6 +4,16 @@ export default {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      keyframes: {
+        smoothBounce: {
+          "0%, 100%": { transform: "translateX(0)" },
+          "50%": { transform: "translateX(15px)" },
+          "75%": { transform: "translateX(-5px)" },
+        },
+      },
+      animation: {
+        smoothBounce: "smoothBounce 1.2s ease-in-out",
+      },
       fontFamily: {
         kaiseiDecol: ["Kaisei Decol", "sans-serif"],
         inter: ["Inter", "sans-serif"],

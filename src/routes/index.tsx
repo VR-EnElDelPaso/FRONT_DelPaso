@@ -8,6 +8,7 @@ import Tours from "../pages/Tours";
 import CartPage from "../pages/CartPage";
 import { CheckoutPage } from "../pages/Checkout";
 import TourRoutePage from "../pages/TourRoutePage";
+import Auth from "@/pages/Auth";
 
 const router = createBrowserRouter([
   {
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
       {
         path: "/tour-route/:id",
         element: <TourRoutePage />,
+      },
+      {
+        path: "/auth",
+        element: <Auth />,
       },
     ],
   },
