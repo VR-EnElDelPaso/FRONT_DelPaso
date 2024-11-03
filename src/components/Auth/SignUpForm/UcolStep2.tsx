@@ -32,7 +32,7 @@ export const UcolStep2 = ({ onBack, onComplete }: UcolStep2Props) => {
           <label className="text-white">Contraseña</label>
           <input
             type="password"
-            placeholder="Contraseña"
+            placeholder="********"
             className="w-full bg-gray-300/20 border border-gray-400/20 px-4 py-3 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none transition-shadow text-white placeholder-white/70"
             {...register("password", {
               required: "La contraseña es requerida",
@@ -57,7 +57,7 @@ export const UcolStep2 = ({ onBack, onComplete }: UcolStep2Props) => {
           <label className="text-white">Confirmar contraseña</label>
           <input
             type="password"
-            placeholder="Confirmar contraseña"
+            placeholder="********"
             className="w-full bg-gray-300/20 border border-gray-400/20 px-4 py-3 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none transition-shadow text-white placeholder-white/70"
             {...register("confirmPassword", {
               required: "Debe confirmar la contraseña",

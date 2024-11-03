@@ -36,7 +36,7 @@ const RecoveryPasswordForm = ({
             <label className="text-white">Correo</label>
             <input
               type="email"
-              placeholder="example@example.com"
+              placeholder="correo@ejemplo.com"
               className="w-full bg-gray-300/20 border border-gray-400/20 px-4 py-3 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none transition-shadow text-white placeholder-white/70"
               {...register("email", {
                 required: "El correo es requerido",

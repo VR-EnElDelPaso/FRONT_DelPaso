@@ -30,30 +30,8 @@ export const NonUcolForm = ({ onBack, onComplete }: NonUcolFormProps) => {
     <div className="transition-all duration-500 ease-in-out transform animate-slideIn">
       <h1 className="text-2xl font-bold mb-4 text-white">Registro</h1>
       <div className="max-h-[500px] overflow-y-auto overflow-x-hidden p-2">
-        {" "}
         {/* Contenedor con scroll */}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-2 w-full">
-          <div className="space-y-2">
-            <label className="text-white">Nombre de usuario</label>
-            <input
-              type="text"
-              placeholder="Nombre de usuario"
-              className="w-full bg-gray-300/20 border border-gray-400/20 px-4 py-3 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none transition-shadow text-white placeholder-white/70"
-              {...register("username", {
-                required: "El nombre de usuario es requerido",
-                minLength: {
-                  value: 3,
-                  message:
-                    "El nombre de usuario debe tener al menos 3 caracteres",
-                },
-              })}
-            />
-            {errors.username && (
-              <span className="text-red-500 text-sm">
-                {errors.username.message}
-              </span>
-            )}
-          </div>
           <div className="space-y-2">
             <label className="text-white">Correo</label>
             <input
@@ -75,10 +53,31 @@ export const NonUcolForm = ({ onBack, onComplete }: NonUcolFormProps) => {
             )}
           </div>
           <div className="space-y-2">
+            <label className="text-white">Nombre de usuario</label>
+            <input
+              type="text"
+              placeholder="Manuel Rosado"
+              className="w-full bg-gray-300/20 border border-gray-400/20 px-4 py-3 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none transition-shadow text-white placeholder-white/70"
+              {...register("username", {
+                required: "El nombre de usuario es requerido",
+                minLength: {
+                  value: 3,
+                  message:
+                    "El nombre de usuario debe tener al menos 3 caracteres",
+                },
+              })}
+            />
+            {errors.username && (
+              <span className="text-red-500 text-sm">
+                {errors.username.message}
+              </span>
+            )}
+          </div>
+          <div className="space-y-2">
             <label className="text-white">Contraseña</label>
             <input
               type="password"
-              placeholder="Contraseña"
+              placeholder="********"
               className="w-full bg-gray-300/20 border border-gray-400/20 px-4 py-3 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none transition-shadow text-white placeholder-white/70"
               {...register("password", {
                 required: "La contraseña es requerida",
@@ -103,7 +102,7 @@ export const NonUcolForm = ({ onBack, onComplete }: NonUcolFormProps) => {
             <label className="text-white">Confirmar contraseña</label>
             <input
               type="password"
-              placeholder="Confirmar contraseña"
+              placeholder="********"
               className="w-full bg-gray-300/20 border border-gray-400/20 px-4 py-3 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none transition-shadow text-white placeholder-white/70"
               {...register("confirmPassword", {
                 required: "Debe confirmar la contraseña",

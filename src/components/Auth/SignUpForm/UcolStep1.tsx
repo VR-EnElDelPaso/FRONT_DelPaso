@@ -31,7 +31,7 @@ export const UcolStep1 = ({ onNext, onBack }: UcolStep1Props) => {
           <label className="text-white">Nombre completo</label>
           <input
             type="text"
-            placeholder="Nombre completo"
+            placeholder="Nombre y Apellidos"
             className="w-full bg-gray-300/20 border border-gray-400/20 px-4 py-3 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none transition-shadow text-white placeholder-white/70"
             {...register("fullName", {
               required: "El nombre es requerido",
