@@ -18,7 +18,7 @@ export default function AppBar() {
   const {logout, isAuthenticated, user} = useAuth();
   const handleLogout = () => logout();
   
-  const handleLogin = () => navigate('/login');
+  const handleLogin = () => navigate('/auth');
   const [menuOpen, toggleMenu] = useToggle(false);
   return (
     <nav className="sticky top-0 z-50 bg-white shadow-md">
