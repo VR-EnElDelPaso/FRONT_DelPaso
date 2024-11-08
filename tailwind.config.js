@@ -4,6 +4,31 @@ export default {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      keyframes: {
+        slideIn: {
+          "0%": { transform: "translateX(100%)", opacity: "0" },
+          "100%": { transform: "translateX(0)", opacity: "1" },
+        },
+        slideOut: {
+          "0%": { transform: "translateX(0)", opacity: "1" },
+          "100%": { transform: "translateX(-100%)", opacity: "0" },
+        },
+        fadeIn: {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        smoothBounce: {
+          "0%, 100%": { transform: "translateX(0)" },
+          "50%": { transform: "translateX(15px)" },
+          "75%": { transform: "translateX(-5px)" },
+        },
+      },
+      animation: {
+        smoothBounce: "smoothBounce 1.2s ease-in-out",
+        slideIn: "slideIn 0.5s ease-out forwards",
+        slideOut: "slideOut 0.5s ease-out forwards",
+        fadeIn: "fadeIn 0.5s ease-out forwards",
+      },
       fontFamily: {
         kaiseiDecol: ["Kaisei Decol", "sans-serif"],
         inter: ["Inter", "sans-serif"],

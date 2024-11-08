@@ -4,12 +4,24 @@ import HomePage from "../pages/Home";
 import TourPage from "../pages/TourPage";
 import LoginPage from "../pages/Login";
 import AppLayout from "../layouts/AppLayout";
+import NoAppBarLayout from "../layouts/NoAppBarLayout";
 import Tours from "../pages/Tours";
 import CartPage from "../pages/CartPage";
 import { CheckoutPage } from "../pages/Checkout";
 import TourRoutePage from "../pages/TourRoutePage";
+import Auth from "@/pages/Auth";
 
 const router = createBrowserRouter([
+  {
+    path: "/auth",
+    element: <NoAppBarLayout />,
+    children: [
+      {
+        index: true,
+        element: <Auth />,
+      },
+    ],
+  },
   {
     path: "/",
     element: <AppLayout />,
