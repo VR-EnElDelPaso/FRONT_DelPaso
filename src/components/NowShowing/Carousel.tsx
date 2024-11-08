@@ -4,12 +4,14 @@ import { wrap } from "popmotion";
 import Slide from "./Slide";
 import CarouselControls from "./CarouselControls";
 import { getTours } from "@/apis/Tours";
-import image from "../../../public/PA_Obra13.jpg";
 import { variants, swipeConfidenceThreshold, swipePower } from "./animations";
+import { dateFormatter } from "@/utils/dateFormatter";
 
 export default function Carousel() {
   const [[page, direction], setPage] = useState([0, 0]);
   const [slides, setSlides] = useState<Slide[]>([]);
+  const [loading, setLoading] = useState(true);
+
   interface Slide {
     image_url: string;
     created_at: string;
@@ -18,10 +20,14 @@ export default function Carousel() {
     description: string;
   }
 
-
   useEffect(() => {
     getTours().then((response) => {
       setSlides(response.data);
+      setLoading(false);
+    })
+    .catch((error) => {
+      console.error(error);
+      setLoading(false);
     });
   }, []);
 
@@ -41,6 +47,8 @@ export default function Carousel() {
 
     return () => clearInterval(interval);
   }, [paginate]);
+
+  if (loading) return <div>Loading...</div>;
 
   return (
     <div className="relative w-full mt-4 sm:mt-8">
@@ -72,8 +80,8 @@ export default function Carousel() {
             className="absolute w-full h-full"
           >
             <Slide
-              imageSrc={image}
-              date={slides[imageIndex].created_at}
+              imageSrc={slides[imageIndex].image_url}
+              date={dateFormatter(slides[imageIndex].created_at)}
               title={slides[imageIndex].name}
               rating={slides[imageIndex].stars}
               description={slides[imageIndex].description}
