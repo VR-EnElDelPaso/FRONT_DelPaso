@@ -3,11 +3,27 @@ import { motion, AnimatePresence } from "framer-motion";
 import { wrap } from "popmotion";
 import Slide from "./Slide";
 import CarouselControls from "./CarouselControls";
-import { slides } from "./slide-data";
+import { getTours } from "@/apis/Tours";
+import image from "../../../public/PA_Obra13.jpg";
 import { variants, swipeConfidenceThreshold, swipePower } from "./animations";
 
 export default function Carousel() {
   const [[page, direction], setPage] = useState([0, 0]);
+  const [slides, setSlides] = useState<Slide[]>([]);
+  interface Slide {
+    image_url: string;
+    created_at: string;
+    name: string;
+    stars: number;
+    description: string;
+  }
+
+
+  useEffect(() => {
+    getTours().then((response) => {
+      setSlides(response.data);
+    });
+  }, []);
 
   const imageIndex = wrap(0, slides.length, page);
 
@@ -56,10 +72,10 @@ export default function Carousel() {
             className="absolute w-full h-full"
           >
             <Slide
-              imageSrc={slides[imageIndex].imageSrc}
-              date={slides[imageIndex].date}
-              title={slides[imageIndex].title}
-              rating={slides[imageIndex].rating}
+              imageSrc={image}
+              date={slides[imageIndex].created_at}
+              title={slides[imageIndex].name}
+              rating={slides[imageIndex].stars}
               description={slides[imageIndex].description}
             />
           </motion.div>

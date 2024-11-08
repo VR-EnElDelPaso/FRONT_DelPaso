@@ -1,7 +1,7 @@
 import axios from "axios";
 import ResponseData from "../types/ResponseData";
 
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL as string
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL as string;
 
 const headers = {
   'Content-Type': 'application/json',
@@ -9,7 +9,9 @@ const headers = {
 
 //get all tours
 export const getAllTours = async () => {
-  const response = await axios.get(`${apiBaseUrl}/tour`, { headers });
+  const response = await axios.get(`${apiBaseUrl}/tour`, { 
+    headers,
+  });
   return response.data;   
 };
 

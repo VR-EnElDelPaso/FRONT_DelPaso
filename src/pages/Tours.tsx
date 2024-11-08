@@ -73,7 +73,7 @@ const Tours = () => {
                   {/* Rating */}
                   <div className="flex items-center gap-1">
                     <Star className="h-6 w-6" style={{ fill: "#B33424", color: "#B33424" }} />
-                    <span className="font-medium text-lg">4.5</span>
+                    <span className="font-medium text-lg">{tour.stars}</span>
                   </div>
 
                   {/* Date */}
