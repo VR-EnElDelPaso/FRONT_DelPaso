@@ -19,10 +19,12 @@ export default function NowShowing() {
                 {/* Title */}
                 <div className="mb-8">
                     <div className="flex items-center">
-                        <span className="text-3xl mr-2">•</span>
-                        <p className="text-sm font-bold tracking-widest uppercase">Actuales</p>
+                        <span className="text-xl mr-2 text-primary">•</span>
+                        <p className="text-sm font-medium text-primary tracking-widest uppercase">
+                          Mejores puntuados
+                        </p>
                     </div>
-                    <h1 className="text-3xl md:text-5xl font-bold font-kaiseiDecol mt-2">Recorridos Virtuales</h1>
+                    <h1 className="text-3xl md:text-5xl font-kaiseiDecol mt-2">Recorridos Virtuales</h1>
                 </div>
                 
                 {/* Carousel */}

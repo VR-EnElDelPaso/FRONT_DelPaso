@@ -1,57 +1,103 @@
 import { useNavigate } from "react-router-dom";
+import { Search, Star, Calendar } from "lucide-react";
 import { Tour } from "../types/tour";
 import useFetchTours from "../hooks/useFetchTours";
 import { dateFormatter } from "../utils/dateFormatter";
+import { Card } from "@/components/ui/card";
 import image from "../../public/PA_Obra13.jpg";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 
 const Tours = () => {
   const navigate = useNavigate();
   const tours = useFetchTours();
 
   return (
-    <div className="container mx-auto max-w-6xl p-4">
-      <div className="flex flex-col md:flex-row justify-between mb-8 space-y-4 md:space-y-0">
+    <div className="container mx-auto max-w-6xl p-4 space-y-8">
+      <div className="flex flex-col md:flex-row justify-between gap-4">
+        {/* Filters */}
         <div className="relative w-full md:w-1/2">
-          <input 
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+          <Input 
             type="search" 
             placeholder="Buscar..." 
-            className="w-full py-2 pl-5 pr-4 text-gray-700 bg-slate-100 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-[rgba(179,52,36,0.75)]"
+            className="pl-10 rounded-full"
           />
         </div>
-        <div className='flex items-center space-x-3'>
-          <p className="whitespace-nowrap">Filtrar por:</p>
-          <select 
-            title="Filtrar por"
-            className="w-full md:w-auto py-2 pl-2 pr-4 text-gray-700 bg-slate-100 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[rgba(179,52,36,0.75)]"
-          >
-            <option value="all">Museo</option>
-            <option value="art">Arte</option>
-            <option value="history">Historia</option>
-            <option value="science">Ciencia</option>
-          </select>
+        <div className='flex items-center gap-4'>
+          <span className="text-muted-foreground">Filtrar por:</span>
+          <Select>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Selecciona categoría" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="museum">Museo</SelectItem>
+                <SelectItem value="art">Arte</SelectItem>
+                <SelectItem value="history">Historia</SelectItem>
+                <SelectItem value="science">Ciencia</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </div>
       </div>
       
+      {/* Tours */}
       <div className='space-y-6'>
         {tours.map((tour: Tour) => (
-          <div key={tour.id} className='flex flex-col md:flex-row gap-4 bg-white rounded-lg overflow-hidden'>
-            <img src={image} alt={tour.name} className='w-full rounded-3xl md:w-1/5 h-64 md:h-auto object-cover' />
-            <div className='flex flex-col justify-between p-6 w-full md:w-2/3'>
-              <div className="flex flex-col gap-4">
-                <h2 className='text-4xl font-kaiseiDecol mb-2'>{tour.name}</h2>
-                <p className='font-inter text-gray-600 mb-4'>{tour.description}</p>
+          <Card key={tour.id} className="overflow-hidden border-none shadow-none bg-transparent">
+            <div className="flex flex-col md:flex-row gap-6">
+              {/* Image */}
+              <div className="w-full md:w-[200px]">
+                <img 
+                  src={image} // TODO: Change this to tour.image_url
+                  alt={tour.name} 
+                  className='w-full h-64 md:h-[200px] object-cover rounded-lg'
+                />
               </div>
-              <div className='flex flex-col md:flex-row justify-between items-end'>
-                <p className='font-semibold text-gray-500'>{dateFormatter(tour.created_at)}</p>
-                <button 
-                  className="mt-4 md:mt-0 px-6 py-2 text-white font-bold rounded-lg text-sm hover:bg-opacity-90 transition-colors duration-200 bg-[rgba(179,52,36,0.75)]"
-                  onClick={() => navigate(`/tour/${tour.id}`)}
-                >
-                  Ver más
-                </button>
+
+              {/* Content */}
+              <div className='flex-1 p-6'>
+                <div className="flex flex-col md:h-full md:justify-center space-y-4">
+                  {/* Title */}
+                  <h2 className='text-3xl font-kaiseiDecol'>{tour.name}</h2>
+
+                  {/* Rating */}
+                  <div className="flex items-center gap-1">
+                    <Star className="h-6 w-6" style={{ fill: "#B33424", color: "#B33424" }} />
+                    <span className="font-medium text-lg">{tour.stars}</span>
+                  </div>
+
+                  {/* Date */}
+                  <div className="flex items-center gap-2">
+                    <Calendar className="h-4 w-4 text-muted-foreground" />
+                    <time className='text-sm text-muted-foreground'>
+                      {dateFormatter(tour.created_at)}
+                    </time>
+                  </div>
+
+                  {/* Description */}
+                  <div className="flex justify-between items-end gap-4">
+                    <p className='text-muted-foreground flex-1'>{tour.description}</p>
+                    <Button 
+                      onClick={() => navigate(`/tour/${tour.id}`)}
+                      className="text-white bg-primary hover:bg-primary/90 whitespace-nowrap"
+                    >
+                      Ver más
+                    </Button>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          </Card>
         ))}
       </div>
     </div>
