@@ -4,12 +4,12 @@ import Footer from "../components/Footer";
 
 export default function AuthProvider() {
   return (
-    <>
+    <div className="font-inter">
       <AppBar />
       <div className="min-h-[calc(100svh-100px)]">
         <Outlet />
       </div>
       <Footer />
-    </>
-  )
+    </div>
+  );
 }
