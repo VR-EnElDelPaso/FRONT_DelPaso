@@ -7,15 +7,30 @@ import { Tour } from "../shared/types/Tour";
 import { MdOutlineCancel } from "react-icons/md";
 import Skeleton from "../shared/components/Skeleton";
 import { useCartStore } from "../stores/useCartStore";
+import { useAuth } from "../hooks/useAuth";
 
 export function CheckoutPage() {
   const { state } = useLocation();
   const navigate = useNavigate();
   const { cartItems } = useCartStore();
+  const { isAuthenticated } = useAuth();
   const [isLoadingPreference, setIsLoadingPreference] = useState<boolean>(true);
   const [tours, setTours] = useState<Tour[]>([]);
   const [isToursLoading, setIsToursLoading] = useState<boolean>(true);
   const [preferenceId, setPreferenceId] = useState<string | null>(null);
+
+  // Validación de autenticación y carrito
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("/auth", { state: { from: location }, replace: true });
+      return;
+    }
+
+    if (cartItems.length === 0) {
+      navigate("/cart");
+      return;
+    }
+  }, [isAuthenticated, cartItems.length, navigate]);
 
   // Si no hay items en el carrito, redirigir a /cart
   useEffect(() => {
@@ -57,12 +72,22 @@ export function CheckoutPage() {
       return;
     }
 
-    const response = await createPreferences(tourIds);
-    if (response.ok) {
-      setPreferenceId(response.data);
+    try {
+      const response = await createPreferences(tourIds);
+      if (response.ok) {
+        setPreferenceId(response.data);
+      }
+    } catch (error: unknown) {
+      if (
+        error instanceof Error &&
+        (error as { response?: { status?: number } }).response?.status === 401
+      ) {
+        navigate("/auth", { state: { from: location }, replace: true });
+      }
+    } finally {
+      setIsLoadingPreference(false);
     }
-    setIsLoadingPreference(false);
-  }, [tourIds]);
+  }, [tourIds, navigate]);
 
   const total = useMemo(() => {
     return tours
