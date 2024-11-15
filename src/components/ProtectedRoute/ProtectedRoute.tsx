@@ -1,5 +1,6 @@
-import { Navigate, useLocation } from "react-router-dom";
+import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import { AuthDialog } from "../Auth/AuthDialog";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -7,14 +8,17 @@ interface ProtectedRouteProps {
 
 export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const { isAuthenticated, isLoading } = useAuth();
-  const location = useLocation();
+  const setShowAuthDialog = useState(false)[1];
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
+  // Si no está autenticado, mostrar el diálogo
   if (!isAuthenticated) {
-    return <Navigate to="/auth" state={{ from: location }} replace />;
+    return (
+      <AuthDialog isOpen={true} onClose={() => setShowAuthDialog(false)} />
+    );
   }
 
   return <>{children}</>;
