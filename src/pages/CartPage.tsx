@@ -62,11 +62,16 @@ export default function CartPage() {
         const selectedItems = cartItems.filter(item => item.isSelected).map(item => item.id);
         
         if (selectedItems.length === 0) {
-            alert('No hay tours seleccionados');
-            return;
+          alert('No hay tours seleccionados');
+          return;
         }
-        navigate('/checkout', { state: { tourIds: selectedItems } });
-    }
+        
+        // Usar state para pasar los tourIds
+        navigate('/checkout', { 
+          state: { tourIds: selectedItems },
+          replace: true,
+        });
+      }
 
     return (
         <div className="grid place-items-center py-10 px-5">
