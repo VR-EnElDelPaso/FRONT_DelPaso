@@ -1,4 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
+import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
 
 import HomePage from "../pages/Home";
 import TourPage from "../pages/TourPage";
@@ -36,7 +37,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/checkout",
-        element: <CheckoutPage />,
+        element: (
+          <ProtectedRoute>
+            <CheckoutPage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/tour/:id",
