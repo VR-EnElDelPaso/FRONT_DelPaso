@@ -1,17 +1,19 @@
 import { useForm } from "react-hook-form";
+import { useRegisterStore } from "@/stores/RegisterStore";
 
 type UcolStep1Props = {
   onNext: () => void;
   onBack: () => void;
 };
 
-type UcolStep1Inputs = {
+export type UcolStep1Inputs = {
   fullName: string;
   accountNumber: string;
-  ucolEmail: string;
+  email: string;
 };
 
 export const UcolStep1 = ({ onNext, onBack }: UcolStep1Props) => {
+  const { setFormInputs } = useRegisterStore();
   const {
     register,
     handleSubmit,
@@ -20,6 +22,7 @@ export const UcolStep1 = ({ onNext, onBack }: UcolStep1Props) => {
 
   const onSubmit = (data: UcolStep1Inputs) => {
     console.log(data);
+    setFormInputs(data);
     onNext();
   };
 
@@ -73,7 +76,7 @@ export const UcolStep1 = ({ onNext, onBack }: UcolStep1Props) => {
             type="email"
             placeholder="ejemplo@ucol.mx"
             className="w-full bg-gray-300/20 border border-gray-400/20 px-4 py-3 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none transition-shadow text-white placeholder-white/70"
-            {...register("ucolEmail", {
+            {...register("email", {
               required: "El correo es requerido",
               pattern: {
                 value: /@ucol\.mx$/,
@@ -81,9 +84,9 @@ export const UcolStep1 = ({ onNext, onBack }: UcolStep1Props) => {
               },
             })}
           />
-          {errors.ucolEmail && (
+          {errors.email && (
             <span className="text-red-500 text-sm">
-              {errors.ucolEmail.message}
+              {errors.email.message}
             </span>
           )}
         </div>

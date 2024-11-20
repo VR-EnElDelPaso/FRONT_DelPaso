@@ -1,4 +1,7 @@
 import { useForm } from "react-hook-form";
+import { useRegisterStore } from "@/stores/RegisterStore";
+import { useEffect } from "react";
+import { UcolStep1Inputs } from "./UcolStep1";
 
 type UcolStep2Props = {
   onBack: () => void;
@@ -10,7 +13,13 @@ type UcolStep2Inputs = {
   confirmPassword: string;
 };
 
-export const UcolStep2 = ({ onBack, onComplete }: UcolStep2Props) => {
+type ApiFormData = UcolStep1Inputs & {
+  password: string;
+  role: string;
+}
+
+export const UcolStep2 = ({ onBack }: UcolStep2Props) => {
+  const { formInputs, getUserType } = useRegisterStore();
   const {
     register,
     handleSubmit,
@@ -20,8 +29,24 @@ export const UcolStep2 = ({ onBack, onComplete }: UcolStep2Props) => {
 
   const password = watch("password");
 
-  const onSubmit = () => {
-    onComplete();
+  useEffect(() => {
+    console.log(formInputs);
+  }, [formInputs]);
+
+  const onSubmit = (data: UcolStep2Inputs) => {
+    const { password } = data;
+
+    const combinedData: ApiFormData = { 
+      ...formInputs, 
+      password,
+      role: getUserType()
+    };
+
+    try {
+      console.log(combinedData);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
