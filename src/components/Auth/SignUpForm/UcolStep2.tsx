@@ -16,7 +16,7 @@ type UcolStep2Inputs = {
 
 export const UcolStep2 = ({ onBack, onComplete }: UcolStep2Props) => {
   const { toast } = useToast();
-  const { formInputs, getUserType } = useRegisterStore();
+  const { formInputs, getUserType, getDisplayName } = useRegisterStore();
   const {
     register,
     handleSubmit,
@@ -32,7 +32,7 @@ export const UcolStep2 = ({ onBack, onComplete }: UcolStep2Props) => {
     const combinedData: RegisterUser = { 
       ...formInputs,
       account_number: parseInt(formInputs.account_number),
-      display_name: formInputs.name,
+      display_name: getDisplayName(),
       password,
       role: getUserType()
     };
