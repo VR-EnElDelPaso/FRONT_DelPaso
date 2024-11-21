@@ -3,6 +3,7 @@ import { InitialStep } from "./InitialStep";
 import { UcolStep1 } from "./UcolStep1";
 import { UcolStep2 } from "./UcolStep2";
 import { NonUcolForm } from "./NonUcolForm";
+import { useRegisterStore } from "@/stores/RegisterStore";
 
 type SignUpFormProps = {
   onToggleForm: () => void;
@@ -11,8 +12,8 @@ type SignUpFormProps = {
 const SignUpForm = ({ onToggleForm }: SignUpFormProps) => {
   const [step, setStep] = useState("initial");
   const [isAnimating, setIsAnimating] = useState(false);
+  const { setHasUcolAccount } = useRegisterStore();
 
-  // Resetear el formulario cuando se vuelve a mostrar
   useEffect(() => {
     setStep("initial");
   }, [onToggleForm]);
@@ -22,7 +23,7 @@ const SignUpForm = ({ onToggleForm }: SignUpFormProps) => {
     setTimeout(() => {
       setStep(nextStep);
       setIsAnimating(false);
-    }, 500); // Coincidir con la duración de la animación
+    }, 500);
   };
 
   const renderStep = () => {
@@ -36,7 +37,10 @@ const SignUpForm = ({ onToggleForm }: SignUpFormProps) => {
         return (
           <div className={commonClasses}>
             <InitialStep
-              onUcolYes={() => handleStepChange("ucolForm1")}
+              onUcolYes={() => {
+                handleStepChange("ucolForm1");
+                setHasUcolAccount(true);
+              }}
               onUcolNo={() => handleStepChange("nonUcolForm")}
             />
           </div>
@@ -55,7 +59,7 @@ const SignUpForm = ({ onToggleForm }: SignUpFormProps) => {
           <div className={commonClasses}>
             <UcolStep2
               onBack={() => handleStepChange("ucolForm1")}
-              onComplete={() => console.log("Registro completado")}
+              onComplete={() => onToggleForm()}
             />
           </div>
         );
@@ -64,7 +68,7 @@ const SignUpForm = ({ onToggleForm }: SignUpFormProps) => {
           <div className={commonClasses}>
             <NonUcolForm
               onBack={() => handleStepChange("initial")}
-              onComplete={() => console.log("Registro completado")}
+              onComplete={() => onToggleForm()}
             />
           </div>
         );

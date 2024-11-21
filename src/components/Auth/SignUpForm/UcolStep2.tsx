@@ -1,7 +1,8 @@
 import { useForm } from "react-hook-form";
 import { useRegisterStore } from "@/stores/RegisterStore";
-import { useEffect } from "react";
-import { UcolStep1Inputs } from "./UcolStep1";
+import { Register } from "@/services/Auth";
+import { RegisterUser } from "@/types/user";
+import { useToast } from "@/hooks/use-toast";
 
 type UcolStep2Props = {
   onBack: () => void;
@@ -13,12 +14,8 @@ type UcolStep2Inputs = {
   confirmPassword: string;
 };
 
-type ApiFormData = UcolStep1Inputs & {
-  password: string;
-  role: string;
-}
-
-export const UcolStep2 = ({ onBack }: UcolStep2Props) => {
+export const UcolStep2 = ({ onBack, onComplete }: UcolStep2Props) => {
+  const { toast } = useToast();
   const { formInputs, getUserType } = useRegisterStore();
   const {
     register,
@@ -29,23 +26,32 @@ export const UcolStep2 = ({ onBack }: UcolStep2Props) => {
 
   const password = watch("password");
 
-  useEffect(() => {
-    console.log(formInputs);
-  }, [formInputs]);
-
-  const onSubmit = (data: UcolStep2Inputs) => {
+  const onSubmit = async (data: UcolStep2Inputs) => {
     const { password } = data;
 
-    const combinedData: ApiFormData = { 
-      ...formInputs, 
+    const combinedData: RegisterUser = { 
+      ...formInputs,
+      account_number: parseInt(formInputs.account_number),
+      display_name: formInputs.name,
       password,
       role: getUserType()
     };
-
+    
     try {
-      console.log(combinedData);
-    } catch (error) {
+      await Register(combinedData);
+      toast({
+        title: "¡Registro exitoso!",
+        description: "Tu cuenta ha sido creada exitosamente.",
+        variant: "default",
+      });
+      onComplete();
+    } catch (error: unknown) {
       console.error(error);
+      toast({
+        title: "Error",
+        description: "Hubo un error al intentar registrar tu cuenta.",
+        variant: "destructive",
+      });
     }
   };
 
