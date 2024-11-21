@@ -1,8 +1,12 @@
+import { useState } from "react";
 import { RegisterUser } from "@/types/user";
 import { useForm } from "react-hook-form";
 import { useRegisterStore } from "@/stores/RegisterStore";
 import { Register } from "@/services/Auth";
 import { useToast } from "@/hooks/use-toast";
+import { AlertCircle } from "lucide-react";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { handleAuthError } from "@/utils/errorHandler";
 
 type NonUcolFormProps = {
   onBack: () => void;
@@ -25,10 +29,11 @@ export const NonUcolForm = ({ onBack, onComplete }: NonUcolFormProps) => {
     watch,
     formState: { errors },
   } = useForm<NonUcolFormInputs>();
+  const [authError, setAuthError] = useState<string>("");
 
   const password = watch("password");
 
-  const onSubmit = (data: NonUcolFormInputs) => {
+  const onSubmit = async (data: NonUcolFormInputs) => {
     const { username, email, password } = data;
 
     setFormInputs({
@@ -47,7 +52,8 @@ export const NonUcolForm = ({ onBack, onComplete }: NonUcolFormProps) => {
     }
 
     try {
-      Register(combinedData);
+      await Register(combinedData);
+      
       toast({
         title: "¡Registro exitoso!",
         description: "Tu cuenta ha sido creada exitosamente.",
@@ -56,9 +62,11 @@ export const NonUcolForm = ({ onBack, onComplete }: NonUcolFormProps) => {
       onComplete();
     } catch (error: unknown) {
       console.error(error);
+      const errorMessage = handleAuthError(error, "register");
+      setAuthError(errorMessage);
       toast({
-        title: "Error",
-        description: "Hubo un error al intentar registrar tu cuenta.",
+        title: "¡Error!",
+        description: errorMessage,
         variant: "destructive",
       });
     }
@@ -169,6 +177,16 @@ export const NonUcolForm = ({ onBack, onComplete }: NonUcolFormProps) => {
               Regresar
             </button>
           </div>
+
+          {authError && (
+            <Alert variant="destructive" className="mt-4">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                <AlertTitle>¡Error!</AlertTitle>
+                {authError}
+              </AlertDescription>
+            </Alert>
+          )}
         </form>
       </div>
     </div>
