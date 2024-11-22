@@ -20,6 +20,10 @@ type NonUcolFormInputs = {
   confirmPassword: string;
 };
 
+type RegisterNonUcolUser = Omit<RegisterUser, "account_number"> & { 
+  account_number?: number 
+};
+
 export const NonUcolForm = ({ onBack, onComplete }: NonUcolFormProps) => {
   const { toast } = useToast();
   const { getUserType, setFormInputs, getDisplayName } = useRegisterStore();
@@ -42,8 +46,7 @@ export const NonUcolForm = ({ onBack, onComplete }: NonUcolFormProps) => {
       email,
     });
 
-    const combinedData: RegisterUser = {
-      account_number: 0,
+    const combinedData: RegisterNonUcolUser = {
       name: username,
       display_name: getDisplayName(),
       email,
@@ -52,7 +55,7 @@ export const NonUcolForm = ({ onBack, onComplete }: NonUcolFormProps) => {
     }
 
     try {
-      await Register(combinedData);
+      await Register(combinedData as RegisterUser);
       
       toast({
         title: "¡Registro exitoso!",
