@@ -93,6 +93,10 @@ export const NonUcolForm = ({ onBack, onComplete }: NonUcolFormProps) => {
                   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                   message: "Correo inválido",
                 },
+                validate: {
+                  noSpecificDomain: (value) =>
+                    !value.endsWith("@ucol.mx") || "No se permiten correos UCOL en esta opción",
+                },
               })}
             />
             {errors.email && (
