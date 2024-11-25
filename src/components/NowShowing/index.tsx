@@ -1,42 +1,50 @@
 import Carousel from "./Carousel";
-import MuseumStatus from "./MuseumStatus";
+// import MuseumStatus from "./MuseumStatus";
 import { useNavigate } from "react-router-dom";
 
 export default function NowShowing() {
-    const navigate = useNavigate();
-  
-    const handleRedirect = () => {
-      navigate('/tours');
-    }
+ const navigate = useNavigate();
 
-    return (
-        <div className="container mx-auto">
-            {/* MuseumStatus */}
-            <div className="flex justify-end p-5">
-                <MuseumStatus />
-            </div>
-            <div className="container mx-auto px-4 md:px-10 max-w-7xl">
-                {/* Title */}
-                <div className="mb-8">
-                    <div className="flex items-center">
-                        <span className="text-xl mr-2 text-primary">•</span>
-                        <p className="text-sm font-medium text-primary tracking-widest uppercase">
-                          Mejores puntuados
-                        </p>
-                    </div>
-                    <h1 className="text-3xl md:text-5xl font-kaiseiDecol mt-2">Recorridos Virtuales</h1>
-                </div>
-                
-                {/* Carousel */}
-                <div className="flex-col md:flex-row">
-                    <Carousel />
-                </div>
+ const handleRedirect = () => {
+   navigate("/tours");
+ };
 
-                {/* Button */}
-                <div className="flex justify-center p-4">
-                    <button className="bg-black text-white font-bold py-2 px-4 rounded-full" onClick={handleRedirect}>Ver todos</button>
-                </div>
-            </div>
-        </div>
-    );
+ return (
+   <div className="block py-12 sm:py-16 md:py-20">
+     {/* MuseumStatus */}
+     {/* <div className="absolute right-0 top-0 p-4 sm:p-5 z-10">
+       <MuseumStatus />
+     </div> */}
+
+     <div className="container mx-auto flex flex-col px-4 sm:px-6 md:px-8">
+       {/* Title */}
+       <div className="mb-6 sm:mb-8">
+         <div className="flex text-primary/50 items-center mb-2">
+           <span className="text-lg sm:text-xl mr-2">•</span>
+           <p className="text-xs sm:text-sm font-bold tracking-widest uppercase">
+             Actuales
+           </p>
+         </div>
+         <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-kaiseiDecol">
+           Recorridos Virtuales
+         </h1>
+       </div>
+
+       {/* Carousel */}
+       <div className="w-full mb-8 sm:mb-10">
+         <Carousel />
+       </div>
+
+       {/* Button */}
+       <div className="flex justify-center mb-8 sm:mb-10">
+        <button
+          className="text-primary/75 underline underline-offset-2 text-sm sm:text-base font-medium py-2.5 px-6 sm:px-8"
+          onClick={handleRedirect}
+        >
+          Ver todo
+        </button>
+       </div>
+     </div>
+   </div>
+ );
 }
