@@ -47,4 +47,25 @@ export const ReviewService = {
       throw error;
     }
   },
+
+  getReviewsByTour: async (
+    tourId: string,
+    take: number,
+    skip: number
+  ): Promise<ResponseData> => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/reviews/${tourId}/reviews?take=${take}&skip=${skip}`
+      );
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        throw new Error(
+          error.response?.data?.message ||
+            "Error fetching reviews. Please try again."
+        );
+      }
+      throw error;
+    }
+  },
 };
