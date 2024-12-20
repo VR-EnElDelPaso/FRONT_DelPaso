@@ -1,7 +1,7 @@
 // src/pages/TourRoutePage.tsx
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import Dialog from "../shared/components/Tour/Dialog";
+import ReviewDialog from "../shared/components/Tour/ReviewDialog";
 import TourIframe from "../shared/components/Tour/TourIframe";
 import useFetchTourById from "../hooks/useFetchTourById";
 import { dateFormatter } from "../utils/dateFormatter";
@@ -49,7 +49,7 @@ export default function TourRoutePage() {
           <p className="uppercase text-sm">{dateFormatter(tour.created_at)}</p>
         </div>
 
-        <Dialog
+        <ReviewDialog
           isOpen={isDialogOpen}
           onClose={() => setIsDialogOpen(false)}
           onSubmit={handleSubmit}
