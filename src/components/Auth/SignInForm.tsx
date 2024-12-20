@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { AxiosError } from "axios";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { LocalLogin } from "@/services/Auth";
 import ResponseData from "@/types/ResponseData";
@@ -8,6 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import RecoveryPasswordForm from "./RecoveryPasswordForm";
+import { handleAuthError } from "@/utils/errorHandler";
 
 type SignInFormInputs = {
   email: string;
@@ -49,30 +49,8 @@ export const SignInForm = ({ resetRecovery }: SignInFormProps) => {
       navigate(from, { replace: true });
     } catch (error: unknown) {
       console.error("Login error:", error);
-
-      if (error instanceof AxiosError && error.response) {
-        switch (error.response.status) {
-          case 401:
-            setAuthError("Correo o contraseña incorrectas");
-            break;
-          case 404:
-            setAuthError("El servicio no está disponible");
-            break;
-          case 500:
-            setAuthError("Error en el servidor. Por favor, intente más tarde");
-            break;
-          default:
-            setAuthError(
-              "Error al iniciar sesión. Por favor, intente de nuevo"
-            );
-        }
-      } else if ((error as AxiosError).request) {
-        setAuthError(
-          "No se pudo conectar con el servidor. Verifique su conexión"
-        );
-      } else {
-        setAuthError("Error al procesar la solicitud");
-      }
+      const errorMessage = handleAuthError(error, "login");
+      setAuthError(errorMessage);
     }
   };
 

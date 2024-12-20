@@ -1,17 +1,19 @@
 import { useForm } from "react-hook-form";
+import { useRegisterStore } from "@/stores/RegisterStore";
 
 type UcolStep1Props = {
   onNext: () => void;
   onBack: () => void;
 };
 
-type UcolStep1Inputs = {
-  fullName: string;
-  accountNumber: string;
-  ucolEmail: string;
+export type UcolStep1Inputs = {
+  name: string;
+  account_number: string;
+  email: string;
 };
 
 export const UcolStep1 = ({ onNext, onBack }: UcolStep1Props) => {
+  const { setFormInputs } = useRegisterStore();
   const {
     register,
     handleSubmit,
@@ -19,7 +21,7 @@ export const UcolStep1 = ({ onNext, onBack }: UcolStep1Props) => {
   } = useForm<UcolStep1Inputs>();
 
   const onSubmit = (data: UcolStep1Inputs) => {
-    console.log(data);
+    setFormInputs(data);
     onNext();
   };
 
@@ -33,7 +35,7 @@ export const UcolStep1 = ({ onNext, onBack }: UcolStep1Props) => {
             type="text"
             placeholder="Nombre y Apellidos"
             className="w-full bg-gray-300/20 border border-gray-400/20 px-4 py-3 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none transition-shadow text-white placeholder-white/70"
-            {...register("fullName", {
+            {...register("name", {
               required: "El nombre es requerido",
               minLength: {
                 value: 3,
@@ -41,9 +43,9 @@ export const UcolStep1 = ({ onNext, onBack }: UcolStep1Props) => {
               },
             })}
           />
-          {errors.fullName && (
+          {errors.name && (
             <span className="text-red-500 text-sm">
-              {errors.fullName.message}
+              {errors.name.message}
             </span>
           )}
         </div>
@@ -53,7 +55,7 @@ export const UcolStep1 = ({ onNext, onBack }: UcolStep1Props) => {
             type="text"
             placeholder="Número de cuenta"
             className="w-full bg-gray-300/20 border border-gray-400/20 px-4 py-3 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none transition-shadow text-white placeholder-white/70"
-            {...register("accountNumber", {
+            {...register("account_number", {
               required: "El número de cuenta es requerido",
               pattern: {
                 value: /^\d{8}$/,
@@ -61,9 +63,9 @@ export const UcolStep1 = ({ onNext, onBack }: UcolStep1Props) => {
               },
             })}
           />
-          {errors.accountNumber && (
+          {errors.account_number && (
             <span className="text-red-500 text-sm">
-              {errors.accountNumber.message}
+              {errors.account_number.message}
             </span>
           )}
         </div>
@@ -73,7 +75,7 @@ export const UcolStep1 = ({ onNext, onBack }: UcolStep1Props) => {
             type="email"
             placeholder="ejemplo@ucol.mx"
             className="w-full bg-gray-300/20 border border-gray-400/20 px-4 py-3 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none transition-shadow text-white placeholder-white/70"
-            {...register("ucolEmail", {
+            {...register("email", {
               required: "El correo es requerido",
               pattern: {
                 value: /@ucol\.mx$/,
@@ -81,9 +83,9 @@ export const UcolStep1 = ({ onNext, onBack }: UcolStep1Props) => {
               },
             })}
           />
-          {errors.ucolEmail && (
+          {errors.email && (
             <span className="text-red-500 text-sm">
-              {errors.ucolEmail.message}
+              {errors.email.message}
             </span>
           )}
         </div>

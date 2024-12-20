@@ -1,4 +1,8 @@
 import { useForm } from "react-hook-form";
+import { useRegisterStore } from "@/stores/RegisterStore";
+import { Register } from "@/services/Auth";
+import { RegisterUser } from "@/types/user";
+import { useToast } from "@/hooks/use-toast";
 
 type UcolStep2Props = {
   onBack: () => void;
@@ -11,6 +15,8 @@ type UcolStep2Inputs = {
 };
 
 export const UcolStep2 = ({ onBack, onComplete }: UcolStep2Props) => {
+  const { toast } = useToast();
+  const { formInputs, getUserType, getDisplayName } = useRegisterStore();
   const {
     register,
     handleSubmit,
@@ -20,8 +26,33 @@ export const UcolStep2 = ({ onBack, onComplete }: UcolStep2Props) => {
 
   const password = watch("password");
 
-  const onSubmit = () => {
-    onComplete();
+  const onSubmit = async (data: UcolStep2Inputs) => {
+    const { password } = data;
+
+    const combinedData: RegisterUser = { 
+      ...formInputs,
+      account_number: parseInt(formInputs.account_number),
+      display_name: getDisplayName(),
+      password,
+      role: getUserType()
+    };
+    
+    try {
+      await Register(combinedData);
+      toast({
+        title: "¡Registro exitoso!",
+        description: "Tu cuenta ha sido creada exitosamente.",
+        variant: "default",
+      });
+      onComplete();
+    } catch (error: unknown) {
+      console.error(error);
+      toast({
+        title: "Error",
+        description: "Hubo un error al intentar registrar tu cuenta.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (

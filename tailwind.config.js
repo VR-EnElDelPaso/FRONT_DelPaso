@@ -32,6 +32,7 @@ export default {
       fontFamily: {
         kaiseiDecol: ["Kaisei Decol", "sans-serif"],
         inter: ["Inter", "sans-serif"],
+        outfit: ["Outfit", "sans-serif"],
       },
       backgroundColor: {
         secondary: "#5F5EA3",

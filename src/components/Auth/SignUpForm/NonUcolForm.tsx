@@ -1,4 +1,12 @@
+import { useState } from "react";
+import { RegisterUser } from "@/types/user";
 import { useForm } from "react-hook-form";
+import { useRegisterStore } from "@/stores/RegisterStore";
+import { Register } from "@/services/Auth";
+import { useToast } from "@/hooks/use-toast";
+import { AlertCircle } from "lucide-react";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { handleAuthError } from "@/utils/errorHandler";
 
 type NonUcolFormProps = {
   onBack: () => void;
@@ -12,18 +20,59 @@ type NonUcolFormInputs = {
   confirmPassword: string;
 };
 
+type RegisterNonUcolUser = Omit<RegisterUser, "account_number"> & { 
+  account_number?: number 
+};
+
 export const NonUcolForm = ({ onBack, onComplete }: NonUcolFormProps) => {
+  const { toast } = useToast();
+  const { getUserType, setFormInputs, getDisplayName } = useRegisterStore();
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
   } = useForm<NonUcolFormInputs>();
+  const [authError, setAuthError] = useState<string>("");
 
   const password = watch("password");
 
-  const onSubmit = () => {
-    onComplete();
+  const onSubmit = async (data: NonUcolFormInputs) => {
+    const { username, email, password } = data;
+
+    setFormInputs({
+      name: username,
+      account_number: "",
+      email,
+    });
+
+    const combinedData: RegisterNonUcolUser = {
+      name: username,
+      display_name: getDisplayName(),
+      email,
+      password,
+      role: getUserType(),
+    }
+
+    try {
+      await Register(combinedData as RegisterUser);
+      
+      toast({
+        title: "¡Registro exitoso!",
+        description: "Tu cuenta ha sido creada exitosamente.",
+        variant: "default",
+      });
+      onComplete();
+    } catch (error: unknown) {
+      console.error(error);
+      const errorMessage = handleAuthError(error, "register");
+      setAuthError(errorMessage);
+      toast({
+        title: "¡Error!",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -43,6 +92,10 @@ export const NonUcolForm = ({ onBack, onComplete }: NonUcolFormProps) => {
                 pattern: {
                   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                   message: "Correo inválido",
+                },
+                validate: {
+                  noSpecificDomain: (value) =>
+                    !value.endsWith("@ucol.mx") || "No se permiten correos UCOL en esta opción",
                 },
               })}
             />
@@ -131,6 +184,16 @@ export const NonUcolForm = ({ onBack, onComplete }: NonUcolFormProps) => {
               Regresar
             </button>
           </div>
+
+          {authError && (
+            <Alert variant="destructive" className="mt-4">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                <AlertTitle>¡Error!</AlertTitle>
+                {authError}
+              </AlertDescription>
+            </Alert>
+          )}
         </form>
       </div>
     </div>

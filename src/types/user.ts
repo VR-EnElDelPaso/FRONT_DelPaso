@@ -11,10 +11,19 @@ export default interface User {
   exp: number;
 }
 
-enum UserType {
+export interface RegisterUser {
+  account_number: number;
+  name: string;
+  display_name: string;
+  email: string;
+  password: string;
+  role: UserType;
+}
+
+export enum UserType {
   ADMIN = 'ADMIN',
   VISITOR = 'VISITOR',
-  UDC_STUDENT = 'UDC_STUDENT',
-  UDC_EMPLOYEE = 'UDC_EMPLOYEE',
+  STUDENT = 'STUDENT',
+  WORKER = 'WORKER',
 }
 
