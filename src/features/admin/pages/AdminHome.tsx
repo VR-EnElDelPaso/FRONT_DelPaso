@@ -2,7 +2,7 @@
 const AdminHome = () => {
   return (
     <div>
-      <h1>AdminPage</h1>
+      <h1>Admin Principal</h1>
     </div>
   )
 }

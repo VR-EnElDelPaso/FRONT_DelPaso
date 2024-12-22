@@ -13,7 +13,7 @@ import TourRoutePage from "../pages/TourRoutePage";
 import Auth from "@/pages/Auth";
 import AdminProtectedRoute from "@/features/admin/routes/AdminProtectedRoute";
 import AdminLayout from "@/features/admin/AdminLayout";
-import AdminHome from "@/features/admin/pages/AdminHome";
+import adminRoutes from "@/features/admin/routes";
 
 const router = createBrowserRouter([
   {
@@ -33,12 +33,7 @@ const router = createBrowserRouter([
         <AdminLayout />
       </AdminProtectedRoute>
     ),
-    children: [
-      {
-        index: true,
-        element: <AdminHome />,
-      },
-    ],
+    children: [ ...adminRoutes.children ]
   },
   {
     path: "/",
