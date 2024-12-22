@@ -11,6 +11,9 @@ import CartPage from "../pages/CartPage";
 import { CheckoutPage } from "../pages/Checkout";
 import TourRoutePage from "../pages/TourRoutePage";
 import Auth from "@/pages/Auth";
+import AdminProtectedRoute from "@/features/admin/routes/AdminProtectedRoute";
+import AdminLayout from "@/features/admin/AdminLayout";
+import AdminHome from "@/features/admin/pages/AdminHome";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +23,20 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Auth />,
+      },
+    ],
+  },
+  {
+    path: "/admin",
+    element: (
+      <AdminProtectedRoute>
+        <AdminLayout />
+      </AdminProtectedRoute>
+    ),
+    children: [
+      {
+        index: true,
+        element: <AdminHome />,
       },
     ],
   },
