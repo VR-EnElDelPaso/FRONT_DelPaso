@@ -1,6 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, User, ChartBar, LogOut } from "lucide-react";
-import { MdOutlineMuseum } from "react-icons/md";
+import { LogOut } from "lucide-react";
 import { 
   Sidebar, 
   SidebarContent,
@@ -12,34 +11,12 @@ import {
   SidebarFooter
 } from "@/components/ui/sidebar";
 import Muvi from "@/assets/images/muvi.jpg";
+import { navigationItems } from "../constants/navigationItems";
 import { useAuth } from "@/hooks/useAuth";
-
-const navigationItems = [
-  {
-    title: "Dashboard",
-    icon: Home,
-    url: "/admin",
-  },
-  {
-    title: "Usuarios",
-    icon: User,
-    url: "/admin/users",
-  },
-  {
-    title: "Museos",
-    icon: MdOutlineMuseum,
-    url: "/admin/museums",
-  },
-  {
-    title: "Estadísticas",
-    icon: ChartBar,
-    url: "/admin/stats",
-  },
-];
 
 const AdminSidebar = () => {
   const location = useLocation();
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
 
   const isActiveRoute = (url: string) => {
     if (url === '/admin') {
@@ -60,6 +37,7 @@ const AdminSidebar = () => {
             alt="Muvi logo" 
             className="w-20 h-20 rounded-full object-cover mx-auto shadow-sm"
           />
+          <h1 className="mt-4 text-lg font-semibold text-center">{user?.display_name}</h1>
         </SidebarHeader>
 
         <SidebarGroup className="flex-1 px-3 py-8">

@@ -11,7 +11,7 @@ import CartPage from "../pages/CartPage";
 import { CheckoutPage } from "../pages/Checkout";
 import TourRoutePage from "../pages/TourRoutePage";
 import Auth from "@/pages/Auth";
-import AdminProtectedRoute from "@/features/admin/routes/AdminProtectedRoute";
+import AdminProtectedRoute from "@/features/admin/components/AdminProtectedRoute";
 import AdminLayout from "@/features/admin/AdminLayout";
 import adminRoutes from "@/features/admin/routes";
 
