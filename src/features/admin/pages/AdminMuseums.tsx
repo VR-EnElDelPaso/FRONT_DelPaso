@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { useLoaderData } from "react-router-dom";
 import { DataTable } from "@/shared/components/DataTable";
 import { Museum } from "@/types/Museums";
 import PhotoCellModal from "@/shared/components/PhotoCellModal";
+import MuseumForm from "../components/MuseumForm";
 
 interface LoaderData {
   data: Museum[];
@@ -33,6 +35,7 @@ const columns: ColumnDef<Museum>[] = [
 
 const AdminMuseums = () => {
   const { data } = useLoaderData() as LoaderData;
+  const [formVisible, setFormVisible] = useState(false);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -47,8 +50,22 @@ const AdminMuseums = () => {
         </div>
 
         <div className="bg-white rounded-lg overflow-hidden">
-          <DataTable columns={columns} data={data} />
+          <DataTable 
+            columns={columns} 
+            data={data} 
+            canCreate={true}
+            createText="Crear nuevo museo"
+            onCreate={() => setFormVisible(true)}
+          />
         </div>
+
+        {formVisible && (
+          <MuseumForm 
+            isOpen={formVisible}
+            onClose={() => setFormVisible(false)}
+            onSubmit={(values) => {console.log(values)}}
+          />
+        )}
       </div>
     </div>
   );
