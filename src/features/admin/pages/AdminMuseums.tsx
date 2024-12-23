@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useRevalidator } from "react-router-dom";
 import { DataTable } from "@/shared/components/DataTable";
 import { Museum } from "@/types/Museums";
 import PhotoCellModal from "@/shared/components/PhotoCellModal";
 import MuseumForm from "../components/MuseumForm";
+import { createMuseum } from "@/services/Museums";
+import { useToast } from "@/hooks/use-toast";
 
 interface LoaderData {
   data: Museum[];
@@ -34,8 +36,32 @@ const columns: ColumnDef<Museum>[] = [
 ];
 
 const AdminMuseums = () => {
+  const { toast } = useToast();
   const { data } = useLoaderData() as LoaderData;
+  const { revalidate } = useRevalidator();
   const [formVisible, setFormVisible] = useState(false);
+
+  const onSubmit = async (values: Partial<Museum>) => {
+    try {
+      const response = await createMuseum(values as Museum);
+      if (response) {
+        setFormVisible(false);
+        revalidate();
+        toast({
+          title: "¡Museo creado!",
+          description: "El museo ha sido creado exitosamente.",
+          variant: "default",
+        });
+      }
+    } catch (error: unknown) {
+      console.error(error);
+      toast({
+        title: "Error",
+        description: "Hubo un error al intentar crear el museo.",
+        variant: "destructive",
+      });
+    }
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -63,7 +89,7 @@ const AdminMuseums = () => {
           <MuseumForm 
             isOpen={formVisible}
             onClose={() => setFormVisible(false)}
-            onSubmit={(values) => {console.log(values)}}
+            onSubmit={onSubmit}
           />
         )}
       </div>

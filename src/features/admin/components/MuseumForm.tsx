@@ -25,6 +25,7 @@ const formSchema = z.object({
   name: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
   description: z.string().min(10, "La descripción debe tener al menos 10 caracteres"),
   address_name: z.string().min(5, "La dirección debe tener al menos 5 caracteres"),
+  main_photo: z.string(),
 })
 
 interface MuseumFormProps {
@@ -40,13 +41,14 @@ const MuseumForm = ({ isOpen, onClose, onSubmit }: MuseumFormProps) => {
       name: "",
       description: "",
       address_name: "",
+      main_photo: "",
     },
   })
 
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
-    onSubmit(values)
-    form.reset()
-    onClose()
+    onSubmit(values);
+    form.reset();
+    onClose();
   }
 
   return (
@@ -103,6 +105,20 @@ const MuseumForm = ({ isOpen, onClose, onSubmit }: MuseumFormProps) => {
                   <FormLabel>Dirección</FormLabel>
                   <FormControl>
                     <Input placeholder="Dirección del museo" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="main_photo"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Foto del</FormLabel>
+                  <FormControl>
+                    <Input placeholder="URL de la foto principal" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

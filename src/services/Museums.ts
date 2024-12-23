@@ -11,3 +11,8 @@ export const getAllMuseums = async (): Promise<MuseumsResponse> => {
   const response = await axios.get<MuseumsResponse>(`${apiBaseUrl}/museums`);
   return response.data;
 };
+
+export const createMuseum = async (museum: Museum): Promise<Museum> => {
+  const response = await axios.post(`${apiBaseUrl}/museums`, museum);
+  return response.data;
+}
