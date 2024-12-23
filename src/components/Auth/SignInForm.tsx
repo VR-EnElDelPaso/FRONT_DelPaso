@@ -40,17 +40,12 @@ export const SignInForm = ({ resetRecovery }: SignInFormProps) => {
     formState: { errors, isSubmitting },
   } = useForm<SignInFormInputs>();
   
-  const simulatedToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjlkOTMzNGY5LTJmNDktNDk5MS1iOTdkLTEyNDQxMjA0NjhjYyIsImFjY291bnRfbnVtYmVyIjoyMDE4Mzg5MCwibmFtZSI6Ik1pZ3VlbCBBbmdlbCIsImRpc3BsYXlfbmFtZSI6Ik1pZ3VlbCIsImVtYWlsIjoibWlndWVsQGV4YW1wbGUuY29tIiwicm9sZSI6IkFETUlOIiwiY3JlYXRlZF9hdCI6IjIwMjQtMTItMTNUMjI6MjA6NTMuNTQyWiIsInVwZGF0ZWRfYXQiOiIyMDI0LTEyLTEzVDIyOjIwOjUzLjU0MloiLCJlbWFpbFZlcmlmaWVkIjpudWxsLCJpbWFnZSI6bnVsbCwiaWF0IjoxNzM0ODQ4MTQ3LCJleHAiOjE3MzQ5MzQ1NDd9.fbd1xIKZa1K0rM7GySfKIBY4CGuyiUUZjaUd2bOyivM";
-
   const onSubmit: SubmitHandler<SignInFormInputs> = async (data) => {
     try {
       setAuthError("");
       const response = await LocalLogin(data.email, data.password);
       const responseData: ResponseData = response.data;
-      console.log(responseData);
-      // login(responseData.data.token);
-      login(simulatedToken);
-      console.log('to gud');
+      login(responseData.data.token);
       navigate(from, { replace: true });
     } catch (error: unknown) {
       console.error("Login error:", error);
