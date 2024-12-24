@@ -5,7 +5,7 @@ import { DataTable } from "@/shared/components/DataTable";
 import { Museum } from "@/types/Museums";
 import PhotoCellModal from "@/shared/components/PhotoCellModal";
 import MuseumForm from "../components/MuseumForm";
-import { createMuseum } from "@/services/Museums";
+import { createMuseum, deleteMuseum, editMuseum } from "@/services/Museums";
 import { useToast } from "@/hooks/use-toast";
 
 interface LoaderData {
@@ -40,27 +40,68 @@ const AdminMuseums = () => {
   const { data } = useLoaderData() as LoaderData;
   const { revalidate } = useRevalidator();
   const [formVisible, setFormVisible] = useState(false);
+  const [initialValues, setInitialValues] = useState<Museum | undefined>(undefined);
 
   const onSubmit = async (values: Partial<Museum>) => {
+    // todo: mejorar esta parte para no repetir lo mismo
     try {
-      const response = await createMuseum(values as Museum);
-      if (response) {
-        setFormVisible(false);
-        revalidate();
-        toast({
-          title: "¡Museo creado!",
-          description: "El museo ha sido creado exitosamente.",
-          variant: "default",
-        });
+      if (initialValues) {
+        const response = await editMuseum(initialValues.id, values as Museum);
+        if (response) {
+          setFormVisible(false);
+          setInitialValues(undefined);
+          revalidate();
+          toast({
+            title: "¡Museo actualizado!",
+            description: "El museo ha sido actualizado exitosamente.",
+            variant: "default",
+          });
+        }
+      } else {
+        const response = await createMuseum(values as Museum);
+        if (response) {
+          setFormVisible(false);
+          setInitialValues(undefined);
+          revalidate();
+          toast({
+            title: "¡Museo creado!",
+            description: "El museo ha sido creado exitosamente.",
+            variant: "default",
+          });
+        }
       }
     } catch (error: unknown) {
       console.error(error);
       toast({
         title: "Error",
-        description: "Hubo un error al intentar crear el museo.",
+        description: "Hubo un error en la operación solicitada.",
         variant: "destructive",
       });
     }
+  }
+
+  const onDelete = async (id: string) => {
+    try {
+      await deleteMuseum(id);
+      revalidate();
+      toast({
+        title: "¡Museo eliminado!",
+        description: "El museo ha sido eliminado exitosamente.",
+        variant: "default",
+      });
+    } catch (error: unknown) {
+      console.error(error);
+      toast({
+        title: "Error",
+        description: "Hubo un error al intentar eliminar el museo.",
+        variant: "destructive",
+      });
+    }
+  }
+
+  const handleClose = () => {
+    setFormVisible(false);
+    setInitialValues(undefined);
   }
 
   return (
@@ -79,17 +120,25 @@ const AdminMuseums = () => {
           <DataTable 
             columns={columns} 
             data={data} 
-            canCreate={true}
+            canCreate
             createText="Crear nuevo museo"
             onCreate={() => setFormVisible(true)}
+            canEdit
+            canDelete
+            onEdit={(values) => {
+              setInitialValues(values);
+              setFormVisible(true);
+            }}
+            onDelete={(values) => onDelete(values.id)}
           />
         </div>
 
         {formVisible && (
           <MuseumForm 
             isOpen={formVisible}
-            onClose={() => setFormVisible(false)}
+            onClose={handleClose}
             onSubmit={onSubmit}
+            initialValues={initialValues}
           />
         )}
       </div>

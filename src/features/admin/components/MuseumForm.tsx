@@ -32,12 +32,26 @@ interface MuseumFormProps {
   isOpen: boolean
   onClose: () => void
   onSubmit: (data: z.infer<typeof formSchema>) => void
+  initialValues?: {
+    id?: string
+    name: string
+    description: string
+    address_name: string
+    main_photo: string
+    main_tour_id?: string | null
+    created_at?: string
+    updated_at?: string
+  }
 }
-
-const MuseumForm = ({ isOpen, onClose, onSubmit }: MuseumFormProps) => {
+const MuseumForm = ({ isOpen, onClose, onSubmit, initialValues }: MuseumFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
+    defaultValues: initialValues ? {
+      name: initialValues.name,
+      description: initialValues.description,
+      address_name: initialValues.address_name,
+      main_photo: initialValues.main_photo,
+    } : {
       name: "",
       description: "",
       address_name: "",
@@ -55,11 +69,11 @@ const MuseumForm = ({ isOpen, onClose, onSubmit }: MuseumFormProps) => {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[600px p-6]" aria-describedby="dialog-description">
         <DialogHeader className="space-y-3 pb-4 border-b">
-          <DialogTitle className="text-2xl font-semibold tracking-tight">
-            Crear nuevo museo
-          </DialogTitle>
+        <DialogTitle className="text-2xl font-semibold tracking-tight">
+          {initialValues ? 'Editar museo' : 'Crear nuevo museo'}
+        </DialogTitle>
           <DialogDescription className="text-base text-gray-500" id="dialog-description">
-            Complete los campos para agregar un nuevo museo al sistema.
+            {initialValues ? 'Edite la información del museo seleccionado' : 'Complete los campos para agregar un nuevo museo al sistema.'}
           </DialogDescription>
         </DialogHeader>
 
@@ -116,7 +130,7 @@ const MuseumForm = ({ isOpen, onClose, onSubmit }: MuseumFormProps) => {
               name="main_photo"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Foto del</FormLabel>
+                  <FormLabel>Foto del museo</FormLabel>
                   <FormControl>
                     <Input placeholder="URL de la foto principal" {...field} />
                   </FormControl>

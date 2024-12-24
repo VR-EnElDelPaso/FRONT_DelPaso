@@ -16,3 +16,13 @@ export const createMuseum = async (museum: Museum): Promise<Museum> => {
   const response = await axios.post(`${apiBaseUrl}/museums`, museum);
   return response.data;
 }
+
+export const editMuseum = async (id: string, museum: Museum): Promise<Museum> => {
+  const response = await axios.patch(`${apiBaseUrl}/museums/${id}`, museum);
+  return response.data;
+}
+
+export const deleteMuseum = async (id: string): Promise<void> => {
+  const response = await axios.delete(`${apiBaseUrl}/museums/${id}`);
+  return response.data;
+}
