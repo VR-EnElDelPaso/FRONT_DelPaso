@@ -16,7 +16,7 @@ import { useAuth } from "@/hooks/useAuth";
 
 const AdminSidebar = () => {
   const location = useLocation();
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
 
   const isActiveRoute = (url: string) => {
     if (url === '/admin') {
@@ -37,7 +37,6 @@ const AdminSidebar = () => {
             alt="Muvi logo" 
             className="w-20 h-20 rounded-full object-cover mx-auto shadow-sm"
           />
-          <h1 className="mt-4 text-lg font-semibold text-center">{user?.display_name}</h1>
         </SidebarHeader>
 
         <SidebarGroup className="flex-1 px-3 py-8">
