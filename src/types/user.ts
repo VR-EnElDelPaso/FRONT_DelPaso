@@ -4,7 +4,7 @@ export default interface User {
   name: string;
   display_name: string;
   email: string;
-  type: UserType;
+  role: UserType;
   created_at: string;
   updated_at: string;
   iat: number;

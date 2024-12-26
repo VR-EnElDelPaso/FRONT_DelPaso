@@ -39,7 +39,7 @@ export const SignInForm = ({ resetRecovery }: SignInFormProps) => {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<SignInFormInputs>();
-
+  
   const onSubmit: SubmitHandler<SignInFormInputs> = async (data) => {
     try {
       setAuthError("");
