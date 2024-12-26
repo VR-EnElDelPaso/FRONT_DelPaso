@@ -87,6 +87,12 @@ export function DataTable<TData, TValue>({
                         )}
                   </TableHead>
                 ))}
+                {/* Agregamos el header de acciones */}
+                {(canEdit || canDelete) && (
+                  <TableHead className="py-3 px-4 text-left font-medium text-gray-700">
+                    Acciones
+                  </TableHead>
+                )}
               </TableRow>
             ))}
           </TableHeader>
