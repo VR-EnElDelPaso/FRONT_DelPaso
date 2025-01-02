@@ -129,7 +129,7 @@ const TourForm = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] p-0">
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] p-0 font-inter">
         <ScrollArea className="h-full max-h-[90vh]">
           <div className="p-6">
             <DialogHeader className="space-y-3 pb-4 border-b">
