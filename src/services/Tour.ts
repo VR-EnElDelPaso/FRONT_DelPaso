@@ -75,13 +75,46 @@ export const editTour = async (
   return response.data;
 };
 
+//delete reviews by tour id
+const deleteReviewsByTourId = async (tourId: string): Promise<void> => {
+  try {
+    const token = localStorage.getItem("auth-token");
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    };
+
+    const response = await axios.get(`${apiBaseUrl}/reviews/${tourId}/reviews`);
+    const reviews = response.data.data.reviews;
+
+    // Eliminar cada review individualmente con el token
+    await Promise.all(
+      reviews.map((review: { id: string }) =>
+        axios.delete(`${apiBaseUrl}/reviews/${review.id}`, { headers })
+      )
+    );
+  } catch (error) {
+    console.error("Error deleting reviews:", error);
+    throw error;
+  }
+};
+
 //delete tour
 export const deleteTour = async (id: string): Promise<ResponseData> => {
   try {
+    const token = localStorage.getItem("auth-token");
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    };
+
     // Primero eliminamos las reviews asociadas
-    await axios.delete(`${apiBaseUrl}/tour/${id}/reviews`);
+    await deleteReviewsByTourId(id);
+
     // Luego eliminamos el tour
-    const response = await axios.delete(`${apiBaseUrl}/tour/${id}`);
+    const response = await axios.delete(`${apiBaseUrl}/tour/${id}`, {
+      headers,
+    });
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
