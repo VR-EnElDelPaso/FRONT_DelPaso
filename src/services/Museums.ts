@@ -4,7 +4,9 @@ import axios from "axios";
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
 interface MuseumsResponse {
-  data: Museum[]
+  ok: boolean;
+  message: string;
+  data: Museum[];
 }
 
 export const getAllMuseums = async (): Promise<MuseumsResponse> => {
