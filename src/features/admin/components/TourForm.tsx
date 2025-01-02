@@ -25,6 +25,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Museum } from "@/types/Museums";
 import { getAllMuseums } from "@/services/Museums";
 import { ChevronDown } from "lucide-react";
+import ImageUpload from "@/shared/components/ImageUpload";
 
 const formSchema = z.object({
   name: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
@@ -36,7 +37,7 @@ const formSchema = z.object({
     .regex(/^\d+(\.\d{1,2})?$/, "El precio debe ser un número válido"),
   stars: z.number().min(0).max(5),
   url: z.string().url("Debe ser una URL válida"),
-  image_url: z.string().url("Debe ser una URL válida de imagen"),
+  image_url: z.string().min(1, "La imagen es requerida"),
   museum_id: z.string().uuid("Debes seleccionar un museo válido"),
 });
 
@@ -240,11 +241,13 @@ const TourForm = ({
                   name="image_url"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>URL de la imagen</FormLabel>
+                      <FormLabel>Imagen del tour</FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="https://example.com/image.jpg"
-                          {...field}
+                        <ImageUpload
+                          value={field.value}
+                          onChange={field.onChange}
+                          onClear={() => field.onChange("")}
+                          error={!!form.formState.errors.image_url}
                         />
                       </FormControl>
                       <FormMessage />
