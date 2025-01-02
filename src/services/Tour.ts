@@ -12,7 +12,7 @@ export const getAllTours = async () => {
   const response = await axios.get(`${apiBaseUrl}/tour`, { 
     headers,
   });
-  return response.data;   
+  return response.data.data;   
 };
 
 //get tours
@@ -28,7 +28,7 @@ export const getTours = async (tourIds: string[]): Promise<ResponseData> => {
 export const getTourById = async (id: string) => {
   try {
     const response = await axios.get(`${apiBaseUrl}/tour/${id}`, { headers });
-    return response.data;
+    return response.data.data;
   } catch (error) {
     console.error('Error fetching tour', error);
     return null;
