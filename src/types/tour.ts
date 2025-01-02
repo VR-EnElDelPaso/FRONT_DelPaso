@@ -2,7 +2,7 @@ export interface Tour {
   id: string;
   name: string;
   description: string;
-  price: string;
+  price: number;
   stars: number;
   url: string;
   image_url: string;
