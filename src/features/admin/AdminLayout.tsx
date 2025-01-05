@@ -19,7 +19,7 @@ const AdminLayout = () => {
 
   return (
     <SidebarProvider>
-      <div className="flex h-screen w-full">
+      <div className="flex h-screen w-full font-inter">
         <AdminSidebar />
         <div className="flex flex-col w-full">
           <header className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b bg-white dark:bg-gray-900 w-full">
@@ -48,22 +48,31 @@ const AdminLayout = () => {
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="flex items-center gap-3 h-auto py-2">
+                  <Button
+                    variant="ghost"
+                    className="flex items-center gap-3 h-auto py-2"
+                  >
                     <Avatar className="h-8 w-8 sm:h-9 sm:w-9">
                       <AvatarImage />
-                      <AvatarFallback>{user?.display_name.charAt(0)}</AvatarFallback>
+                      <AvatarFallback>
+                        {user?.display_name.charAt(0)}
+                      </AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col items-start sm:flex">
-                      <span className="text-sm font-semibold leading-tight">{user?.display_name}</span>
-                      <span className="text-xs text-muted-foreground">Administrador</span>
+                      <span className="text-sm font-semibold leading-tight">
+                        {user?.display_name}
+                      </span>
+                      <span className="text-xs text-muted-foreground">
+                        Administrador
+                      </span>
                     </div>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56" align="end">
                   <DropdownMenuItem>Mi Perfil</DropdownMenuItem>
                   <DropdownMenuItem>Configuración</DropdownMenuItem>
-                  <DropdownMenuItem 
-                    className="text-red-600 hover:bg-red-50 dark:hover:bg-red-950 hover:cursor-pointer" 
+                  <DropdownMenuItem
+                    className="text-red-600 hover:bg-red-50 dark:hover:bg-red-950 hover:cursor-pointer"
                     onClick={() => logout()}
                   >
                     Cerrar Sesión
