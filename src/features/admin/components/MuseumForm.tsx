@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { DialogDescription } from "@radix-ui/react-dialog";
+import ImageUpload from "@/shared/components/ImageUpload";
 
 const formSchema = z.object({
   name: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
@@ -132,7 +133,12 @@ const MuseumForm = ({ isOpen, onClose, onSubmit, initialValues }: MuseumFormProp
                 <FormItem>
                   <FormLabel>Foto del museo</FormLabel>
                   <FormControl>
-                    <Input placeholder="URL de la foto principal" {...field} />
+                    <ImageUpload 
+                      value={field.value}
+                      onChange={field.onChange}
+                      onClear={() => field.onChange('')}
+                      error={!!form.formState.errors.main_photo}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
