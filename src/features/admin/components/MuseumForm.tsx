@@ -67,7 +67,7 @@ const MuseumForm = ({ isOpen, onClose, onSubmit, initialValues }: MuseumFormProp
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px p-6]" aria-describedby="dialog-description">
+      <DialogContent className="sm:max-w-[600px p-6] font-inter" aria-describedby="dialog-description">
         <DialogHeader className="space-y-3 pb-4 border-b">
         <DialogTitle className="text-2xl font-semibold tracking-tight">
           {initialValues ? 'Editar museo' : 'Crear nuevo museo'}

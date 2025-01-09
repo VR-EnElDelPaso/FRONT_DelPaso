@@ -31,7 +31,7 @@ export interface ActionButtonProps {
 }
 
 export interface PriceTagProps {
-  price: string;
+  price: number;
 }
 
 export interface BuyButtonProps {
