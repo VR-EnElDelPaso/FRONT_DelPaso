@@ -14,6 +14,7 @@ import Auth from "@/pages/Auth";
 import AdminProtectedRoute from "@/features/admin/components/AdminProtectedRoute";
 import AdminLayout from "@/features/admin/AdminLayout";
 import adminRoutes from "@/features/admin/routes";
+import { ErrorBoundary } from "@/components/Errors/ErrorBoundary";
 
 const router = createBrowserRouter([
   {
@@ -33,7 +34,9 @@ const router = createBrowserRouter([
         <AdminLayout />
       </AdminProtectedRoute>
     ),
-    children: [ ...adminRoutes.children ]
+    children: [ ...adminRoutes.children ],
+    hasErrorBoundary: true,
+    ErrorBoundary: ErrorBoundary
   },
   {
     path: "/",
@@ -76,6 +79,8 @@ const router = createBrowserRouter([
         element: <TourRoutePage />,
       },
     ],
+    hasErrorBoundary: true,
+    ErrorBoundary: ErrorBoundary
   },
 ]);
 
