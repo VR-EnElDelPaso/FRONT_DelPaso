@@ -4,9 +4,9 @@ import { Link, useLoaderData, useRevalidator } from "react-router-dom";
 import { DataTable } from "@/shared/components/DataTable";
 import { Museum } from "@/types/Museums";
 import PhotoCellModal from "@/shared/components/PhotoCellModal";
-import MuseumForm from "../components/MuseumForm";
 import { createMuseum, deleteMuseum, editMuseum } from "@/services/Museums";
 import { useToast } from "@/hooks/use-toast";
+import MuseumForm from "@/features/admin/components/MuseumForm";
 
 interface LoaderData {
   data: Museum[];

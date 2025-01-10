@@ -1,8 +1,8 @@
-import AdminHome from "@/features/admin/pages/AdminHome";
-import AdminUsers from "@/features/admin/pages/AdminUsers";
-import AdminMuseums from "../pages/AdminMuseums";
-import AdminStats from "../pages/AdminStats";
-import AdminTours from "../pages/AdminTours";
+import AdminHome from "@/pages/admin/AdminHome";
+import AdminMuseums from "@/pages/admin/AdminMuseums";
+import AdminStatistics from "@/pages/admin/AdminStats";
+import AdminTours from "@/pages/admin/AdminTours";
+import AdminUsers from "@/pages/admin/AdminUsers";
 import { getAllMuseums } from "@/services/Museums";
 import { getAllTours } from "@/services/Tour";
 
@@ -15,7 +15,7 @@ const adminRoutes = {
       element: <AdminMuseums />,
       loader: async () => await getAllMuseums(),
     },
-    { path: "stats", element: <AdminStats /> },
+    { path: "stats", element: <AdminStatistics /> },
     {
       path: "tours",
       element: <AdminTours />,

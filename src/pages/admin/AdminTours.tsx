@@ -4,12 +4,12 @@ import { useLoaderData, useRevalidator } from "react-router-dom";
 import { DataTable } from "@/shared/components/DataTable";
 import { Tour } from "@/types/tour";
 import PhotoCellModal from "@/shared/components/PhotoCellModal";
-import TourForm from "../components/TourForm";
 import { createTour, deleteTour, editTour } from "@/services/Tour";
 import { getAllMuseums } from "@/services/Museums";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
 import { Museum } from "@/types/Museums";
+import TourForm from "@/features/admin/components/TourForm";
 
 interface LoaderData {
   data: Tour[];
