@@ -8,6 +8,7 @@ import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import RecoveryPasswordForm from "./RecoveryPasswordForm";
 import { handleAuthError } from "@/utils/errorHandler";
+import { getRedirectPath } from "@/utils/auth";
 
 type SignInFormInputs = {
   email: string;
@@ -45,8 +46,13 @@ export const SignInForm = ({ resetRecovery }: SignInFormProps) => {
       setAuthError("");
       const response = await LocalLogin(data.email, data.password);
       const responseData: ResponseData = response.data;
-      login(responseData.data.token);
-      navigate(from, { replace: true });
+      const { token } = responseData.data;
+
+      login(token);
+
+      const redirectPath = getRedirectPath(token, from);
+      navigate(redirectPath);
+      
     } catch (error: unknown) {
       console.error("Login error:", error);
       const errorMessage = handleAuthError(error, "login");

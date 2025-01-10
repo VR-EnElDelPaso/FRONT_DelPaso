@@ -1,6 +1,4 @@
-import { useState, useEffect } from "react";
-import { useAuth } from "../hooks/useAuth";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useState } from "react";
 import { SignInForm } from "@/components/Auth/SignInForm";
 import SignUpForm from "@/components/Auth/SignUpForm/index";
 import Udc from "@/assets/images/udc.png";
@@ -8,16 +6,6 @@ import Udc from "@/assets/images/udc.png";
 const Auth = () => {
   const [isSignIn, setIsSignIn] = useState(true);
   const [resetRecovery, setResetRecovery] = useState(false);
-  const { isAuthenticated } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
-  const from = location.state?.from?.pathname || "/";
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate(from, { replace: true });
-    }
-  }, [isAuthenticated, navigate, from]);
 
   const handleToggleForm = (showSignIn: boolean) => {
     setIsSignIn(showSignIn);
