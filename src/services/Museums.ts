@@ -1,4 +1,5 @@
 import { Museum } from "@/types/Museums";
+import ResponseData from "@/types/ResponseData";
 import axios from "axios";
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
@@ -9,6 +10,8 @@ interface MuseumsResponse {
   data: Museum[];
 }
 
+
+// ----[ Crud operations ]----
 export const getAllMuseums = async (): Promise<MuseumsResponse> => {
   const response = await axios.get<MuseumsResponse>(`${apiBaseUrl}/museums`);
   return response.data;
@@ -26,5 +29,11 @@ export const editMuseum = async (id: string, museum: Museum): Promise<Museum> =>
 
 export const deleteMuseum = async (id: string): Promise<void> => {
   const response = await axios.delete(`${apiBaseUrl}/museums/${id}`);
+  return response.data;
+}
+
+// ----[ Sub resources ]----
+export const getMuseumTours = async (museumId: string): Promise<ResponseData> => {
+  const response = await axios.get(`${apiBaseUrl}/museums/${museumId}/tours`);
   return response.data;
 }
