@@ -51,7 +51,7 @@ const AdminMuseums = () => {
   const [formVisible, setFormVisible] = useState(false);
   const [initialValues, setInitialValues] = useState<Museum | undefined>(undefined);
 
-  const onSubmit = async (values: Partial<Museum>) => {
+  const onSubmit = async (values: Partial<Omit<Museum, 'main_tour_id'> & { main_tour_id?: string | null }>) => {
     // todo: mejorar esta parte para no repetir lo mismo
     try {
       if (initialValues) {
