@@ -3,7 +3,7 @@ import ResponseData from "../types/ResponseData";
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
-const getAuthConfig = () => {
+export const getAuthConfig = () => {
   const token = localStorage.getItem("auth-token");
   return {
     headers: {
@@ -12,24 +12,16 @@ const getAuthConfig = () => {
   };
 };
 
-// Create a new preference based on tour ids, return the id of the preference
-export const createPreferences = async (
-  tourIds: string[]
-): Promise<ResponseData> => {
-  const response = await axios.post(
-    `${apiBaseUrl}/preference/multi`,
-    { item_ids: tourIds },
-    getAuthConfig()
-  );
-  return response.data;
-};
+interface PostPreferenceResponse {
+  id: string;
+  init_point: string;
+  external_reference: string;
+}
 
-export const createPreference = async (
-  tourId: string
-): Promise<ResponseData> => {
-  const response = await axios.post(
-    `${apiBaseUrl}/preference/${tourId}`,
-    {},
+export const createOnePreference = async (order_id: string) => {
+  const response = await axios.post<ResponseData<PostPreferenceResponse>>(
+    `${apiBaseUrl}/preferences`,
+    {order_id},
     getAuthConfig()
   );
   return response.data;

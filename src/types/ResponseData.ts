@@ -1,8 +1,7 @@
-export default interface ResponseData {
+export default interface ResponseData<T> {
   ok: boolean;
   message: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  data?: any;
+  data?: T;
   pagination: {
     total: number;
     page: number;

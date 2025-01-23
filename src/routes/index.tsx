@@ -8,7 +8,7 @@ import AppLayout from "../layouts/AppLayout";
 import NoAppBarLayout from "../layouts/NoAppBarLayout";
 import Tours from "../pages/Tours";
 import CartPage from "../pages/CartPage";
-import { CheckoutPage } from "../pages/Checkout";
+import { CheckoutPage } from "../pages/CheckoutPage";
 import TourRoutePage from "../pages/TourRoutePage";
 import Auth from "@/pages/Auth";
 import AdminProtectedRoute from "@/features/admin/components/AdminProtectedRoute";
