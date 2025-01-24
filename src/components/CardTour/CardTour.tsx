@@ -2,7 +2,6 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaArrowRight, FaShare, FaEnvelope, FaShoppingCart } from "react-icons/fa";
 import { dateFormatter } from "../../utils/dateFormatter";
-import image from '/PA_Obra13.jpg';
 import { 
   TourId, 
   CardImageProps, 
@@ -107,7 +106,7 @@ const CardTour = (tour: Tour) => {
 
   return (
     <div className="mb-4 max-w-sm sm:max-w-md md:max-w-4xl lg:max-w-6xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden flex flex-col md:flex-row">
-      <CardImage imagePath={image} title={name} />
+      <CardImage imagePath={tour.image_url} title={name} />
       <div className="w-full md:w-7/12 lg:w-1/2 flex flex-col justify-between p-3 sm:p-4 md:p-6">
         <div>
           <CardHeader date={created_at} title={name} />

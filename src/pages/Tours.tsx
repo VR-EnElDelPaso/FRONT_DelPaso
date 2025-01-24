@@ -4,7 +4,6 @@ import { Tour } from "../types/tour";
 import useFetchTours from "../hooks/useFetchTours";
 import { dateFormatter } from "../utils/dateFormatter";
 import { Card } from "@/components/ui/card";
-import image from "../../public/PA_Obra13.jpg";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -58,7 +57,7 @@ const Tours = () => {
               {/* Image */}
               <div className="w-full md:w-[200px]">
                 <img 
-                  src={image} // TODO: Change this to tour.image_url
+                  src={tour.image_url}
                   alt={tour.name} 
                   className='w-full h-64 md:h-[200px] object-cover rounded-lg'
                 />
