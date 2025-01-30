@@ -6,6 +6,7 @@ export interface Tour {
   stars: number;
   url: string;
   image_url: string;
+  museum_id: string;
   created_at: string;
   updated_at: string;
 }
