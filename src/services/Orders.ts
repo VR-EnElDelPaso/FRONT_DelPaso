@@ -1,4 +1,4 @@
-import ResponseData from "@/types/ResponseData";
+import { ResponseDataTyped } from "@/types/ResponseData";
 import axios from "axios";
 import { getAuthConfig } from "./Preference";
 
@@ -21,7 +21,7 @@ export interface PostOrderResponse {
 const BASE_URL = import.meta.env.VITE_API_BASE_URL as string;
 
 export const createOneOrder = async (tourIds: string[]) => {
-  const response = await axios.post<ResponseData<PostOrderResponse>>(
+  const response = await axios.post<ResponseDataTyped<PostOrderResponse>>(
     `${BASE_URL}/orders/`,
     { tour_ids: tourIds },
     getAuthConfig());

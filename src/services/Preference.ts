@@ -1,5 +1,5 @@
 import axios from "axios";
-import ResponseData from "../types/ResponseData";
+import { ResponseDataTyped } from "../types/ResponseData";
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
@@ -19,8 +19,8 @@ interface PostPreferenceResponse {
 }
 
 export const createOnePreference = async (order_id: string) => {
-  const response = await axios.post<ResponseData<PostPreferenceResponse>>(
-    `${apiBaseUrl}/preferences`,
+  const response = await axios.post<ResponseDataTyped<PostPreferenceResponse>>(
+    `${apiBaseUrl}/preference`,
     {order_id},
     getAuthConfig()
   );

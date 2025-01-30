@@ -21,7 +21,7 @@ export const getAllTours = async (): Promise<ToursResponse> => {
 };
 
 //get tours
-export const getTours = async (tourIds: string[]): Promise<ResponseData<unknown>> => {
+export const getTours = async (tourIds: string[]): Promise<ResponseData> => {
   const response = await axios.post(
     `${apiBaseUrl}/tour/from-array`,
     {
@@ -48,7 +48,7 @@ export const getTourById = async (id: string) => {
 export const getTourSuggestions = async (
   excludedTourIds: string[],
   quantity: number
-): Promise<ResponseData<unknown>> => {
+): Promise<ResponseData> => {
   const response = await axios.post(
     `${apiBaseUrl}/tour/suggestion?take=${quantity}`,
     {
@@ -100,7 +100,7 @@ const deleteReviewsByTourId = async (tourId: string): Promise<void> => {
 };
 
 //delete tour
-export const deleteTour = async (id: string): Promise<ResponseData<unknown>> => {
+export const deleteTour = async (id: string): Promise<ResponseData> => {
   try {
     const token = localStorage.getItem("auth-token");
     const headers = {
