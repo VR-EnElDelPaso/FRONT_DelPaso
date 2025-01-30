@@ -20,7 +20,7 @@ interface PostPreferenceResponse {
 
 export const createOnePreference = async (order_id: string) => {
   const response = await axios.post<ResponseDataTyped<PostPreferenceResponse>>(
-    `${apiBaseUrl}/preference`,
+    `${apiBaseUrl}/preferences`,
     {order_id},
     getAuthConfig()
   );
