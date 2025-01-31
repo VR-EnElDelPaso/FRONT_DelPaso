@@ -17,13 +17,13 @@ export default function TourSuggestionCard({ tour }: TourSuggestionCardProps) {
   return (
     <div
       onClick={handleCardClick}
-      className=" rounded-lg overflow-hidden transition-all duration-300 hover:scale-[1.02] cursor-pointer group mt-4"
+      className=" rounded-lg overflow-hidden cursor-pointer group mt-4"
     >
       <div className="relative">
         <img
           src={tour.image_url}
           alt={tour.name}
-          className="rounded-xl w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
+          className="rounded-xl w-full h-48 object-cover"
         />
       </div>
       <div className="p-4">
