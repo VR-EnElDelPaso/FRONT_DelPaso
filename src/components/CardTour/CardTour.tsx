@@ -30,7 +30,7 @@ export default function TourCard({
             {name}
           </h1>
           <div className="flex items-center justify-start gap-1">
-            <Star className="fill-red-600 text-red-600 w-5 h-5" />
+            <Star className="fill-primary text-primary w-5 h-5" />
             <span className="text-xl font-bold text-neutral-500">{stars}</span>
           </div>
           <p className="text-neutral-400 text-sm font-medium">
