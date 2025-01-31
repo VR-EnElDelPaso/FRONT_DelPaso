@@ -2,7 +2,7 @@ import React from "react";
 
 const ReviewCardSkeleton: React.FC = () => {
   return (
-    <div className="bg-white py-6 rounded-lg animate-pulse">
+    <div className=" py-6 rounded-lg animate-pulse">
       <div className="flex items-center mb-2 px-6">
         <div className="h-4 w-1/3 bg-gray-300 rounded mr-2"></div>
         <div className="flex space-x-1">

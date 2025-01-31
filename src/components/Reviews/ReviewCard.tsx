@@ -1,36 +1,21 @@
-import React from "react";
-import { FaStar } from "react-icons/fa";
 import { Review } from "@/types/Review";
+import RatingStars from "@/shared/components/RatingStars";
 
 interface ReviewCardProps {
   review: Review;
 }
 
-const ReviewCard: React.FC<ReviewCardProps> = ({ review }) => {
-  const renderStars = (score: number) => {
-    return (
-      <div className="flex">
-        {[1, 2, 3, 4, 5].map((star) => (
-          <FaStar
-            key={star}
-            className={`w-4 h-4 ${
-              star <= score ? "text-primary" : "text-gray-300"
-            }`}
-          />
-        ))}
-      </div>
-    );
-  };
-
+export default function ReviewCard({ review }: ReviewCardProps) {
   return (
-    <div key={review.id} className="bg-white py-6 rounded-lg">
-      <h4 className="font-semibold mb-2 text-neutral-400">
+    <div className="rounded-lg mt-4">
+      <h4 className="font-medium text-neutral-500 text-sm mb-2">
         {review.user.display_name || review.user.name}
       </h4>
-      {renderStars(review.score)}
-      <p className="mt-4 text-lg font-light">{review.comment}</p>
+      <div className="mb-4">
+        <RatingStars value={review.score} onChange={() => {}} noHover={true} />
+      </div>
+      <p className="text-dark text-md leading-relaxed">{review.comment}</p>
+      <hr className="border-t border-neutral-300 my-4" />
     </div>
   );
-};
-
-export default ReviewCard;
+}
