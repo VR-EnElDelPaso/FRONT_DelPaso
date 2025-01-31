@@ -46,7 +46,10 @@ export default function TourCard({
           <Button
             variant="default"
             className="h-12 shadow-none rounded-xl text-white w-full md:w-auto"
-            onClick={() => navigate(`/checkout`, { state: { tourIds: [id] } })}
+            onClick={() => {
+              setCartItem({ id, isSelected: true, quantity: 1 });
+              navigate(`/checkout`, { state: { tourIds: [id] } });
+            }}
           >
             Comprar ahora
           </Button>
