@@ -1,24 +1,30 @@
 import { Card } from "@/components/ui/card";
 import { getMuseumById } from "@/services/Museums";
 import { Museum } from "@/types/Museums";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Clock, MapPin, DollarSign } from "lucide-react";
 import Carousel from "@/components/NowShowing/Carousel";
 import { Button } from "@/components/ui/button";
+import { MuseumInfoCard } from "@/features/museum/componets/MuseumInfoCard";
 
 const MuseumPage = () => {
-  const { id } = useParams<{ id: string }>();
+  // ----[ States ]----
   const [museum, setMuseum] = useState<Museum | null>(null);
 
-  useEffect(() => {
-    const fetchMuseum = async () => {
-      const museum = await getMuseumById(id as string);
-      setMuseum(museum);
-    };
+  // ----[ Hooks ]----
+  const { id } = useParams<{ id: string }>();
 
-    fetchMuseum();
+  // ----[ Callbacks ]----
+  const fetchMuseum = useCallback(async () => {
+    const museum = await getMuseumById(id as string);
+    setMuseum(museum);
   }, [id]);
+
+  // ----[ Effects ]----
+  useEffect(() => {
+    fetchMuseum();
+  }, [fetchMuseum]);
 
   if (!museum) return null;
 
@@ -49,45 +55,42 @@ const MuseumPage = () => {
           </div>
 
           {/* Info Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
             {/* Horario */}
-            <div className="flex flex-col items-center p-4 rounded-lg border bg-card">
-              <div className="rounded-full bg-primary p-3 mb-3">
-                <Clock className="h-6 w-6 text-primary-foreground" />
-              </div>
-              <h3 className="font-semibold mb-2">Horarios</h3>
-              <p className="text-sm text-muted-foreground text-center">
+            <MuseumInfoCard
+              title="Horarios"
+              icon={<Clock className="h-6 w-6 text-white" />}
+            >
+              <p className="text-sm text-muted-foreground">
                 Horario no disponible
               </p>
-            </div>
+            </MuseumInfoCard>
 
             {/* Ubicación */}
-            <div className="flex flex-col items-center p-4 rounded-lg border bg-card">
-              <div className="rounded-full bg-primary p-3 mb-3">
-                <MapPin className="h-6 w-6 text-primary-foreground" />
-              </div>
-              <h3 className="font-semibold mb-2">Ubicación</h3>
-              <p className="text-sm text-muted-foreground text-center">
+            <MuseumInfoCard
+              title="Ubicación"
+              icon={<MapPin className="h-6 w-6 text-white" />}
+            >
+              <p className="text-sm text-muted-foreground">
                 {museum.address_name || "Ubicación no disponible"}
               </p>
-            </div>
+            </MuseumInfoCard>
 
             {/* Precio */}
-            <div className="flex flex-col items-center p-4 rounded-lg border bg-card">
-              <div className="rounded-full bg-primary p-3 mb-3">
-                <DollarSign className="h-6 w-6 text-primary-foreground" />
-              </div>
-              <h3 className="font-semibold mb-2">Precio</h3>
-              <p className="text-sm text-muted-foreground text-center">
-                 Precio no disponible
+            <MuseumInfoCard
+              title="Precio"
+              icon={<DollarSign className="h-6 w-6 text-white" />}
+            >
+              <p className="text-sm text-muted-foreground">
+                Precio no disponible
               </p>
-            </div>
+            </MuseumInfoCard>
           </div>
 
           {/* Recorridos */}
           <div className="container mx-auto flex flex-col px-4 sm:px-6 md:px-8">
             {/* Title */}
-            <div className="mb-6 sm:mb-8">
+            <div className="sm:mb-8">
               <div className="flex text-primary/50 items-center mb-2">
                 <span className="text-lg sm:text-xl mr-2">•</span>
                 <p className="text-xs sm:text-sm font-bold tracking-widest uppercase">
@@ -142,7 +145,9 @@ const MuseumPage = () => {
                   </h3>
                 </div>
 
-                <h2 className="text-3xl font-kaiseiDecol font-bold">¿Tienes preguntas?</h2>
+                <h2 className="text-3xl font-kaiseiDecol font-bold">
+                  ¿Tienes preguntas?
+                </h2>
 
                 <p className="text-base leading-7 text-muted-foreground">
                   Si tienes alguna duda sobre nuestras exposiciones, horarios,
@@ -153,7 +158,11 @@ const MuseumPage = () => {
                   Paso.
                 </p>
 
-                <Button variant="default" size="lg" className="font-medium text-white">
+                <Button
+                  variant="default"
+                  size="lg"
+                  className="font-medium text-white"
+                >
                   Ayuda
                 </Button>
               </div>
