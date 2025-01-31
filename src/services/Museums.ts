@@ -37,3 +37,8 @@ export const getMuseumTours = async (museumId: string): Promise<ResponseData> =>
   const response = await axios.get(`${apiBaseUrl}/museums/${museumId}/tours`);
   return response.data;
 }
+
+export const getMuseumById = async (id: string): Promise<Museum> => {
+  const response = (await axios.get(`${apiBaseUrl}/museums/${id}`)).data;
+  return response.data;
+}
