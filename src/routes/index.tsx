@@ -15,6 +15,7 @@ import AdminProtectedRoute from "@/features/admin/components/AdminProtectedRoute
 import AdminLayout from "@/features/admin/AdminLayout";
 import adminRoutes from "@/features/admin/routes";
 import { ErrorBoundary } from "@/components/Errors/ErrorBoundary";
+import MuseumPage from "@/pages/MuseumPage";
 
 const router = createBrowserRouter([
   {
@@ -65,6 +66,10 @@ const router = createBrowserRouter([
       {
         path: "/tours",
         element: <Tours />,
+      },
+      {
+        path: "/museum/:id",
+        element: <MuseumPage />
       },
       {
         path: "/test",
