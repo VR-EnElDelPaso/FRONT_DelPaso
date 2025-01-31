@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Review } from "@/types/Review";
 import { ReviewService } from "@/services/Review";
@@ -9,18 +9,17 @@ interface ReviewsListProps {
   tourId: string;
 }
 
-const REVIEWS_PER_PAGE = 2;
+const REVIEWS_PER_PAGE = 5;
 
-const ReviewsList: React.FC<ReviewsListProps> = ({ tourId }) => {
+export default function ReviewsList({ tourId }: ReviewsListProps) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [hasMore, setHasMore] = useState(true);
   const [skip, setSkip] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [total, setTotal] = useState(0);
 
-  // Eliminar reviews.length de las dependencias para evitar la recreación innecesaria
   const fetchReviews = useCallback(async () => {
-    if (isLoading || !hasMore) return;
+    if (isLoading) return;
 
     try {
       setIsLoading(true);
@@ -34,9 +33,19 @@ const ReviewsList: React.FC<ReviewsListProps> = ({ tourId }) => {
         const newReviews = response.data.reviews;
         setTotal(response.data.total);
 
-        setReviews((prevReviews) => [...prevReviews, ...newReviews]);
-        setHasMore(reviews.length + newReviews.length < response.data.total);
-        setSkip((prevSkip) => prevSkip + REVIEWS_PER_PAGE);
+        if (skip === 0) {
+          setReviews(newReviews);
+        } else {
+          setReviews((prevReviews) => [...prevReviews, ...newReviews]);
+        }
+
+        const currentTotal =
+          skip === 0 ? newReviews.length : reviews.length + newReviews.length;
+        setHasMore(currentTotal < response.data.total);
+
+        if (currentTotal < response.data.total) {
+          setSkip(currentTotal);
+        }
       }
     } catch (error) {
       console.error("Error fetching reviews:", error);
@@ -44,16 +53,23 @@ const ReviewsList: React.FC<ReviewsListProps> = ({ tourId }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [tourId, skip, isLoading, hasMore, reviews.length]); // `reviews.length` agregado
-
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  }, [tourId, skip, isLoading, reviews.length]);
 
   useEffect(() => {
-    if (isInitialLoad) {
-      fetchReviews();
-      setIsInitialLoad(false);
-    }
-  }, [isInitialLoad, fetchReviews]);
+    setSkip(0);
+    setReviews([]);
+    setHasMore(true);
+    fetchReviews();
+  }, [tourId]);
+
+  if (reviews.length === 0 && isLoading) {
+    return (
+      <div className="mt-6">
+        <ReviewCardSkeleton />
+        <ReviewCardSkeleton />
+      </div>
+    );
+  }
 
   return (
     <div className="mt-8">
@@ -73,7 +89,7 @@ const ReviewsList: React.FC<ReviewsListProps> = ({ tourId }) => {
               : "Has llegado al final de las reseñas."}
           </p>
         }
-        scrollThreshold={0.9}
+        scrollThreshold={0.8}
       >
         <div className="space-y-6">
           {reviews.map((review) => (
@@ -83,6 +99,4 @@ const ReviewsList: React.FC<ReviewsListProps> = ({ tourId }) => {
       </InfiniteScroll>
     </div>
   );
-};
-
-export default ReviewsList;
+}
