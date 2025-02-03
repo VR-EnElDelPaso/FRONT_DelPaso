@@ -7,5 +7,5 @@ export const getTours = async () => {
 }
 
 export const getTourById = async (id: string) => {
-  return await axios.get(`${API_BASE_URL}/tour/${id}`);
+  return await axios.get(`${API_BASE_URL}/tours/${id}`);
 }
