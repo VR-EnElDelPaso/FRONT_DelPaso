@@ -87,7 +87,7 @@ const Tours = () => {
                   <div className="flex justify-between items-end gap-4">
                     <p className='text-muted-foreground flex-1'>{tour.description}</p>
                     <Button 
-                      onClick={() => navigate(`/tour/${tour.id}`)}
+                      onClick={() => navigate(`/tours/${tour.id}`)}
                       className="text-white bg-primary hover:bg-primary/90 whitespace-nowrap"
                     >
                       Ver más

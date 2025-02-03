@@ -5,14 +5,21 @@ import { Tour } from "../shared/types/Tour";
 import { CartSuggestions } from "../features/cart/components/CartSuggestions";
 import { CartList } from "../features/cart/components/CartList";
 import { CartResume } from "../features/cart/components/CartResume";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { EmptyCartMessage } from "@/features/cart/components/EmptyCartMessage";
 
 export default function CartPage() {
-  const navigate = useNavigate();
+  // ----[ State ]----
   const [fetchedTours, setFetchedTours] = useState<Tour[]>([]);
+  // const [paymentStatus, setPaymentStatus] = useState<string | null>();
+  // const [orderId, setOrderId] = useState<string | null>();
 
+  // ----[ Hooks ]----
+  const [searchParams] = useSearchParams();
   const { cartItems, setCartItem } = useCartStore();
+  const navigate = useNavigate();
 
+  // ----[ Memos ]----
   const toursIds = useMemo(() => cartItems.map((item) => item.id), [cartItems]);
 
   const cartListData = useMemo(
@@ -26,16 +33,25 @@ export default function CartPage() {
     [fetchedTours, cartItems]
   );
 
+  // ----[ Callbacks ]----
   const fetchTours = useCallback(async () => {
     const response = await getTours(toursIds);
     if (!response.ok) return;
     setFetchedTours(response.data);
   }, [toursIds]);
 
+  // ----[ Effects ]----
   useEffect(() => {
     fetchTours();
   }, [fetchTours]);
 
+  useEffect(() => {
+    if (searchParams.has("external_reference")) {
+      navigate(`/orders/${searchParams.get("external_reference")}`);
+    }
+  }, [navigate, searchParams]);
+
+  // ----[ Functions ]----
   const handleCheckboxChange = (id: string, isChecked: boolean) => {
     const item = cartItems.find((item) => item.id === id);
     if (!item) return;
@@ -69,24 +85,6 @@ export default function CartPage() {
       replace: true,
     });
   };
-
-  // Empty cart message component
-  const EmptyCartMessage = () => (
-    <div className="flex flex-col items-center justify-center py-10 text-center">
-      <h2 className="text-4xl font-semibold  mb-4 font-kaiseiDecol">
-        Tu carrito está vacío
-      </h2>
-      <p className=" mb-6 max-w-60">
-        ¿Por qué no exploras nuestros tours disponibles?
-      </p>
-      <button
-        onClick={() => navigate("/tours")}
-        className="bg-primary text-white px-6 py-2 rounded-md hover:bg-primary/90 transition-colors"
-      >
-        Ver Tours
-      </button>
-    </div>
-  );
 
   return (
     <div className="grid place-items-center py-10 px-5">
