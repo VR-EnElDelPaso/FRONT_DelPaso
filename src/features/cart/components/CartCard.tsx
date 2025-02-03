@@ -20,7 +20,7 @@ export const CartCard = ({
   }
 
   const handleMoreInfo = () => {
-    navigate(`/tour/${cartItem.id}`);
+    navigate(`/tours/${cartItem.id}`);
   }
 
   return (

@@ -11,7 +11,7 @@ export default function TourSuggestionCard({ tour }: TourSuggestionCardProps) {
   const navigate = useNavigate();
 
   const handleCardClick = () => {
-    navigate(`/tour/${tour.id}`);
+    navigate(`/tours/${tour.id}`);
   };
 
   return (

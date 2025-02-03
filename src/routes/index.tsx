@@ -16,6 +16,7 @@ import AdminLayout from "@/features/admin/AdminLayout";
 import adminRoutes from "@/features/admin/routes";
 import { ErrorBoundary } from "@/components/Errors/ErrorBoundary";
 import MuseumPage from "@/pages/MuseumPage";
+import { OrderDetailPage } from "@/pages/OrderDetailPage";
 
 const router = createBrowserRouter([
   {
@@ -60,29 +61,34 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/tour/:id",
-        element: <TourPage />,
-      },
-      {
         path: "/tours",
-        element: <Tours />,
+        children: [
+          {
+            index: true,
+            element: <Tours />,
+          },
+          {
+            path: ":id",
+            element: <TourPage />,
+          },
+          {
+            path: "view/:id",
+            element: <TourRoutePage />,
+          },
+        ]
       },
       {
         path: "/museum/:id",
         element: <MuseumPage />
       },
       {
-        path: "/test",
-        element: <div>Test</div>,
-      },
-      {
         path: "/login",
         element: <LoginPage />,
       },
       {
-        path: "/tour-route/:id",
-        element: <TourRoutePage />,
-      },
+        path: "/orders/:orderId",
+        element: <OrderDetailPage />
+      }
     ],
     hasErrorBoundary: true,
     ErrorBoundary: ErrorBoundary

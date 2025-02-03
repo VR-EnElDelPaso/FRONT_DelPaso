@@ -62,7 +62,7 @@ const AdminTours = () => {
         const name = row.getValue("name") as string;
         const id = row.original.id;
         return (
-          <Link to={`/tour/${id}`} className="text-blue-500 hover:underline">
+          <Link to={`/tours/${id}`} className="text-blue-500 hover:underline">
             {name}
           </Link>
         );
