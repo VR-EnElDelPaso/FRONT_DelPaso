@@ -16,7 +16,7 @@ const headers = {
 
 //get all tours
 export const getAllTours = async (): Promise<ToursResponse> => {
-  const response = await axios.get<ToursResponse>(`${apiBaseUrl}/tour`);
+  const response = await axios.get<ToursResponse>(`${apiBaseUrl}/tours`);
   return response.data;
 };
 
@@ -62,7 +62,7 @@ export const getTourSuggestions = async (
 
 //create tour
 export const createTour = async (tour: Partial<Tour>): Promise<Tour> => {
-  const response = await axios.post(`${apiBaseUrl}/tour`, tour);
+  const response = await axios.post(`${apiBaseUrl}/tours`, tour);
   return response.data;
 };
 
