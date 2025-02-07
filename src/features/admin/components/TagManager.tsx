@@ -67,13 +67,13 @@ export const TagManager = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[600px] max-h-[80vh]">
         <DialogHeader>
-          <DialogTitle>Gestionar Etiquetas</DialogTitle>
+          <DialogTitle>Gestionar tags</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-6">
           {/* Selected Tags Section */}
           <div className="space-y-2">
-            <h3 className="text-lg font-medium">Etiquetas seleccionadas</h3>
+            <h3 className="text-lg font-medium">Tags seleccionadas</h3>
             <div className="min-h-[100px] p-4 border rounded-lg bg-gray-50">
               <AnimatePresence>
                 <div className="flex flex-wrap gap-2">
@@ -106,7 +106,7 @@ export const TagManager = ({
 
           {/* Available Tags Section */}
           <div className="space-y-2">
-            <h3 className="text-lg font-medium">Todas las etiquetas</h3>
+            <h3 className="text-lg font-medium">Todas las tags</h3>
             <div className="p-4 border rounded-lg">
               <div className="flex flex-wrap gap-2">
                 {unselectedTags.map((tag) => (

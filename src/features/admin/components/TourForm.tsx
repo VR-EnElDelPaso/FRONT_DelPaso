@@ -251,6 +251,24 @@ const TourForm = ({
                 />
 
                 <FormField
+                  name="tags"
+                  render={() => (
+                    <FormItem>
+                      <FormLabel>Tags</FormLabel>
+                      <Button
+                        type="button"
+                        onClick={() => setShowTagManager(true)}
+                        variant="outline"
+                        className="w-full"
+                      >
+                        <FaTags className="mr-2" />
+                        Gestionar Tags ({selectedTags.length})
+                      </Button>
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
                   control={form.control}
                   name="image_url"
                   render={({ field }) => (
@@ -265,24 +283,6 @@ const TourForm = ({
                         />
                       </FormControl>
                       <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  name="tags"
-                  render={() => (
-                    <FormItem>
-                      <FormLabel>Tags</FormLabel>
-                      <Button
-                        type="button"
-                        onClick={() => setShowTagManager(true)}
-                        variant="outline"
-                        className="w-full"
-                      >
-                        <FaTags className="mr-2" />
-                        Gestionar etiquetas ({selectedTags.length})
-                      </Button>
                     </FormItem>
                   )}
                 />
