@@ -16,10 +16,10 @@ interface Slide {
 }
 
 interface CarouselProps {
-  museum_id: string;
+  museum_id?: string;
 }
 
-export default function Carousel({ museum_id }: CarouselProps) {
+export default function Carousel({ museum_id = "" }: CarouselProps) {
   const [[page, direction], setPage] = useState([0, 0]);
   const [slides, setSlides] = useState<Slide[]>([]);
   const [loading, setLoading] = useState(true);
