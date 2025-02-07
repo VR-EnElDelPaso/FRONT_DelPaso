@@ -6,6 +6,7 @@ import CarouselControls from "./CarouselControls";
 import { variants, swipeConfidenceThreshold, swipePower } from "./animations";
 import { dateFormatter } from "@/utils/dateFormatter";
 import { getMuseumTours } from "@/services/Museums";
+import { getAllTours } from "@/services/Tour";
 
 interface Slide {
   image_url: string;
@@ -25,24 +26,27 @@ export default function Carousel({ museum_id = "" }: CarouselProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchToursByMuseumId = useCallback(async () => {
+  const fetchTours = useCallback(async () => {
     setLoading(true);
-    await getMuseumTours(museum_id)
-      .then((tour) => {
+    try {
+      if (museum_id) {
+        const tour = await getMuseumTours(museum_id);
         setSlides(tour.data);
-      })
-      .catch((error) => {
-        setError("Error al cargar los tours");
-        console.error(error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+      } else {
+        const tours = await getAllTours();
+        setSlides(tours.data);
+      }
+    } catch (error) {
+      setError("Error al cargar los tours");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   }, [museum_id]);
 
   useEffect(() => {
-    fetchToursByMuseumId();
-  }, [fetchToursByMuseumId]);
+    fetchTours();
+  }, [fetchTours]);
 
   const imageIndex = wrap(0, Math.max(slides.length, 1), page);
 
