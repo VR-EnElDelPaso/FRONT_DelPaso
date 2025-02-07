@@ -16,14 +16,14 @@ const headers = {
 
 //get all tours
 export const getAllTours = async (): Promise<ToursResponse> => {
-  const response = await axios.get<ToursResponse>(`${apiBaseUrl}/tour`);
+  const response = await axios.get<ToursResponse>(`${apiBaseUrl}/tours`);
   return response.data;
 };
 
 //get tours
 export const getTours = async (tourIds: string[]): Promise<ResponseData> => {
   const response = await axios.post(
-    `${apiBaseUrl}/tour/from-array`,
+    `${apiBaseUrl}/tours/from-array`,
     {
       ids: tourIds,
     },
@@ -36,7 +36,7 @@ export const getTours = async (tourIds: string[]): Promise<ResponseData> => {
 //get tour by id
 export const getTourById = async (id: string) => {
   try {
-    const response = await axios.get(`${apiBaseUrl}/tour/${id}`, { headers });
+    const response = await axios.get(`${apiBaseUrl}/tours/${id}`, { headers });
     return response.data.data;
   } catch (error) {
     console.error("Error fetching tour", error);
@@ -50,7 +50,7 @@ export const getTourSuggestions = async (
   quantity: number
 ): Promise<ResponseData> => {
   const response = await axios.post(
-    `${apiBaseUrl}/tour/suggestion?take=${quantity}`,
+    `${apiBaseUrl}/tours/suggestion?take=${quantity}`,
     {
       excludedIds: excludedTourIds,
       quantity,
@@ -62,7 +62,7 @@ export const getTourSuggestions = async (
 
 //create tour
 export const createTour = async (tour: Partial<Tour>): Promise<Tour> => {
-  const response = await axios.post(`${apiBaseUrl}/tour`, tour);
+  const response = await axios.post(`${apiBaseUrl}/tours`, tour);
   return response.data;
 };
 
@@ -71,7 +71,7 @@ export const editTour = async (
   id: string,
   tour: Partial<Tour>
 ): Promise<Tour> => {
-  const response = await axios.patch(`${apiBaseUrl}/tour/${id}`, tour);
+  const response = await axios.patch(`${apiBaseUrl}/tours/${id}`, tour);
   return response.data;
 };
 
@@ -112,7 +112,7 @@ export const deleteTour = async (id: string): Promise<ResponseData> => {
     await deleteReviewsByTourId(id);
 
     // Luego eliminamos el tour
-    const response = await axios.delete(`${apiBaseUrl}/tour/${id}`, {
+    const response = await axios.delete(`${apiBaseUrl}/tours/${id}`, {
       headers,
     });
     return response.data;

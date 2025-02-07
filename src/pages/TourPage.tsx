@@ -3,12 +3,12 @@ import CardTour from "../components/CardTour/CardTour";
 import useFetchTourById from "../hooks/useFetchTourById";
 import { FadeInOnScroll } from "../components/animations/FadeInOnScroll";
 import ReviewsList from "../components/Reviews/ReviewsList";
+import TourSuggestions from "../components/TourSuggestions/TourSuggestions";
 
-const Tour = () => {
+export default function TourPage() {
   const { id } = useParams<{ id: string }>();
   const tourData = useFetchTourById(id || "");
 
-  console.log(tourData);
   if (!tourData) return <div>Cargando...</div>;
 
   return (
@@ -21,16 +21,23 @@ const Tour = () => {
             </div>
           </FadeInOnScroll>
 
-          <section className="mt-10">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-3xl font-medium font-kaiseiDecol">Reseñas</h2>
+          <div className="flex flex-col md:flex-row gap-8 md:gap-16 lg:gap-24 justify-center md:px-12">
+            {/* Reviews Section - Ahora a la izquierda */}
+            <div className="w-full md:w-3/4 order-2 md:order-none">
+              <h2 className="text-[28px] md:text-[32px] font-kaiseiDecol font-normal text-dark">
+                Reseñas
+              </h2>
+              <ReviewsList tourId={id || ""} />
             </div>
-            <ReviewsList tourId={id || ""} />
-          </section>
+
+            {/* Suggestions Section - Ahora a la derecha */}
+            <div className="w-full md:w-1/2 order-1 md:order-none">
+              <TourSuggestions currentTourId={id || ""} quantity={10} />
+              <hr className="border-gray-300 my-6 md:hidden" />
+            </div>
+          </div>
         </div>
       </div>
     </div>
   );
-};
-
-export default Tour;
+}

@@ -10,3 +10,16 @@ export default interface ResponseData {
     hasMore: boolean;
   };
 }
+
+export interface ResponseDataTyped<T> {
+  ok: boolean;
+  message: string;
+  data?: T;
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    hasMore: boolean;
+  };
+}
+
