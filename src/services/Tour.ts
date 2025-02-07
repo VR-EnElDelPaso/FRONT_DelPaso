@@ -71,7 +71,13 @@ export const editTour = async (
   id: string,
   tour: Partial<Tour>
 ): Promise<Tour> => {
-  const response = await axios.patch(`${apiBaseUrl}/tours/${id}`, tour);
+  // Si hay tags, extraemos solo los IDs antes de enviar
+  const dataToSend = {
+    ...tour,
+    tags: tour.tags?.map((tag) => tag.id), // Convertimos los tags a array de IDs
+  };
+
+  const response = await axios.patch(`${apiBaseUrl}/tours/${id}`, dataToSend);
   return response.data;
 };
 
