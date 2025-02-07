@@ -87,7 +87,7 @@ export const TagManager = ({
                     >
                       <Badge
                         variant="default"
-                        className="px-3 py-1 text-md bg-primary text-primary-foreground group"
+                        className="px-3 py-1 text-md bg-primary text-white group"
                       >
                         {tag.name}
                         <button
@@ -128,7 +128,9 @@ export const TagManager = ({
           <Button variant="outline" onClick={onClose}>
             Cancelar
           </Button>
-          <Button onClick={() => onSave(selected)}>Guardar</Button>
+          <Button className="text-white" onClick={() => onSave(selected)}>
+            Guardar
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
