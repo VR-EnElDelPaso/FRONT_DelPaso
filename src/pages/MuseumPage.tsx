@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { getMuseumById } from "@/services/Museums";
 import { Museum } from "@/types/Museums";
-import { useCallback, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Clock, MapPin, DollarSign } from "lucide-react";
 import Carousel from "@/components/NowShowing/Carousel";
@@ -12,18 +12,6 @@ import { MuseumInfoCard } from "@/features/museum/componets/MuseumInfoCard";
 const MuseumPage = () => {
   // ----[ States ]----
   const [museum, setMuseum] = useState<Museum | null>(null);
-
-  const fetchMuseum = useCallback(async () => {
-    const museum = await getMuseumById(id as string);
-    console.log(museum);
-    setMuseum(museum);
-  }, [id]);
-
-  const fetchMuseum = useCallback(async () => {
-    const museum = await getMuseumById(id as string);
-    console.log(museum);
-    setMuseum(museum);
-  }, [id]);
 
   // ----[ Hooks ]----
   const { id } = useParams<{ id: string }>();
@@ -175,9 +163,15 @@ const MuseumPage = () => {
                   Paso.
                 </p>
 
-                <Button variant="default" size="lg" className="font-medium text-white">
-                  Ayuda
-                </Button>
+                <div className="flex justify-end">
+                  <Button
+                    variant="default"
+                    size="lg"
+                    className="font-medium text-white rounded-xl"
+                    >
+                    Ayuda
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
