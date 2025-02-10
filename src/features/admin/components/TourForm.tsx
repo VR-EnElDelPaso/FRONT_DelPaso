@@ -54,7 +54,9 @@ const formSchema = z.object({
 interface TourFormProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: z.infer<typeof formSchema>) => void;
+  onSubmit: (
+    data: Omit<z.infer<typeof formSchema>, "tags"> & { tags: string[] }
+  ) => void;
   initialValues?: Partial<z.infer<typeof formSchema>>;
 }
 
@@ -136,7 +138,12 @@ const TourForm = ({
   });
 
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
-    onSubmit(values);
+    const formattedValues = {
+      ...values,
+      tags: values.tags.map((tag) => tag.id), // Solo enviamos los IDs
+    };
+
+    onSubmit(formattedValues);
     form.reset();
     onClose();
   };
