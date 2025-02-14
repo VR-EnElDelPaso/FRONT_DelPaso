@@ -121,7 +121,10 @@ const AdminTours = () => {
           });
         }
       } else {
-        const response = await createTour(values);
+        const response = await createTour({
+          ...values,
+          tags: values.tags || [],
+        });
         if (response) {
           setFormVisible(false);
           setInitialValues(undefined);
@@ -209,7 +212,11 @@ const AdminTours = () => {
             isOpen={formVisible}
             onClose={handleClose}
             onSubmit={(data) =>
-              onSubmit({ ...data, price: parseFloat(data.price) })
+              onSubmit({
+                ...data,
+                price: parseFloat(data.price),
+                tags: data.tags.map((tag) => ({ id: tag, name: tag })),
+              })
             }
             initialValues={
               initialValues
