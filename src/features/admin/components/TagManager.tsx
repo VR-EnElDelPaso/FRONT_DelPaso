@@ -91,6 +91,7 @@ export const TagManager = ({
                       >
                         {tag.name}
                         <button
+                          title="Remover tag"
                           onClick={() => handleToggleTag(tag)}
                           className="ml-2 opacity-60 hover:opacity-100 transition-opacity group-hover:text-red-300"
                         >
