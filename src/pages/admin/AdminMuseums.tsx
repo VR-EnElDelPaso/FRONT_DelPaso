@@ -7,6 +7,9 @@ import PhotoCellModal from "@/shared/components/PhotoCellModal";
 import { createMuseum, deleteMuseum, editMuseum } from "@/services/Museums";
 import { useToast } from "@/hooks/use-toast";
 import MuseumForm from "@/features/admin/components/MuseumForm";
+import HoursDisplay from "@/features/admin/components/HoursDisplay";
+import { Clock } from "lucide-react";
+import { MuseumHours } from "@/types/Museums";
 
 interface LoaderData {
   data: Museum[];
@@ -42,6 +45,21 @@ const columns: ColumnDef<Museum>[] = [
     accessorKey: "address_name",
     header: "Dirección",
   },
+  {
+    accessorKey: "hours",
+    header: "Horarios",
+    cell: ({ row }) => {
+      const hours = row.getValue("hours") as MuseumHours[];
+      return hours ? (
+        <HoursDisplay hours={hours} />
+      ) : (
+        <div className="flex items-center gap-2 text-gray-500">
+          <Clock className="w-4 h-4" />
+          <span>No especificado</span>
+        </div>
+      );
+    }
+  }
 ];
 
 const AdminMuseums = () => {
