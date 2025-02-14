@@ -50,27 +50,34 @@ const HoursDialog = ({
 
       if (editingDay === "all") {
         daysToSelect = initialHours.map((h) => h.day);
+        // Resetear estados para edición múltiple
+        setIs24Hours(false);
+        setIsClosed(false);
+        setOpenTime("");
+        setCloseTime("");
       } else if (editingDay === "weekdays") {
         daysToSelect = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
+        // Resetear estados para edición múltiple
+        setIs24Hours(false);
+        setIsClosed(false);
+        setOpenTime("");
+        setCloseTime("");
       } else if (editingDay) {
         daysToSelect = [editingDay];
+        // Obtener el horario del día específico que se está editando
+        const referenceHours = initialHours.find((h) => h.day === editingDay);
+        if (referenceHours) {
+          setIs24Hours(
+            referenceHours.isOpen &&
+              (!referenceHours.openTime || !referenceHours.closeTime)
+          );
+          setIsClosed(!referenceHours.isOpen);
+          setOpenTime(referenceHours.openTime || "");
+          setCloseTime(referenceHours.closeTime || "");
+        }
       }
 
       setSelectedDays(daysToSelect);
-
-      // Obtener el horario del primer día seleccionado
-      const referenceHours = initialHours.find(
-        (h) => h.day === daysToSelect[0]
-      );
-      if (referenceHours) {
-        setIs24Hours(
-          referenceHours.isOpen &&
-            (!referenceHours.openTime || !referenceHours.closeTime)
-        );
-        setIsClosed(!referenceHours.isOpen);
-        setOpenTime(referenceHours.openTime || "");
-        setCloseTime(referenceHours.closeTime || "");
-      }
     }
   }, [isOpen, initialHours, editingDay]);
 
