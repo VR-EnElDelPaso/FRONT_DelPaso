@@ -1,6 +1,7 @@
 import axios from "axios";
 import ResponseData from "../types/ResponseData";
 import { Tour } from "@/types/tour";
+import { Tag } from "@/types/tag";
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL as string;
 
@@ -61,8 +62,16 @@ export const getTourSuggestions = async (
 };
 
 //create tour
-export const createTour = async (tour: Partial<Tour>): Promise<Tour> => {
-  const response = await axios.post(`${apiBaseUrl}/tours`, tour);
+export const createTour = async (
+  tour: Partial<Tour> & { tags: Array<Tag | string> }
+): Promise<Tour> => {
+  const dataToSend = {
+    ...tour,
+    // Si el tag es un objeto, tomamos su id, si es un string lo dejamos como está
+    tags: tour.tags.map((tag) => (typeof tag === "object" ? tag.id : tag)),
+  };
+
+  const response = await axios.post(`${apiBaseUrl}/tours`, dataToSend);
   return response.data;
 };
 
@@ -71,7 +80,13 @@ export const editTour = async (
   id: string,
   tour: Partial<Tour>
 ): Promise<Tour> => {
-  const response = await axios.patch(`${apiBaseUrl}/tours/${id}`, tour);
+  // Si hay tags, extraemos solo los IDs antes de enviar
+  const dataToSend = {
+    ...tour,
+    tags: tour.tags?.map((tag) => tag.id), // Convertimos los tags a array de IDs
+  };
+
+  const response = await axios.patch(`${apiBaseUrl}/tours/${id}`, dataToSend);
   return response.data;
 };
 

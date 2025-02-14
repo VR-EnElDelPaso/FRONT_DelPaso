@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
 import { Museum } from "@/types/Museums";
 import TourForm from "@/features/admin/components/TourForm";
+import { TagsCell } from "@/shared/components/TagCell";
 
 interface LoaderData {
   data: Tour[];
@@ -94,6 +95,14 @@ const AdminTours = () => {
         return `${row.getValue("stars")} ⭐`;
       },
     },
+    {
+      accessorKey: "tags",
+      header: "Tags",
+      cell: ({ row }) => {
+        const tags = row.original.tags;
+        return <TagsCell tags={tags} />;
+      },
+    },
   ];
 
   // Rest of the component remains the same...
@@ -112,7 +121,10 @@ const AdminTours = () => {
           });
         }
       } else {
-        const response = await createTour(values);
+        const response = await createTour({
+          ...values,
+          tags: values.tags || [],
+        });
         if (response) {
           setFormVisible(false);
           setInitialValues(undefined);
@@ -200,7 +212,11 @@ const AdminTours = () => {
             isOpen={formVisible}
             onClose={handleClose}
             onSubmit={(data) =>
-              onSubmit({ ...data, price: parseFloat(data.price) })
+              onSubmit({
+                ...data,
+                price: parseFloat(data.price),
+                tags: data.tags.map((tag) => ({ id: tag, name: tag })),
+              })
             }
             initialValues={
               initialValues

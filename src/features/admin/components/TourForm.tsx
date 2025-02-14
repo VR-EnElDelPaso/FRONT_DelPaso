@@ -27,6 +27,10 @@ import { getAllMuseums } from "@/services/Museums";
 import { ChevronDown } from "lucide-react";
 import ImageUpload from "@/shared/components/ImageUpload";
 
+import { FaTags } from "react-icons/fa";
+import { TagManager } from "./TagManager";
+import { Tag } from "@/types/tag";
+
 const formSchema = z.object({
   name: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
   description: z
@@ -39,12 +43,20 @@ const formSchema = z.object({
   url: z.string().url("Debe ser una URL válida"),
   image_url: z.string().min(1, "La imagen es requerida"),
   museum_id: z.string().uuid("Debes seleccionar un museo válido"),
+  tags: z.array(
+    z.object({
+      id: z.string(),
+      name: z.string(),
+    })
+  ),
 });
 
 interface TourFormProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: z.infer<typeof formSchema>) => void;
+  onSubmit: (
+    data: Omit<z.infer<typeof formSchema>, "tags"> & { tags: string[] }
+  ) => void;
   initialValues?: Partial<z.infer<typeof formSchema>>;
 }
 
@@ -92,6 +104,10 @@ const TourForm = ({
   initialValues,
 }: TourFormProps) => {
   const [museums, setMuseums] = useState<Museum[]>([]);
+  const [showTagManager, setShowTagManager] = useState(false);
+  const [selectedTags, setSelectedTags] = useState<Tag[]>(
+    initialValues?.tags || []
+  );
 
   useEffect(() => {
     const fetchMuseums = async () => {
@@ -122,7 +138,12 @@ const TourForm = ({
   });
 
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
-    onSubmit(values);
+    const formattedValues = {
+      ...values,
+      tags: values.tags.map((tag) => tag.id), // Solo enviamos los IDs
+    };
+
+    onSubmit(formattedValues);
     form.reset();
     onClose();
   };
@@ -237,6 +258,24 @@ const TourForm = ({
                 />
 
                 <FormField
+                  name="tags"
+                  render={() => (
+                    <FormItem>
+                      <FormLabel>Tags</FormLabel>
+                      <Button
+                        type="button"
+                        onClick={() => setShowTagManager(true)}
+                        variant="outline"
+                        className="w-full"
+                      >
+                        <FaTags className="mr-2" />
+                        Gestionar Tags ({selectedTags.length})
+                      </Button>
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
                   control={form.control}
                   name="image_url"
                   render={({ field }) => (
@@ -254,6 +293,20 @@ const TourForm = ({
                     </FormItem>
                   )}
                 />
+
+                {showTagManager && (
+                  <TagManager
+                    isOpen={showTagManager}
+                    onClose={() => setShowTagManager(false)}
+                    selectedTags={selectedTags}
+                    onSave={(tags) => {
+                      setSelectedTags(tags);
+                      setShowTagManager(false);
+                      // Asegúrate de incluir los tags en el formulario
+                      form.setValue("tags", tags);
+                    }}
+                  />
+                )}
 
                 <DialogFooter className="pt-6">
                   <Button type="button" variant="outline" onClick={onClose}>
