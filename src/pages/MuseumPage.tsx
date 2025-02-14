@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { Clock, MapPin, DollarSign } from "lucide-react";
 import Carousel from "@/components/NowShowing/Carousel";
 import { Button } from "@/components/ui/button";
+import MuseumStatus from "@/components/NowShowing/MuseumStatus";
 import { MuseumInfoCard } from "@/features/museum/componets/MuseumInfoCard";
 
 const MuseumPage = () => {
@@ -87,10 +88,14 @@ const MuseumPage = () => {
             </MuseumInfoCard>
           </div>
 
+          <div className="flex justify-end mt-4">
+            <MuseumStatus />
+          </div>
+
           {/* Recorridos */}
           <div className="container mx-auto flex flex-col px-4 sm:px-6 md:px-8">
             {/* Title */}
-            <div className="sm:mb-8">
+            <div className="mb-6 sm:mb-8">
               <div className="flex text-primary/50 items-center mb-2">
                 <span className="text-lg sm:text-xl mr-2">•</span>
                 <p className="text-xs sm:text-sm font-bold tracking-widest uppercase">
@@ -104,7 +109,7 @@ const MuseumPage = () => {
 
             {/* Carousel */}
             <div className="w-full mb-8 sm:mb-10">
-              <Carousel />
+              <Carousel museum_id={museum.id} />
             </div>
 
             {/* Button */}
@@ -137,10 +142,10 @@ const MuseumPage = () => {
 
             {/* Sección de Ayuda */}
             <div className="container mx-auto px-4 py-16">
-              <div className="max-w-3xl mx-auto text-center space-y-6">
-                <div className="flex items-center justify-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-primary" />
-                  <h3 className="text-sm font-medium text-muted-foreground">
+              <div className="max-w-3xl mx-auto space-y-6">
+                <div className="flex items-center gap-2">
+                  <div className="w-1 h-1 rounded-full bg-primary" />
+                  <h3 className="text-sm font-medium tracking-widest text-primary uppercase text-muted-foreground">
                     Ayuda
                   </h3>
                 </div>
@@ -158,13 +163,15 @@ const MuseumPage = () => {
                   Paso.
                 </p>
 
-                <Button
-                  variant="default"
-                  size="lg"
-                  className="font-medium text-white"
-                >
-                  Ayuda
-                </Button>
+                <div className="flex justify-end">
+                  <Button
+                    variant="default"
+                    size="lg"
+                    className="font-medium text-white rounded-xl"
+                    >
+                    Ayuda
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
