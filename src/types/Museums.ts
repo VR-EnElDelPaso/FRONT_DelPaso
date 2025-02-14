@@ -8,3 +8,10 @@ export interface Museum {
   created_at: string;
   updated_at: string;
 }
+
+export interface MuseumHours {
+  day: string;
+  isOpen: boolean;
+  openTime?: string;
+  closeTime?: string;
+}
