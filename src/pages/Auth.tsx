@@ -2,6 +2,7 @@ import { useState } from "react";
 import { SignInForm } from "@/components/Auth/SignInForm";
 import SignUpForm from "@/components/Auth/SignUpForm/index";
 import Udc from "@/assets/images/udc.png";
+import MuviLogoSvg from "@/assets/svgs/MUVI-logo.svg";
 
 const Auth = () => {
   const [isSignIn, setIsSignIn] = useState(true);
@@ -19,10 +20,10 @@ const Auth = () => {
   const commonTransition = "transition-all duration-500 ease-in-out";
 
   return (
-    <div className="font-inter text-dark min-h-screen bg-[url('/fernando-del-paso.jpg')] bg-cover bg-center flex items-center justify-center px-4 relative">
+    <div className={`font-inter text-dark min-h-screen bg-[url('/assets/auth/images/auth-bg.png')] bg-cover bg-center flex items-center justify-center px-4 relative`}>
       <div className="absolute inset-0 bg-black opacity-40" />
 
-      <div className="relative w-full max-w-[1035px] min-h-[612px] rounded-lg overflow-hidden backdrop-blur-md bg-white/10 flex sm:flex-row flex-col items-center justify-center">
+      <div className="relative w-full max-w-[1035px] min-h-[612px] rounded-lg overflow-hidden backdrop-blur-2xl bg-white/10 flex sm:flex-row flex-col items-center justify-center">
         {/* Sign Up Container */}
         <div
           className={`absolute top-0 h-full ${commonTransition} sm:left-0 w-full sm:w-1/2
@@ -83,7 +84,7 @@ const Auth = () => {
           <div className="bg-white rounded-lg p-6 shadow-lg flex flex-col justify-between items-center h-full">
             <div className="flex-grow flex items-center justify-center">
               <img
-                src="/muvi_logo.png"
+                src={MuviLogoSvg}
                 alt="Muvi Logo"
                 className="object-contain max-w-[80%] max-h-[80%]"
               />
