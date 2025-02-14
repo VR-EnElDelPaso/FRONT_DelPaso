@@ -3,7 +3,6 @@ import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
 
 import HomePage from "../pages/Home";
 import TourPage from "../pages/TourPage";
-import LoginPage from "../pages/Login";
 import AppLayout from "../layouts/AppLayout";
 import NoAppBarLayout from "../layouts/NoAppBarLayout";
 import Tours from "../pages/Tours";
@@ -80,10 +79,6 @@ const router = createBrowserRouter([
       {
         path: "/museum/:id",
         element: <MuseumPage />
-      },
-      {
-        path: "/login",
-        element: <LoginPage />,
       },
       {
         path: "/orders/:orderId",
