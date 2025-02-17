@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { FaSignOutAlt, FaUser } from 'react-icons/fa';
 import Udc from '../../assets/images/udc.png';
-import Muvi from '../../assets/images/muvi.jpg'; 
+import Muvi from '@/assets/svgs/MUVI-logo.svg'; 
 import { useAuth } from '../../hooks/useAuth';
 import { ZoomInOnScroll } from '../animations/ZoomInOnScroll';
 import SocialMediaIcons from '../SocialMediaIcons/SocialMediaIcons';
@@ -26,22 +26,22 @@ export default function AppBar() {
       <ZoomInOnScroll duration={2} initialScale={.95}>
         
         {/* Contenido */}
-        <div className="h-20 p-4 container mx-auto flex justify-between items-center">
+        <div className="container flex items-center justify-between h-20 p-4 mx-auto">
             
             {/* Logos */}
             <div className='h-full'>
-              <a href="/" className="h-full flex cursor-pointer items-center gap-4 transition-transform hover:scale-105">
-                <img className='h-full object-contain' src={Muvi} alt="Logo Muvi" />
+              <a href="/" className="flex items-center h-full gap-4 transition-transform cursor-pointer hover:scale-105">
+                <img className='object-contain h-full p-1' src={Muvi} alt="Logo Muvi" />
                 <div className='h-12 w-[1px] bg-gray-200'></div>
-                <img className='h-full object-contain' src={Udc} alt="Logo UDC" />
+                <img className='object-contain h-full' src={Udc} alt="Logo UDC" />
               </a>
             </div>
 
             {/* Acciones */}
-            <div className="hidden lg:flex space-x-5">
+            <div className="hidden space-x-5 lg:flex">
               
               {/* Menú */}
-              <div className="flex gap-10 items-center">
+              <div className="flex items-center gap-10">
                 <NavLink href="/">{t('Home')}</NavLink>
                 <NavLink href="#">{t('About Muvi')}</NavLink>
                 <NavLink href="#">{t('Help')}</NavLink>
@@ -53,28 +53,28 @@ export default function AppBar() {
                 <LanguageSelector />
                 {
                   isAuthenticated ? (<>
-                    <div className='flex justify-center items-center gap-1'>
+                    <div className='flex items-center justify-center gap-1'>
                       <FaUser className="text-xl" />
                       <h4>{user?.display_name}</h4>
                     </div>
-                    <button title='sign out' onClick={handleLogout} className="bg-black bg-opacity-75 text-white px-4 py-1 rounded-xl transition duration-200 hover:bg-opacity-100 font-normal">
+                    <button title='sign out' onClick={handleLogout} className="px-4 py-1 font-normal text-white transition duration-200 bg-black bg-opacity-75 rounded-xl hover:bg-opacity-100">
                       <FaSignOutAlt className="mr-1" />
                     </button>
                   </>) : (<>
-                    <button onClick={handleLogin} className="bg-primary bg-opacity-75 text-white px-4 py-1 rounded-xl transition duration-200 hover:bg-opacity-100 font-normal">
+                    <button onClick={handleLogin} className="px-4 py-1 font-normal text-white transition duration-200 bg-opacity-75 bg-primary rounded-xl hover:bg-opacity-100">
                       {t('Login')}
                     </button>
                   </>)
                 }
               </div>
             </div>
-            <div className="lg:hidden flex items-center">
+            <div className="flex items-center lg:hidden">
                 <MenuButton isOpen={menuOpen} onClick={toggleMenu} />
             </div>
         </div>
         {/* Menú en vista mobile */}
         {menuOpen && (
-          <div className=" font-bold lg:hidden mt-4 flex flex-col space-y-12 items-center">
+          <div className="flex flex-col items-center mt-4 space-y-12 font-bold lg:hidden">
             <NavLink href="#">{t('Home')}</NavLink>
             <NavLink href="#">{t('About Muvi')}</NavLink>
             <NavLink href="#">{t('Help')}</NavLink>
@@ -82,15 +82,15 @@ export default function AppBar() {
             <div className='flex flex-col gap-1'>
               {
                 isAuthenticated ? (<>
-                  <div className='flex justify-center items-center gap-1'>
+                  <div className='flex items-center justify-center gap-1'>
                     <FaUser className="text-xl" />
                     <h4>{user?.display_name}</h4>
                   </div>
-                  <button onClick={handleLogout} className="bg-black bg-opacity-75 text-white px-4 py-1 rounded-md transition duration-200 hover:bg-opacity-100 font-normal">
+                  <button onClick={handleLogout} className="px-4 py-1 font-normal text-white transition duration-200 bg-black bg-opacity-75 rounded-md hover:bg-opacity-100">
                     {t('Logout')}
                   </button>
                 </>) : (<>
-                  <button onClick={handleLogin} className="bg-black bg-opacity-75 text-white px-4 py-1 rounded-md transition duration-200 hover:bg-opacity-100 font-normal">
+                  <button onClick={handleLogin} className="px-4 py-1 font-normal text-white transition duration-200 bg-black bg-opacity-75 rounded-md hover:bg-opacity-100">
                     {t('Login')}
                   </button>
                 </>)

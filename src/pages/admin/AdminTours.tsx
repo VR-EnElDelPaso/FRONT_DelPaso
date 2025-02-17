@@ -83,7 +83,7 @@ const AdminTours = () => {
     },
     {
       accessorKey: "price",
-      header: "Precio",
+      header: "Cuota de recuperación",
       cell: ({ row }) => {
         return `$${row.getValue("price")}`;
       },
@@ -178,10 +178,10 @@ const AdminTours = () => {
   };
 
   return (
-    <div className="container mx-auto py-8">
-      <div className="bg-white rounded-lg shadow-md p-6">
+    <div className="container py-8 mx-auto">
+      <div className="p-6 bg-white rounded-lg shadow-md">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="mb-2 text-3xl font-bold text-gray-900">
             Gestión de Tours
           </h1>
           <p className="text-gray-600">
@@ -190,7 +190,7 @@ const AdminTours = () => {
           </p>
         </div>
 
-        <div className="bg-white rounded-lg overflow-hidden">
+        <div className="overflow-hidden bg-white rounded-lg">
           <DataTable
             columns={columns}
             data={data}

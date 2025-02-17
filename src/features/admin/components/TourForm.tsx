@@ -38,7 +38,7 @@ const formSchema = z.object({
     .min(10, "La descripción debe tener al menos 10 caracteres"),
   price: z
     .string()
-    .regex(/^\d+(\.\d{1,2})?$/, "El precio debe ser un número válido"),
+    .regex(/^\d+(\.\d{1,2})?$/, "El cuota debe ser un número válido"),
   stars: z.number().min(0).max(5),
   url: z.string().url("Debe ser una URL válida"),
   image_url: z.string().min(1, "La imagen es requerida"),
@@ -76,6 +76,7 @@ const CustomSelect = ({
   return (
     <div className="relative">
       <select
+        title="Museo"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className={`w-full h-10 px-3 rounded-md border bg-background text-sm outline-none 
@@ -92,7 +93,7 @@ const CustomSelect = ({
           </option>
         ))}
       </select>
-      <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 pointer-events-none text-muted-foreground" />
+      <ChevronDown className="absolute w-4 h-4 transform -translate-y-1/2 pointer-events-none right-3 top-1/2 text-muted-foreground" />
     </div>
   );
 };
@@ -153,7 +154,7 @@ const TourForm = ({
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] p-0 font-inter">
         <ScrollArea className="h-full max-h-[90vh]">
           <div className="p-6">
-            <DialogHeader className="space-y-3 pb-4 border-b">
+            <DialogHeader className="pb-4 space-y-3 border-b">
               <DialogTitle className="text-2xl font-semibold tracking-tight">
                 {initialValues ? "Editar tour" : "Crear nuevo tour"}
               </DialogTitle>
@@ -167,8 +168,9 @@ const TourForm = ({
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(handleSubmit)}
-                className="space-y-6 pt-4"
+                className="pt-4 space-y-6"
               >
+                {/* Museo */}
                 <FormField
                   control={form.control}
                   name="museum_id"
@@ -189,6 +191,7 @@ const TourForm = ({
                   )}
                 />
 
+                {/* Nombre */}
                 <FormField
                   control={form.control}
                   name="name"
@@ -203,6 +206,7 @@ const TourForm = ({
                   )}
                 />
 
+                {/* Descripción */}
                 <FormField
                   control={form.control}
                   name="description"
@@ -221,12 +225,13 @@ const TourForm = ({
                   )}
                 />
 
+                {/* Cuota de recuperación */}
                 <FormField
                   control={form.control}
                   name="price"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Precio</FormLabel>
+                      <FormLabel>Cuota de recuperación</FormLabel>
                       <FormControl>
                         <Input
                           type="number"

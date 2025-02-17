@@ -129,7 +129,7 @@ const MuseumForm = ({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-h-[90vh] overflow-y-auto w-full max-w-2xl p-4 md:p-6">
-        <DialogHeader className="space-y-2 pb-4 border-b">
+        <DialogHeader className="pb-4 space-y-2 border-b">
           <DialogTitle className="text-xl font-semibold">
             {initialValues ? "Editar museo" : "Crear nuevo museo"}
           </DialogTitle>
@@ -143,8 +143,9 @@ const MuseumForm = ({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmit)}
-            className="space-y-4 py-4"
+            className="py-4 space-y-4"
           >
+            {/* Nombre */}
             <FormField
               control={form.control}
               name="name"
@@ -159,6 +160,7 @@ const MuseumForm = ({
               )}
             />
 
+            {/* Descripción */}
             <FormField
               control={form.control}
               name="description"
@@ -177,6 +179,7 @@ const MuseumForm = ({
               )}
             />
 
+            {/* Dirección */}
             <FormField
               control={form.control}
               name="address_name"
@@ -191,6 +194,7 @@ const MuseumForm = ({
               )}
             />
 
+            {/* Recorrido principal */}
             {initialValues && (
               <FormField
                 control={form.control}
@@ -226,7 +230,7 @@ const MuseumForm = ({
                       <FormDescription>
                         <Link
                           to="/admin/tours"
-                          className="text-blue-500 hover:text-blue-700 underline flex items-center gap-1"
+                          className="flex items-center gap-1 text-blue-500 underline hover:text-blue-700"
                         >
                           Agregar recorridos
                           <SquareArrowOutUpRight size="10px" />
@@ -239,30 +243,12 @@ const MuseumForm = ({
               />
             )}
 
-            <FormField
-              control={form.control}
-              name="main_photo"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Foto del museo</FormLabel>
-                  <FormControl>
-                    <ImageUpload
-                      value={field.value}
-                      onChange={field.onChange}
-                      onClear={() => field.onChange("")}
-                      error={!!form.formState.errors.main_photo}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
+            {/* Horarios */}
             <div className="space-y-4">
               <FormLabel>Horarios</FormLabel>
 
               {/* Lista de días */}
-              <div className="border rounded-md divide-y">
+              <div className="border divide-y rounded-md">
                 {museumHours.map((hour) => (
                   <div
                     key={hour.day}
@@ -283,13 +269,13 @@ const MuseumForm = ({
                         type="button"
                         variant="ghost"
                         size="sm"
-                        className="h-8 w-8 p-0"
+                        className="w-8 h-8 p-0"
                         onClick={() => {
                           setHoursDialogOpen(true);
                           setCurrentEditingDay(hour.day);
                         }}
                       >
-                        <Pencil className="h-4 w-4 text-gray-500" />
+                        <Pencil className="w-4 h-4 text-gray-500" />
                       </Button>
                     </div>
                   </div>
@@ -324,6 +310,26 @@ const MuseumForm = ({
                 </Button>
               </div>
             </div>
+
+            {/* Foto principal */}
+            <FormField
+              control={form.control}
+              name="main_photo"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Foto del museo</FormLabel>
+                  <FormControl>
+                    <ImageUpload
+                      value={field.value}
+                      onChange={field.onChange}
+                      onClear={() => field.onChange("")}
+                      error={!!form.formState.errors.main_photo}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <DialogFooter className="pt-4">
               <Button type="button" variant="outline" onClick={onClose}>
