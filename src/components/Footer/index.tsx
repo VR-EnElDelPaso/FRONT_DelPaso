@@ -19,7 +19,7 @@ export default function Footer() {
               </div>
               
               <div>
-                <h4 className="text-xl font-semibold mb-4">Precios</h4>
+                <h4 className="text-xl font-semibold mb-4">Cuota de recuperación</h4>
                 <ul className='space-y-2'>
                   <li><strong>• Estudiantes:</strong> 50.00 MXN</li>
                   <li><strong>• Público General:</strong> 80.00 MXN</li>

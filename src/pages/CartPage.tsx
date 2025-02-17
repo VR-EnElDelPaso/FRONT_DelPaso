@@ -93,21 +93,24 @@ export default function CartPage() {
           <div className="pl-10">
             <h1 className="text-5xl font-kaiseiDecol">Carrito</h1>
             {cartItems.length > 0 && (
-              <div className="flex mt-6 gap-2 text-blue-600">
-                <button
-                  type="button"
-                  onClick={selectAllItems}
-                  className="hover:drop-shadow-lg hover:text-blue-800"
-                >
-                  Seleccionar todos
-                </button>
-                <button
-                  type="button"
-                  onClick={unselectAllItems}
-                  className="hover:drop-shadow-lg hover:text-blue-800"
-                >
-                  Borrar selección
-                </button>
+              <div className="flex mt-6 gap-8 items-center justify-between">
+                <div className="flex gap-8 text-primary hover:text-primary/90">
+                  <button
+                    type="button"
+                    onClick={selectAllItems}
+                    className="hover:drop-shadow-lg"
+                  >
+                    Seleccionar todos
+                  </button>
+                  <button
+                    type="button"
+                    onClick={unselectAllItems}
+                    className="hover:drop-shadow-lg"
+                  >
+                    Borrar selección
+                  </button>
+                </div>
+                <div className="text-gray-600 pr-2">Cuota de recuperación</div>
               </div>
             )}
             <hr className="w-full h-0.5 bg-gray-200 border-0 rounded my-2"></hr>
