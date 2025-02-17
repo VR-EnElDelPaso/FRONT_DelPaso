@@ -1,7 +1,12 @@
+// src/features/admin/components/TourForm.tsx
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useEffect, useState } from "react";
+import { Loader2 } from "lucide-react";
+import { FaTags } from "react-icons/fa";
+
+// Components
 import {
   Dialog,
   DialogContent,
@@ -20,15 +25,20 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { DialogDescription } from "@radix-ui/react-dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Museum } from "@/types/Museums";
-import { getAllMuseums } from "@/services/Museums";
-import { ChevronDown } from "lucide-react";
 import ImageUpload from "@/shared/components/ImageUpload";
-
-import { FaTags } from "react-icons/fa";
 import { TagManager } from "./TagManager";
+import { CustomSelect } from "@/shared/components/CustomSelect";
+
+// Services
+import { getAllMuseums } from "@/services/Museums";
+import { uploadImage } from "@/services/upload";
+
+// Hooks
+import { useToast } from "@/hooks/use-toast";
+
+// Types
+import { Museum } from "@/types/Museums";
 import { Tag } from "@/types/tag";
 
 const formSchema = z.object({
@@ -51,52 +61,14 @@ const formSchema = z.object({
   ),
 });
 
+type FormValues = z.infer<typeof formSchema>;
+
 interface TourFormProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (
-    data: Omit<z.infer<typeof formSchema>, "tags"> & { tags: string[] }
-  ) => void;
-  initialValues?: Partial<z.infer<typeof formSchema>>;
+  onSubmit: (data: Omit<FormValues, "tags"> & { tags: string[] }) => void;
+  initialValues?: Partial<FormValues>;
 }
-
-const CustomSelect = ({
-  value,
-  onChange,
-  options,
-  placeholder,
-  error,
-}: {
-  value: string;
-  onChange: (value: string) => void;
-  options: Museum[];
-  placeholder: string;
-  error?: boolean;
-}) => {
-  return (
-    <div className="relative">
-      <select
-        title="Museo"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className={`w-full h-10 px-3 rounded-md border bg-background text-sm outline-none 
-            focus:outline-none focus:ring-2 focus:ring-ring focus:border-input 
-            disabled:cursor-not-allowed disabled:opacity-50 appearance-none
-            ${error ? "border-destructive" : "border-input"}`}
-      >
-        <option value="" disabled>
-          {placeholder}
-        </option>
-        {options.map((option) => (
-          <option key={option.id} value={option.id}>
-            {option.name}
-          </option>
-        ))}
-      </select>
-      <ChevronDown className="absolute w-4 h-4 transform -translate-y-1/2 pointer-events-none right-3 top-1/2 text-muted-foreground" />
-    </div>
-  );
-};
 
 const TourForm = ({
   isOpen,
@@ -104,12 +76,33 @@ const TourForm = ({
   onSubmit,
   initialValues,
 }: TourFormProps) => {
+  // States
   const [museums, setMuseums] = useState<Museum[]>([]);
   const [showTagManager, setShowTagManager] = useState(false);
   const [selectedTags, setSelectedTags] = useState<Tag[]>(
     initialValues?.tags || []
   );
+  const [isUploading, setIsUploading] = useState(false);
 
+  // Hooks
+  const { toast } = useToast();
+
+  // Form
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: initialValues?.name || "",
+      description: initialValues?.description || "",
+      price: initialValues?.price || "",
+      stars: initialValues?.stars || 0,
+      url: initialValues?.url || "",
+      image_url: initialValues?.image_url || "",
+      museum_id: initialValues?.museum_id || "",
+      tags: initialValues?.tags || [],
+    },
+  });
+
+  // Effects
   useEffect(() => {
     const fetchMuseums = async () => {
       try {
@@ -125,28 +118,47 @@ const TourForm = ({
     fetchMuseums();
   }, []);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: initialValues || {
-      name: "",
-      description: "",
-      price: "",
-      stars: 0,
-      url: "",
-      image_url: "",
-      museum_id: "",
-    },
-  });
+  // Handlers
+  const handleSubmit = async (values: FormValues) => {
+    setIsUploading(true);
 
-  const handleSubmit = (values: z.infer<typeof formSchema>) => {
-    const formattedValues = {
-      ...values,
-      tags: values.tags.map((tag) => tag.id), // Solo enviamos los IDs
-    };
+    try {
+      // Si la imagen es base64, súbela a Cloudinary
+      let finalImageUrl = values.image_url;
+      if (values.image_url.startsWith("data:image")) {
+        const response = await uploadImage(values.image_url);
+        if (!response.ok || !response.data?.url) {
+          throw new Error("Error al subir la imagen");
+        }
+        finalImageUrl = response.data.url;
+      }
 
-    onSubmit(formattedValues);
-    form.reset();
-    onClose();
+      // Envía el formulario con la URL de Cloudinary
+      const formattedValues = {
+        ...values,
+        image_url: finalImageUrl,
+        tags: values.tags.map((tag) => tag.id),
+      };
+
+      await onSubmit(formattedValues);
+      form.reset();
+      onClose();
+    } catch (error) {
+      toast({
+        title: "Error al guardar",
+        description:
+          "Ocurrió un error al guardar los cambios. Por favor, intenta de nuevo.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleTagsSave = (tags: Tag[]) => {
+    setSelectedTags(tags);
+    setShowTagManager(false);
+    form.setValue("tags", tags);
   };
 
   return (
@@ -154,23 +166,23 @@ const TourForm = ({
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] p-0 font-inter">
         <ScrollArea className="h-full max-h-[90vh]">
           <div className="p-6">
-            <DialogHeader className="pb-4 space-y-3 border-b">
+            <DialogHeader className="space-y-3 pb-4 border-b">
               <DialogTitle className="text-2xl font-semibold tracking-tight">
                 {initialValues ? "Editar tour" : "Crear nuevo tour"}
               </DialogTitle>
-              <DialogDescription className="text-base text-gray-500">
+              <p className="text-base text-gray-500">
                 {initialValues
                   ? "Edite la información del tour seleccionado"
                   : "Complete los campos para agregar un nuevo tour al sistema."}
-              </DialogDescription>
+              </p>
             </DialogHeader>
 
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(handleSubmit)}
-                className="pt-4 space-y-6"
+                className="space-y-6 pt-4"
               >
-                {/* Museo */}
+                {/* Museum Select */}
                 <FormField
                   control={form.control}
                   name="museum_id"
@@ -191,7 +203,7 @@ const TourForm = ({
                   )}
                 />
 
-                {/* Nombre */}
+                {/* Tour Name */}
                 <FormField
                   control={form.control}
                   name="name"
@@ -206,7 +218,7 @@ const TourForm = ({
                   )}
                 />
 
-                {/* Descripción */}
+                {/* Description */}
                 <FormField
                   control={form.control}
                   name="description"
@@ -225,7 +237,7 @@ const TourForm = ({
                   )}
                 />
 
-                {/* Cuota de recuperación */}
+                {/* Price */}
                 <FormField
                   control={form.control}
                   name="price"
@@ -245,6 +257,7 @@ const TourForm = ({
                   )}
                 />
 
+                {/* URL */}
                 <FormField
                   control={form.control}
                   name="url"
@@ -262,6 +275,7 @@ const TourForm = ({
                   )}
                 />
 
+                {/* Tags */}
                 <FormField
                   name="tags"
                   render={() => (
@@ -280,6 +294,7 @@ const TourForm = ({
                   )}
                 />
 
+                {/* Image Upload */}
                 <FormField
                   control={form.control}
                   name="image_url"
@@ -299,26 +314,39 @@ const TourForm = ({
                   )}
                 />
 
+                {/* Tag Manager Dialog */}
                 {showTagManager && (
                   <TagManager
                     isOpen={showTagManager}
                     onClose={() => setShowTagManager(false)}
                     selectedTags={selectedTags}
-                    onSave={(tags) => {
-                      setSelectedTags(tags);
-                      setShowTagManager(false);
-                      // Asegúrate de incluir los tags en el formulario
-                      form.setValue("tags", tags);
-                    }}
+                    onSave={handleTagsSave}
                   />
                 )}
 
+                {/* Form Actions */}
                 <DialogFooter className="pt-6">
-                  <Button type="button" variant="outline" onClick={onClose}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={onClose}
+                    disabled={isUploading}
+                  >
                     Cancelar
                   </Button>
-                  <Button type="submit" className="text-white">
-                    Guardar
+                  <Button
+                    type="submit"
+                    className="text-white"
+                    disabled={isUploading}
+                  >
+                    {isUploading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Procesando...
+                      </>
+                    ) : (
+                      "Guardar"
+                    )}
                   </Button>
                 </DialogFooter>
               </form>

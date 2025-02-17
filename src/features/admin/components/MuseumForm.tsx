@@ -2,6 +2,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { useCallback, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { Loader2, Pencil, SquareArrowOutUpRight } from "lucide-react";
+
+// Components
 import {
   Dialog,
   DialogContent,
@@ -21,8 +26,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { DialogDescription } from "@radix-ui/react-dialog";
-import ImageUpload from "@/shared/components/ImageUpload";
 import {
   Select,
   SelectContent,
@@ -30,12 +33,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useCallback, useEffect, useState } from "react";
-import { getMuseumTours } from "@/services/Museums";
-import { Tour } from "@/shared/types/Tour";
-import { Link } from "react-router-dom";
-import { Pencil, SquareArrowOutUpRight } from "lucide-react";
+import ImageUpload from "@/shared/components/ImageUpload";
 import HoursDialog from "./HoursDialog";
+
+// Services
+import { getMuseumTours } from "@/services/Museums";
+import { uploadImage } from "@/services/upload";
+
+// Hooks
+import { useToast } from "@/hooks/use-toast";
+
+// Types
+import { Tour } from "@/shared/types/Tour";
 import { MuseumHours } from "@/types/Museums";
 
 const formSchema = z.object({
@@ -47,8 +56,10 @@ const formSchema = z.object({
     .string()
     .min(5, "La dirección debe tener al menos 5 caracteres"),
   main_tour_id: z.string().uuid().optional().nullable(),
-  main_photo: z.string(),
+  main_photo: z.string().min(1, "La imagen es requerida"),
 });
+
+type FormValues = z.infer<typeof formSchema>;
 
 const defaultHours: MuseumHours[] = [
   { day: "Domingo", isOpen: false },
@@ -63,9 +74,7 @@ const defaultHours: MuseumHours[] = [
 interface MuseumFormProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (
-    data: z.infer<typeof formSchema> & { hours?: MuseumHours[] }
-  ) => void;
+  onSubmit: (data: FormValues & { hours?: MuseumHours[] }) => void;
   initialValues?: {
     id?: string;
     name: string;
@@ -85,16 +94,20 @@ const MuseumForm = ({
   onSubmit,
   initialValues,
 }: MuseumFormProps) => {
+  // States
   const [museumTours, setMuseumTours] = useState<Tour[]>([]);
+  const [isUploading, setIsUploading] = useState(false);
   const [hoursDialogOpen, setHoursDialogOpen] = useState(false);
-  const [currentEditingDay, setCurrentEditingDay] = useState<string | null>(
-    null
-  );
+  const [currentEditingDay, setCurrentEditingDay] = useState<string | null>(null);
   const [museumHours, setMuseumHours] = useState<MuseumHours[]>(
     initialValues?.hours || defaultHours
   );
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  // Hooks
+  const { toast } = useToast();
+
+  // Form
+  const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: initialValues?.name || "",
@@ -105,19 +118,15 @@ const MuseumForm = ({
     },
   });
 
-  const handleSubmit = (values: z.infer<typeof formSchema>) => {
-    onSubmit({ ...values, hours: museumHours });
-    form.reset();
-    onClose();
-  };
-
   const fetchMuseumTours = useCallback(async () => {
     if (!initialValues?.id) return;
     try {
-      const tours = await getMuseumTours(initialValues.id);
-      setMuseumTours(tours.data);
+      const response = await getMuseumTours(initialValues.id);
+      if (response.ok) {
+        setMuseumTours(response.data);
+      }
     } catch (error) {
-      console.error(error);
+      console.error("Error fetching museum tours:", error);
       setMuseumTours([]);
     }
   }, [initialValues?.id]);
@@ -126,18 +135,52 @@ const MuseumForm = ({
     fetchMuseumTours();
   }, [fetchMuseumTours]);
 
+  const handleSubmit = async (values: FormValues) => {
+    setIsUploading(true);
+
+    try {
+      let finalImageUrl = values.main_photo;
+      if (values.main_photo.startsWith("data:image")) {
+        const response = await uploadImage(values.main_photo);
+        if (!response.ok || !response.data?.url) {
+          throw new Error("Error al subir la imagen");
+        }
+        finalImageUrl = response.data.url;
+      }
+
+      const formattedValues = {
+        ...values,
+        main_photo: finalImageUrl,
+        hours: museumHours,
+      };
+
+      await onSubmit(formattedValues);
+      form.reset();
+      onClose();
+    } catch (error) {
+      toast({
+        title: "Error al guardar",
+        description:
+          "Ocurrió un error al guardar los cambios. Por favor, intenta de nuevo.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-h-[90vh] overflow-y-auto w-full max-w-2xl p-4 md:p-6">
-        <DialogHeader className="pb-4 space-y-2 border-b">
+        <DialogHeader className="space-y-3 pb-4 border-b">
           <DialogTitle className="text-xl font-semibold">
             {initialValues ? "Editar museo" : "Crear nuevo museo"}
           </DialogTitle>
-          <DialogDescription className="text-sm text-gray-500">
+          <p className="text-sm text-gray-500">
             {initialValues
               ? "Edite la información del museo seleccionado"
               : "Complete los campos para agregar un nuevo museo al sistema."}
-          </DialogDescription>
+          </p>
         </DialogHeader>
 
         <Form {...form}>
@@ -145,7 +188,6 @@ const MuseumForm = ({
             onSubmit={form.handleSubmit(handleSubmit)}
             className="py-4 space-y-4"
           >
-            {/* Nombre */}
             <FormField
               control={form.control}
               name="name"
@@ -160,7 +202,6 @@ const MuseumForm = ({
               )}
             />
 
-            {/* Descripción */}
             <FormField
               control={form.control}
               name="description"
@@ -179,7 +220,6 @@ const MuseumForm = ({
               )}
             />
 
-            {/* Dirección */}
             <FormField
               control={form.control}
               name="address_name"
@@ -194,7 +234,6 @@ const MuseumForm = ({
               )}
             />
 
-            {/* Recorrido principal */}
             {initialValues && (
               <FormField
                 control={form.control}
@@ -247,16 +286,13 @@ const MuseumForm = ({
             <div className="space-y-4">
               <FormLabel>Horarios</FormLabel>
 
-              {/* Lista de días */}
               <div className="border divide-y rounded-md">
                 {museumHours.map((hour) => (
                   <div
                     key={hour.day}
                     className="flex items-center justify-between p-3 hover:bg-gray-50"
                   >
-                    <span className="font-medium text-gray-700">
-                      {hour.day}
-                    </span>
+                    <span className="font-medium text-gray-700">{hour.day}</span>
                     <div className="flex items-center gap-3">
                       <span className="text-gray-600">
                         {hour.isOpen
@@ -282,7 +318,6 @@ const MuseumForm = ({
                 ))}
               </div>
 
-              {/* Botones de edición rápida */}
               <div className="flex flex-wrap gap-2">
                 <Button
                   type="button"
@@ -311,7 +346,6 @@ const MuseumForm = ({
               </div>
             </div>
 
-            {/* Foto principal */}
             <FormField
               control={form.control}
               name="main_photo"
@@ -332,11 +366,27 @@ const MuseumForm = ({
             />
 
             <DialogFooter className="pt-4">
-              <Button type="button" variant="outline" onClick={onClose}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={onClose}
+                disabled={isUploading}
+              >
                 Cancelar
               </Button>
-              <Button type="submit" className="text-white">
-                Guardar
+              <Button
+                type="submit"
+                className="text-white"
+                disabled={isUploading}
+              >
+                {isUploading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Procesando...
+                  </>
+                ) : (
+                  "Guardar"
+                )}
               </Button>
             </DialogFooter>
           </form>
