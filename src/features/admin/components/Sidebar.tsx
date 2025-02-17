@@ -10,7 +10,7 @@ import {
   SidebarMenuItem,
   SidebarFooter
 } from "@/components/ui/sidebar";
-import Muvi from "@/assets/images/muvi.jpg";
+import Muvi from "@/assets/svgs/MUVI-logo.svg";
 import { navigationItems } from "../constants/navigationItems";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -29,13 +29,13 @@ const AdminSidebar = () => {
   const handleLogout = () => logout();
 
   return (
-    <Sidebar className="w-60 h-screen bg-white border-r border-gray-100">
+    <Sidebar className="h-screen bg-white border-r border-gray-100 w-60">
       <SidebarContent className="flex flex-col h-full">
         <SidebarHeader className="p-6">
           <img 
             src={Muvi} 
             alt="Muvi logo" 
-            className="w-20 h-20 rounded-full object-cover mx-auto shadow-sm"
+            className="object-contain w-20 h-20 mx-auto"
           />
         </SidebarHeader>
 

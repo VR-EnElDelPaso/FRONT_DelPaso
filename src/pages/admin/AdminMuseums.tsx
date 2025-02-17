@@ -7,6 +7,9 @@ import PhotoCellModal from "@/shared/components/PhotoCellModal";
 import { createMuseum, deleteMuseum, editMuseum } from "@/services/Museums";
 import { useToast } from "@/hooks/use-toast";
 import MuseumForm from "@/features/admin/components/MuseumForm";
+import HoursDisplay from "@/features/admin/components/HoursDisplay";
+import { Clock } from "lucide-react";
+import { MuseumHours } from "@/types/Museums";
 
 interface LoaderData {
   data: Museum[];
@@ -42,6 +45,21 @@ const columns: ColumnDef<Museum>[] = [
     accessorKey: "address_name",
     header: "Dirección",
   },
+  {
+    accessorKey: "hours",
+    header: "Horarios",
+    cell: ({ row }) => {
+      const hours = row.getValue("hours") as MuseumHours[];
+      return hours ? (
+        <HoursDisplay hours={hours} />
+      ) : (
+        <div className="flex items-center gap-2 text-gray-500">
+          <Clock className="w-4 h-4" />
+          <span>No especificado</span>
+        </div>
+      );
+    }
+  }
 ];
 
 const AdminMuseums = () => {
@@ -53,6 +71,7 @@ const AdminMuseums = () => {
 
   const onSubmit = async (values: Partial<Omit<Museum, 'main_tour_id'> & { main_tour_id?: string | null }>) => {
     // todo: mejorar esta parte para no repetir lo mismo
+    console.log(values);
     try {
       if (initialValues) {
         const response = await editMuseum(initialValues.id, values as Museum);
@@ -114,10 +133,10 @@ const AdminMuseums = () => {
   }
 
   return (
-    <div className="container mx-auto py-8">
-      <div className="bg-white rounded-lg shadow-md p-6">
+    <div className="container py-8 mx-auto">
+      <div className="p-6 bg-white rounded-lg shadow-md">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="mb-2 text-3xl font-bold text-gray-900">
             Gestión de Museos
           </h1>
           <p className="text-gray-600">
@@ -125,7 +144,7 @@ const AdminMuseums = () => {
           </p>
         </div>
 
-        <div className="bg-white rounded-lg overflow-hidden">
+        <div className="overflow-hidden bg-white rounded-lg">
           <DataTable 
             columns={columns} 
             data={data} 

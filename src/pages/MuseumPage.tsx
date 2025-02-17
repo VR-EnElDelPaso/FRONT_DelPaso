@@ -33,7 +33,7 @@ const MuseumPage = () => {
     <div className="w-full">
       {/* Sección de imagen full-width */}
       <div className="w-screen ml-[calc(-50vw+50%)] overflow-hidden">
-        <Card className="rounded-none shadow-xl border-0">
+        <Card className="border-0 rounded-none shadow-xl">
           <img
             src={museum.main_photo}
             alt={museum.name}
@@ -43,24 +43,24 @@ const MuseumPage = () => {
       </div>
 
       {/* Contenido principal */}
-      <div className="container mx-auto px-4 py-8">
+      <div className="container px-4 py-8 mx-auto">
         <div className="max-w-3xl mx-auto">
           {/* Header */}
           <div className="flex flex-col mb-8">
-            <h1 className="text-4xl font-bold font-kaiseiDecol tracking-tight mb-6">
+            <h1 className="mb-6 text-4xl font-bold tracking-tight font-kaiseiDecol">
               {museum.name}
             </h1>
-            <p className="text-muted-foreground leading-7">
+            <p className="leading-7 text-muted-foreground">
               {museum.description}
             </p>
           </div>
 
           {/* Info Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
+          <div className="grid grid-cols-1 gap-6 mb-20 md:grid-cols-3">
             {/* Horario */}
             <MuseumInfoCard
               title="Horarios"
-              icon={<Clock className="h-6 w-6 text-white" />}
+              icon={<Clock className="w-6 h-6 text-white" />}
             >
               <p className="text-sm text-muted-foreground">
                 Horario no disponible
@@ -70,7 +70,7 @@ const MuseumPage = () => {
             {/* Ubicación */}
             <MuseumInfoCard
               title="Ubicación"
-              icon={<MapPin className="h-6 w-6 text-white" />}
+              icon={<MapPin className="w-6 h-6 text-white" />}
             >
               <p className="text-sm text-muted-foreground">
                 {museum.address_name || "Ubicación no disponible"}
@@ -79,11 +79,11 @@ const MuseumPage = () => {
 
             {/* Precio */}
             <MuseumInfoCard
-              title="Precio"
-              icon={<DollarSign className="h-6 w-6 text-white" />}
+              title="Cuota de recuperación"
+              icon={<DollarSign className="w-6 h-6 text-white" />}
             >
               <p className="text-sm text-muted-foreground">
-                Precio no disponible
+                no disponible
               </p>
             </MuseumInfoCard>
           </div>
@@ -93,12 +93,12 @@ const MuseumPage = () => {
           </div>
 
           {/* Recorridos */}
-          <div className="container mx-auto flex flex-col px-4 sm:px-6 md:px-8">
+          <div className="container flex flex-col px-4 mx-auto sm:px-6 md:px-8">
             {/* Title */}
             <div className="mb-6 sm:mb-8">
-              <div className="flex text-primary/50 items-center mb-2">
-                <span className="text-lg sm:text-xl mr-2">•</span>
-                <p className="text-xs sm:text-sm font-bold tracking-widest uppercase">
+              <div className="flex items-center mb-2 text-primary/50">
+                <span className="mr-2 text-lg sm:text-xl">•</span>
+                <p className="text-xs font-bold tracking-widest uppercase sm:text-sm">
                   Sólo en {museum.name}
                 </p>
               </div>
@@ -124,16 +124,16 @@ const MuseumPage = () => {
 
             {/* Ver Instalaciones */}
             <div className="w-screen ml-[calc(-50vw+50%)] overflow-hidden mt-12">
-              <div className="relative group cursor-pointer">
+              <div className="relative cursor-pointer group">
                 <img
                   src="/assets/images/pictures/pasillo.png"
                   alt="Instalaciones"
                   className="w-full h-[400px] object-cover blur-[2px]"
                 />
-                <div className="absolute inset-0 backdrop-blur-md bg-black/10 z-10" />
+                <div className="absolute inset-0 z-10 backdrop-blur-md bg-black/10" />
                 <div className="absolute inset-0 z-20 flex flex-col items-center justify-center text-white">
-                  <p className="text-lg font-medium mb-2">Solo En Muvi</p>
-                  <h2 className="text-3xl md:text-4xl font-bold font-kaiseiDecol text-center px-4">
+                  <p className="mb-2 text-lg font-medium">Solo En Muvi</p>
+                  <h2 className="px-4 text-3xl font-bold text-center md:text-4xl font-kaiseiDecol">
                     Ver Instalaciones de Fernando del Paso
                   </h2>
                 </div>
@@ -141,16 +141,16 @@ const MuseumPage = () => {
             </div>
 
             {/* Sección de Ayuda */}
-            <div className="container mx-auto px-4 py-16">
+            <div className="container px-4 py-16 mx-auto">
               <div className="max-w-3xl mx-auto space-y-6">
                 <div className="flex items-center gap-2">
                   <div className="w-1 h-1 rounded-full bg-primary" />
-                  <h3 className="text-sm font-medium tracking-widest text-primary uppercase text-muted-foreground">
+                  <h3 className="text-sm font-medium tracking-widest uppercase text-primary text-muted-foreground">
                     Ayuda
                   </h3>
                 </div>
 
-                <h2 className="text-3xl font-kaiseiDecol font-bold">
+                <h2 className="text-3xl font-bold font-kaiseiDecol">
                   ¿Tienes preguntas?
                 </h2>
 

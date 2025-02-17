@@ -1,9 +1,10 @@
+// src/features/admin/components/MuseumForm.tsx
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Loader2, SquareArrowOutUpRight } from "lucide-react";
+import { Loader2, Pencil, SquareArrowOutUpRight } from "lucide-react";
 
 // Components
 import {
@@ -33,6 +34,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import ImageUpload from "@/shared/components/ImageUpload";
+import HoursDialog from "./HoursDialog";
 
 // Services
 import { getMuseumTours } from "@/services/Museums";
@@ -43,8 +45,8 @@ import { useToast } from "@/hooks/use-toast";
 
 // Types
 import { Tour } from "@/shared/types/Tour";
+import { MuseumHours } from "@/types/Museums";
 
-// Schema
 const formSchema = z.object({
   name: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
   description: z
@@ -59,10 +61,20 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
+const defaultHours: MuseumHours[] = [
+  { day: "Domingo", isOpen: false },
+  { day: "Lunes", isOpen: false },
+  { day: "Martes", isOpen: false },
+  { day: "Miércoles", isOpen: false },
+  { day: "Jueves", isOpen: false },
+  { day: "Viernes", isOpen: false },
+  { day: "Sábado", isOpen: false },
+];
+
 interface MuseumFormProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: FormValues) => void;
+  onSubmit: (data: FormValues & { hours?: MuseumHours[] }) => void;
   initialValues?: {
     id?: string;
     name: string;
@@ -70,6 +82,7 @@ interface MuseumFormProps {
     address_name: string;
     main_photo: string;
     main_tour_id?: string | null;
+    hours?: MuseumHours[];
     created_at?: string;
     updated_at?: string;
   };
@@ -84,6 +97,11 @@ const MuseumForm = ({
   // States
   const [museumTours, setMuseumTours] = useState<Tour[]>([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [hoursDialogOpen, setHoursDialogOpen] = useState(false);
+  const [currentEditingDay, setCurrentEditingDay] = useState<string | null>(null);
+  const [museumHours, setMuseumHours] = useState<MuseumHours[]>(
+    initialValues?.hours || defaultHours
+  );
 
   // Hooks
   const { toast } = useToast();
@@ -100,7 +118,6 @@ const MuseumForm = ({
     },
   });
 
-  // Effects
   const fetchMuseumTours = useCallback(async () => {
     if (!initialValues?.id) return;
     try {
@@ -118,12 +135,10 @@ const MuseumForm = ({
     fetchMuseumTours();
   }, [fetchMuseumTours]);
 
-  // Handlers
   const handleSubmit = async (values: FormValues) => {
     setIsUploading(true);
 
     try {
-      // Si la imagen es base64, súbela a Cloudinary
       let finalImageUrl = values.main_photo;
       if (values.main_photo.startsWith("data:image")) {
         const response = await uploadImage(values.main_photo);
@@ -133,10 +148,10 @@ const MuseumForm = ({
         finalImageUrl = response.data.url;
       }
 
-      // Envía el formulario con la URL de Cloudinary
       const formattedValues = {
         ...values,
         main_photo: finalImageUrl,
+        hours: museumHours,
       };
 
       await onSubmit(formattedValues);
@@ -156,15 +171,12 @@ const MuseumForm = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent
-        className="sm:max-w-[600px] p-6 font-inter"
-        aria-describedby="dialog-description"
-      >
+      <DialogContent className="max-h-[90vh] overflow-y-auto w-full max-w-2xl p-4 md:p-6">
         <DialogHeader className="space-y-3 pb-4 border-b">
-          <DialogTitle className="text-2xl font-semibold tracking-tight">
+          <DialogTitle className="text-xl font-semibold">
             {initialValues ? "Editar museo" : "Crear nuevo museo"}
           </DialogTitle>
-          <p className="text-base text-gray-500" id="dialog-description">
+          <p className="text-sm text-gray-500">
             {initialValues
               ? "Edite la información del museo seleccionado"
               : "Complete los campos para agregar un nuevo museo al sistema."}
@@ -174,9 +186,8 @@ const MuseumForm = ({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmit)}
-            className="space-y-6"
+            className="py-4 space-y-4"
           >
-            {/* Name */}
             <FormField
               control={form.control}
               name="name"
@@ -191,7 +202,6 @@ const MuseumForm = ({
               )}
             />
 
-            {/* Description */}
             <FormField
               control={form.control}
               name="description"
@@ -210,7 +220,6 @@ const MuseumForm = ({
               )}
             />
 
-            {/* Address */}
             <FormField
               control={form.control}
               name="address_name"
@@ -225,7 +234,6 @@ const MuseumForm = ({
               )}
             />
 
-            {/* Main Tour Selection - Only shown when editing */}
             {initialValues && (
               <FormField
                 control={form.control}
@@ -261,7 +269,7 @@ const MuseumForm = ({
                       <FormDescription>
                         <Link
                           to="/admin/tours"
-                          className="text-blue-500 hover:text-blue-700 underline flex items-center gap-1"
+                          className="flex items-center gap-1 text-blue-500 underline hover:text-blue-700"
                         >
                           Agregar recorridos
                           <SquareArrowOutUpRight size="10px" />
@@ -274,7 +282,70 @@ const MuseumForm = ({
               />
             )}
 
-            {/* Image Upload */}
+            {/* Horarios */}
+            <div className="space-y-4">
+              <FormLabel>Horarios</FormLabel>
+
+              <div className="border divide-y rounded-md">
+                {museumHours.map((hour) => (
+                  <div
+                    key={hour.day}
+                    className="flex items-center justify-between p-3 hover:bg-gray-50"
+                  >
+                    <span className="font-medium text-gray-700">{hour.day}</span>
+                    <div className="flex items-center gap-3">
+                      <span className="text-gray-600">
+                        {hour.isOpen
+                          ? hour.openTime && hour.closeTime
+                            ? `${hour.openTime} - ${hour.closeTime}`
+                            : "Abierto 24h"
+                          : "Cerrado"}
+                      </span>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="w-8 h-8 p-0"
+                        onClick={() => {
+                          setHoursDialogOpen(true);
+                          setCurrentEditingDay(hour.day);
+                        }}
+                      >
+                        <Pencil className="w-4 h-4 text-gray-500" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="text-gray-700"
+                  onClick={() => {
+                    setHoursDialogOpen(true);
+                    setCurrentEditingDay("all");
+                  }}
+                >
+                  Editar todos los horarios
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="text-gray-700"
+                  onClick={() => {
+                    setHoursDialogOpen(true);
+                    setCurrentEditingDay("weekdays");
+                  }}
+                >
+                  Editar lun–vie
+                </Button>
+              </div>
+            </div>
+
             <FormField
               control={form.control}
               name="main_photo"
@@ -294,8 +365,7 @@ const MuseumForm = ({
               )}
             />
 
-            {/* Form Actions */}
-            <DialogFooter>
+            <DialogFooter className="pt-4">
               <Button
                 type="button"
                 variant="outline"
@@ -321,6 +391,28 @@ const MuseumForm = ({
             </DialogFooter>
           </form>
         </Form>
+
+        <HoursDialog
+          isOpen={hoursDialogOpen}
+          onClose={() => {
+            setHoursDialogOpen(false);
+            setCurrentEditingDay(null);
+          }}
+          onSave={(updatedHours) => {
+            setMuseumHours((prevHours) =>
+              prevHours.map((hour) => {
+                const updatedHour = updatedHours.find(
+                  (uh) => uh.day === hour.day
+                );
+                return updatedHour || hour;
+              })
+            );
+            setHoursDialogOpen(false);
+            setCurrentEditingDay(null);
+          }}
+          initialHours={museumHours}
+          editingDay={currentEditingDay}
+        />
       </DialogContent>
     </Dialog>
   );

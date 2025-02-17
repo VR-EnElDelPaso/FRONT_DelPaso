@@ -1,3 +1,4 @@
+// src/features/admin/components/TourForm.tsx
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -40,7 +41,6 @@ import { useToast } from "@/hooks/use-toast";
 import { Museum } from "@/types/Museums";
 import { Tag } from "@/types/tag";
 
-// Schema
 const formSchema = z.object({
   name: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
   description: z
@@ -48,7 +48,7 @@ const formSchema = z.object({
     .min(10, "La descripción debe tener al menos 10 caracteres"),
   price: z
     .string()
-    .regex(/^\d+(\.\d{1,2})?$/, "El precio debe ser un número válido"),
+    .regex(/^\d+(\.\d{1,2})?$/, "El cuota debe ser un número válido"),
   stars: z.number().min(0).max(5),
   url: z.string().url("Debe ser una URL válida"),
   image_url: z.string().min(1, "La imagen es requerida"),
@@ -243,7 +243,7 @@ const TourForm = ({
                   name="price"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Precio</FormLabel>
+                      <FormLabel>Cuota de recuperación</FormLabel>
                       <FormControl>
                         <Input
                           type="number"

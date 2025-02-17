@@ -99,9 +99,9 @@ export function CheckoutPage() {
   }, [cartItems.length, navigate]);
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="w-96 bg-white shadow-lg rounded-lg overflow-hidden">
-        <div className="text-center py-4">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="overflow-hidden bg-white rounded-lg shadow-lg w-96">
+        <div className="py-4 text-center">
           <h2 className="text-2xl font-bold">Resumen de Compra</h2>
         </div>
         <div className="p-6">
@@ -112,9 +112,9 @@ export function CheckoutPage() {
               ))
             : tours.map((tour) => <CheckoutItem key={tour.id} tour={tour} />)}
 
-          <div className="border-t border-gray-200 pt-4">
-            <p className="text-gray-600 text-sm mb-2">Total a pagar:</p>
-            <p className="font-bold text-3xl text-blue-600">${total}</p>
+          <div className="pt-4 border-t border-gray-200">
+            <p className="mb-2 text-sm text-gray-600">Total a pagar:</p>
+            <p className="text-3xl font-bold text-blue-600">${total}</p>
           </div>
           <div className="mt-6">
             <Button
@@ -128,7 +128,7 @@ export function CheckoutPage() {
             {/* Back button */}
             <button
               onClick={() => navigate("/cart", { replace: true })}
-              className="flex justify-center items-center gap-2 text-red-600 w-full mt-6 py-2 border border-red-600 hover:bg-red-600 hover:text-white rounded-lg transition-all duration-300"
+              className="flex items-center justify-center w-full gap-2 py-2 mt-6 text-red-600 transition-all duration-300 border border-red-600 rounded-lg hover:bg-red-600 hover:text-white"
             >
               <MdOutlineCancel className="text-xl" /> Cancelar
             </button>
@@ -143,12 +143,12 @@ function CheckoutItem({ tour }: { tour: Tour }) {
   return (
     <>
       <div className="mb-4">
-        <p className="text-gray-600 text-sm">Tour:</p>
-        <p className="font-bold text-xl text-gray-800">{tour.name}</p>
+        <p className="text-sm text-gray-600">Tour:</p>
+        <p className="text-xl font-bold text-gray-800">{tour.name}</p>
       </div>
       <div>
-        <p className="text-gray-600 text-sm">Precio:</p>
-        <p className="font-bold text-2xl text-blue-600">${tour.price}</p>
+        <p className="text-sm text-gray-600">Cuota de recuperación:</p>
+        <p className="text-2xl font-bold text-blue-600">${tour.price}</p>
       </div>
       <hr className="my-2 bg-gray-400" />
     </>
