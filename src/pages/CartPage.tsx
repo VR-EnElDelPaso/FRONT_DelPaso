@@ -99,7 +99,7 @@ export default function CartPage() {
 
               {cartItems.length > 0 && (
                 <div className="mt-4 sm:mt-6 flex items-center justify-between">
-                  <div className="flex flex-wrap gap-4 text-primary hover:text-primary/90">
+                  <div className="flex gap-4 text-primary hover:text-primary/90">
                     <button
                       type="button"
                       onClick={selectAllItems}
@@ -115,7 +115,7 @@ export default function CartPage() {
                       Borrar selección
                     </button>
                   </div>
-                  <div className="hidden sm:block text-gray-600 text-sm sm:text-base whitespace-nowrap max-[490px]:hidden">
+                  <div className="text-gray-600 text-sm sm:text-base max-[490px]:hidden">
                     Cuota de recuperación
                   </div>
                 </div>
@@ -139,10 +139,10 @@ export default function CartPage() {
           {/* Sidebar */}
           <div className="space-y-4 lg:sticky lg:top-4">
             <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
-              <CartSuggestions cartListData={cartListData} quantity={1} />
+              <CartResume cartItems={cartListData} onPay={handlePay} />
             </div>
             <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
-              <CartResume cartItems={cartListData} onPay={handlePay} />
+              <CartSuggestions cartListData={cartListData} quantity={1} />
             </div>
           </div>
         </div>

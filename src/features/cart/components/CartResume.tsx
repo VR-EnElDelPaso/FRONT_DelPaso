@@ -41,7 +41,7 @@ export const CartResume = ({
         <div className="flex">
           <button
             disabled={total === '0.00'}
-            className="mx-auto px-6 bg-primary disabled:bg-red-400 text-white p-2 rounded-xl hover:bg-primaryHover transition-colors duration-300"
+            className="mx-auto px-6 bg-primary disabled:bg-primary/60 text-white p-2 rounded-xl hover:bg-primaryHover transition-colors duration-300"
             onClick={onPay}
           >
             Pagar
