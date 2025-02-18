@@ -87,48 +87,63 @@ export default function CartPage() {
   };
 
   return (
-    <div className="grid place-items-center py-10 px-5">
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] p-2 gap-2 w-full bg-gray-100 rounded-md">
-        <div className="bg-white p-2">
-          <div className="pl-10">
-            <h1 className="text-5xl font-kaiseiDecol">Carrito</h1>
-            {cartItems.length > 0 && (
-              <div className="flex mt-6 gap-2 text-blue-600">
-                <button
-                  type="button"
-                  onClick={selectAllItems}
-                  className="hover:drop-shadow-lg hover:text-blue-800"
-                >
-                  Seleccionar todos
-                </button>
-                <button
-                  type="button"
-                  onClick={unselectAllItems}
-                  className="hover:drop-shadow-lg hover:text-blue-800"
-                >
-                  Borrar selección
-                </button>
+    <div className="w-full min-h-screen bg-[#EBEBEB]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_350px] gap-4">
+          {/* Main Cart Section */}
+          <div className="bg-white rounded-lg shadow-sm">
+            <div className="p-4 sm:p-6">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-kaiseiDecol">
+                Carrito
+              </h1>
+
+              {cartItems.length > 0 && (
+                <div className="mt-4 sm:mt-6 flex items-center justify-between">
+                  <div className="flex gap-4 text-primary hover:text-primary/90">
+                    <button
+                      type="button"
+                      onClick={selectAllItems}
+                      className="text-sm sm:text-base hover:drop-shadow-lg"
+                    >
+                      Seleccionar todos
+                    </button>
+                    <button
+                      type="button"
+                      onClick={unselectAllItems}
+                      className="text-sm sm:text-base hover:drop-shadow-lg"
+                    >
+                      Borrar selección
+                    </button>
+                  </div>
+                  <div className="text-gray-600 text-sm sm:text-base max-[490px]:hidden">
+                    Cuota de recuperación
+                  </div>
+                </div>
+              )}
+
+              <hr className="w-full h-0.5 bg-gray-200 border-0 rounded my-4" />
+
+              <div className="space-y-4">
+                {cartItems.length === 0 ? (
+                  <EmptyCartMessage />
+                ) : (
+                  <CartList
+                    cartItems={cartListData}
+                    onCheckboxChange={handleCheckboxChange}
+                  />
+                )}
               </div>
-            )}
-            <hr className="w-full h-0.5 bg-gray-200 border-0 rounded my-2"></hr>
+            </div>
           </div>
-          <div className="flex flex-col gap-2">
-            {cartItems.length === 0 ? (
-              <EmptyCartMessage />
-            ) : (
-              <CartList
-                cartItems={cartListData}
-                onCheckboxChange={handleCheckboxChange}
-              />
-            )}
-          </div>
-        </div>
-        <div className="flex flex-col gap-2 sticky top-0">
-          <div className="bg-white p-2">
-            <CartSuggestions cartListData={cartListData} quantity={1} />
-          </div>
-          <div className="bg-white p-2">
-            <CartResume cartItems={cartListData} onPay={handlePay} />
+
+          {/* Sidebar */}
+          <div className="space-y-4 lg:sticky lg:top-4">
+            <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
+              <CartResume cartItems={cartListData} onPay={handlePay} />
+            </div>
+            <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
+              <CartSuggestions cartListData={cartListData} quantity={1} />
+            </div>
           </div>
         </div>
       </div>

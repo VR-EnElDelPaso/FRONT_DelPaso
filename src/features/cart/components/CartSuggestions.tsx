@@ -3,6 +3,7 @@ import { Tour } from "../../../shared/types/Tour";
 import { CartListItem } from "./CartList";
 import { getTourSuggestions } from "../../../services/Tour";
 import { useCartStore } from "../../../stores/useCartStore";
+import RatingStars from "@/shared/components/RatingStars";
 
 interface Props {
   cartListData: CartListItem[];
@@ -15,8 +16,9 @@ export const CartSuggestions = ({ cartListData, quantity }: Props) => {
   const { setCartItem } = useCartStore();
 
   const tourIds = useMemo(
-    () => cartListData.map(item => item.id),
-    [cartListData])
+    () => cartListData.map((item) => item.id),
+    [cartListData]
+  );
 
   const fetchTourSuggestion = useCallback(async () => {
     const response = await getTourSuggestions(tourIds, quantity);
@@ -25,7 +27,7 @@ export const CartSuggestions = ({ cartListData, quantity }: Props) => {
   }, [tourIds, quantity]);
 
   useEffect(() => {
-    fetchTourSuggestion()
+    fetchTourSuggestion();
   }, [fetchTourSuggestion]);
 
   return (
@@ -40,7 +42,7 @@ export const CartSuggestions = ({ cartListData, quantity }: Props) => {
         </div>
         <div className="flex">
           <button
-            className="mx-auto px-6 border border-primary text-primary p-2 rounded-xl hover:bg-primaryHover hover:text-white transition-colors duration-300"
+            className="mx-auto px-6 border bg-primary text-white p-2 rounded-xl hover:bg-primaryHover hover:text-white transition-colors duration-300"
             onClick={() => {
               setCartItem({
                 id: fetchedTour!.id,
@@ -54,22 +56,27 @@ export const CartSuggestions = ({ cartListData, quantity }: Props) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 const TourCard = ({ tour }: { tour: Tour }) => {
   return (
-    <div className="flex gap-2">
-      <img src={tour.image_url} alt={tour.name} className="w-20 h-20 object-cover rounded-md" />
-      <div>
-        <h2 className="font-kaiseiDecol">{tour.name}</h2>
-        <p className="font-inter text-xs">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam, quaerat quia, eum
+    <div className="flex gap-4">
+      <img
+        src={tour.image_url}
+        alt={tour.name}
+        className="w-24 h-24 object-cover rounded-[15px] flex-shrink-0"
+      />
+      <div className="flex-1 min-w-0">
+        <h2 className="font-kaiseiDecol text-lg mb-1 truncate">{tour.name}</h2>
+        <p className="text-sm text-gray-600 line-clamp-2 mb-2">
+          {tour.description}
         </p>
-        <div className="flex justify-end">
-          <h2 className="font-bold">${tour.price}</h2>
+        <div className="flex items-center justify-between">
+          <RatingStars value={tour.stars} noHover size="small" />
+          <span className="font-medium text-sm">${tour.price}</span>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
