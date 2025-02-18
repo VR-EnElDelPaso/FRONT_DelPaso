@@ -14,10 +14,20 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 const Tours = () => {
   const navigate = useNavigate();
   const tours = useFetchTours();
+  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined);
+
+  const filteredTours = () => {
+    if (!selectedCategory) return tours;
+
+    return tours.filter((tour: Tour) => 
+      tour.tags.some((tag) => tag.name.toLowerCase() === selectedCategory.toLocaleLowerCase())
+    );
+  }
 
   return (
     <div className="container mx-auto max-w-6xl p-4 space-y-8">
@@ -33,16 +43,16 @@ const Tours = () => {
         </div>
         <div className='flex items-center gap-4'>
           <span className="text-muted-foreground">Filtrar por:</span>
-          <Select>
+          <Select onValueChange={setSelectedCategory} value={selectedCategory}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Selecciona categoría" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectItem value="museum">Museo</SelectItem>
-                <SelectItem value="art">Arte</SelectItem>
-                <SelectItem value="history">Historia</SelectItem>
-                <SelectItem value="science">Ciencia</SelectItem>
+                <SelectItem value="universitario">Universitarios</SelectItem>
+                <SelectItem value="local">Locales</SelectItem>
+                <SelectItem value="otros estados">Otros estados</SelectItem>
+                <SelectItem value="otros paises">Otros países</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -51,7 +61,7 @@ const Tours = () => {
       
       {/* Tours */}
       <div className='space-y-6'>
-        {tours.map((tour: Tour) => (
+        {filteredTours().map((tour: Tour) => (
           <Card key={tour.id} className="overflow-hidden border-none shadow-none bg-transparent">
             <div className="flex flex-col md:flex-row gap-6">
               {/* Image */}

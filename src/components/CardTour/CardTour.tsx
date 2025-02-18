@@ -4,6 +4,7 @@ import { useCartStore } from "../../stores/useCartStore";
 import { Tour } from "../../types/tour";
 import { dateFormatter } from "../../utils/dateFormatter";
 import { Button } from "../ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 export default function TourCard({
   id,
@@ -13,9 +14,20 @@ export default function TourCard({
   created_at,
   stars,
   image_url,
+  url,
 }: Tour) {
   const navigate = useNavigate();
   const { setCartItem } = useCartStore();
+  const { toast } = useToast();
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(url);
+    toast({
+      title: "Enlace copiado",
+      description: "El enlace se ha copiado al portapapeles",
+      variant: "default",
+    });
+  }
 
   return (
     <>
@@ -66,7 +78,7 @@ export default function TourCard({
           </div>
 
           <div className="space-x-6 mt-6 flex items-center justify-end">
-            <Button variant="link" aria-label="Compartir" className="p-0">
+            <Button variant="link" aria-label="Compartir" onClick={copyToClipboard} className="p-0">
               <Share2 />
               Compartir
             </Button>
