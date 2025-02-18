@@ -83,7 +83,7 @@ export const CartCard = ({ cartItem, onCheckboxChange }: Props) => {
             <div className="flex flex-col gap-2">
               {/* Mobile view */}
               <div className="min-[490px]:hidden">
-                <div className="text-sm text-neutral-600">
+                <div className="text-sm text-neutral-600 mt-8">
                   Cuota de
                   <br />
                   recuperación
