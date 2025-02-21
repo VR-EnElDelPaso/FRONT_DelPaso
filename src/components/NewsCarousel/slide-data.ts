@@ -1,3 +1,7 @@
+import Background1 from '@/assets/images/background-1.webp';
+import Background2 from '@/assets/images/background-2.webp';
+import Background3 from '@/assets/images/background-3.webp';
+
 export interface CarouselSlideProps {
     title: string;
     description: string;
@@ -13,19 +17,19 @@ export interface CarouselSlideProps {
       id: 1,
       title: 'Fernando del Paso',
       description: 'Descubre más sobre nuestros artistas y el arte emergente que se expone, ¡ahora mismo!',
-      imageUrl: '/fernando-del-paso.jpg',
+      imageUrl: Background1,
     },
     {
       id: 2,
       title: 'Museo Fernando del Paso',
       description: '¡Visita nuestro museo y descubre la historia de Fernando del Paso!',
-      imageUrl: '/Museo-Fernando-del-Paso.jpg',
+      imageUrl: Background2,
     },
     {
       id: 3,
       title: 'Fernando del Paso',
       description: '¡Conoce más sobre la vida y obra de Fernando del Paso!',
-      imageUrl: 'fernando-del-paso-3.jpg',
+      imageUrl: Background3,
     }
   ];
   
