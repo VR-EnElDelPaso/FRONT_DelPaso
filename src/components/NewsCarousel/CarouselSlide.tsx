@@ -11,21 +11,20 @@ const CarouselSlide: React.FC<CarouselSlideProps> = ({
       <img
         src={imageUrl}
         alt="Background"
-        loading="lazy"
-        className="absolute inset-0 object-cover w-full h-full"
+        className="absolute inset-0 object-cover w-full h-full blur-sm"
       />
       <div className="absolute inset-0 bg-black opacity-55"></div>
-      <div className="relative z-10 flex flex-col items-start justify-center h-full text-white p-4 sm:p-8 md:p-12">
-        <div className="max-w-xl flex flex-col">
-          <p className="text-sm sm:text-base md:text-lg mb-2">{title}</p>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl mb-4 sm:mb-6">
+      <div className="relative z-10 flex flex-col items-start justify-center h-full p-4 text-white sm:p-8 md:p-12">
+        <div className="flex flex-col max-w-xl">
+          <p className="mb-2 text-sm sm:text-base md:text-lg">{title}</p>
+          <h1 className="mb-4 text-2xl sm:text-3xl md:text-4xl sm:mb-6">
             {description}
           </h1>
           <div className="flex space-x-4">
-            <button className="bg-white bg-opacity-75 text-black px-4 py-2 rounded-lg transition duration-200 hover:bg-opacity-100 text-sm sm:text-base">
+            <button className="px-4 py-2 text-sm text-black transition duration-200 bg-white bg-opacity-75 rounded-lg hover:bg-opacity-100 sm:text-base">
               Conoce más
             </button>
-            <button className="text-white px-4 py-2 rounded-lg transition duration-300 hover:bg-white hover:text-black border border-white text-sm sm:text-base">
+            <button className="px-4 py-2 text-sm text-white transition duration-300 border border-white rounded-lg hover:bg-white hover:text-black sm:text-base">
               Visitas Virtuales
             </button>
           </div>

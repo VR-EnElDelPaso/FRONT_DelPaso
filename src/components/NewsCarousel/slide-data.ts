@@ -15,20 +15,20 @@ export interface CarouselSlideProps {
   export const slides: CarouselSlideInterface[] = [
     {
       id: 1,
-      title: 'Fernando del Paso',
-      description: 'Descubre más sobre nuestros artistas y el arte emergente que se expone, ¡ahora mismo!',
+      title: 'CONOCE MUVI',
+      description: 'MUVi está listo para ofrecerte las mejores experiencias en Recorridos Virtuales',
       imageUrl: Background1,
     },
     {
       id: 2,
-      title: 'Museo Fernando del Paso',
-      description: '¡Visita nuestro museo y descubre la historia de Fernando del Paso!',
+      title: 'CONOCE MUVI',
+      description: 'Hacemos del arte una experiencia cercana para ti.',
       imageUrl: Background2,
     },
     {
       id: 3,
-      title: 'Fernando del Paso',
-      description: '¡Conoce más sobre la vida y obra de Fernando del Paso!',
+      title: 'CONOCE MUVI',
+      description: 'Descubre nuestros recorridos y elige tu favorito.',
       imageUrl: Background3,
     }
   ];
