@@ -3,8 +3,10 @@ import router from "./routes";
 import { initMercadoPago } from "@mercadopago/sdk-react";
 import { Toaster } from "@/components/ui/toaster";
 import { useEffect } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const isProd = import.meta.env.PROD;
+const queryClient = new QueryClient();
 
 function App() {
   initMercadoPago(import.meta.env.VITE_MP_PUBLIC_KEY || "", {
@@ -29,8 +31,10 @@ function App() {
 
   return (
     <>
-      <RouterProvider router={router} />
-      <Toaster />
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+        <Toaster />
+      </QueryClientProvider>
     </>
   );
 }
