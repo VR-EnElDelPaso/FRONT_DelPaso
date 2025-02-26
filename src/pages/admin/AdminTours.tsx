@@ -11,6 +11,7 @@ import { Museum } from "@/types/Museums";
 import TourForm from "@/features/admin/components/TourForm";
 import { TagsCell } from "@/shared/components/TagCell";
 import { useFetchTours } from "@/features/admin/queries/useToursQuery";
+import Loader from "@/shared/components/Loader";
 
 const AdminTours = () => {
   // ----------- Hooks -----------
@@ -172,7 +173,7 @@ const AdminTours = () => {
   };
 
   if (isFetching) {
-    return <div>Cargando...</div>;
+    return <Loader />;
   }
 
   return (

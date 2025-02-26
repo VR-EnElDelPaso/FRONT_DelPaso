@@ -11,6 +11,7 @@ import HoursDisplay from "@/features/admin/components/HoursDisplay";
 import { Clock } from "lucide-react";
 import { MuseumHours } from "@/types/Museums";
 import { useFetchMuseums } from "@/features/admin/queries/useMuseumsQuery";
+import Loader from "@/shared/components/Loader";
 
 const columns: ColumnDef<Museum>[] = [
   {
@@ -130,7 +131,7 @@ const AdminMuseums = () => {
   }
 
   if (isFetching) {
-    return <div>Cargando...</div>
+    return <Loader />;
   }
 
   return (
