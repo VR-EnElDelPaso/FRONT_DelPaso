@@ -24,7 +24,7 @@ import { useState } from "react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+  data: TData[] | undefined;
   canCreate?: boolean;
   createText?: string;
   onCreate?: () => void;
@@ -36,7 +36,7 @@ interface DataTableProps<TData, TValue> {
 
 export function DataTable<TData, TValue>({
   columns,
-  data,
+  data = [],
   canCreate = false,
   createText = "Crear nuevo",
   canEdit,

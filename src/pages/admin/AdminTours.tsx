@@ -1,27 +1,24 @@
 import { useState, useEffect } from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { useLoaderData, useRevalidator } from "react-router-dom";
 import { DataTable } from "@/shared/components/DataTable";
 import { Tour } from "@/types/tour";
 import PhotoCellModal from "@/shared/components/PhotoCellModal";
-import { createTour, deleteTour, editTour } from "@/services/Tour";
+import { deleteTour, editTour } from "@/services/Tour";
 import { getAllMuseums } from "@/services/Museums";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
 import { Museum } from "@/types/Museums";
 import TourForm from "@/features/admin/components/TourForm";
 import { TagsCell } from "@/shared/components/TagCell";
-
-interface LoaderData {
-  data: Tour[];
-  ok?: boolean;
-  message?: string;
-}
+import { useCreateTour, useFetchTours } from "@/features/admin/queries/useToursQuery";
+import Loader from "@/shared/components/Loader";
+import { Tag } from "@/types/tag";
 
 const AdminTours = () => {
+  // ----------- Hooks -----------
+  const { data: tours, isFetching, refetch } = useFetchTours();
+  const { mutate: createMutation } = useCreateTour();
   const { toast } = useToast();
-  const { data } = useLoaderData() as LoaderData;
-  const { revalidate } = useRevalidator();
   const [formVisible, setFormVisible] = useState(false);
   const [initialValues, setInitialValues] = useState<Tour | undefined>(
     undefined
@@ -106,14 +103,14 @@ const AdminTours = () => {
   ];
 
   // Rest of the component remains the same...
-  const onSubmit = async (values: Partial<Tour>) => {
+  const onSubmit = async (values: Partial<Tour> & { tags: Array<Tag | string> }) => {
     try {
       if (initialValues) {
         const response = await editTour(initialValues.id, values);
         if (response) {
           setFormVisible(false);
           setInitialValues(undefined);
-          revalidate();
+          refetch();
           toast({
             title: "¡Tour actualizado!",
             description: "El tour ha sido actualizado exitosamente.",
@@ -121,20 +118,26 @@ const AdminTours = () => {
           });
         }
       } else {
-        const response = await createTour({
-          ...values,
-          tags: values.tags || [],
+        createMutation(values, {
+          onSuccess: () => {
+            setFormVisible(false);
+            setInitialValues(undefined);
+            refetch();
+            toast({
+              title: "¡Tour creado!",
+              description: "El tour ha sido creado exitosamente.",
+              variant: "default",
+            });
+          },
+          onError: (error: unknown) => {
+            console.error(error);
+            toast({
+              title: "Error",
+              description: "Hubo un error en la operación solicitada.",
+              variant: "destructive",
+            });
+          },
         });
-        if (response) {
-          setFormVisible(false);
-          setInitialValues(undefined);
-          revalidate();
-          toast({
-            title: "¡Tour creado!",
-            description: "El tour ha sido creado exitosamente.",
-            variant: "default",
-          });
-        }
       }
     } catch (error: unknown) {
       console.error(error);
@@ -150,7 +153,7 @@ const AdminTours = () => {
     try {
       const response = await deleteTour(id);
       if (response.ok) {
-        revalidate();
+        refetch();
         toast({
           title: "¡Tour eliminado!",
           description: "El tour ha sido eliminado exitosamente.",
@@ -177,6 +180,10 @@ const AdminTours = () => {
     setInitialValues(undefined);
   };
 
+  if (isFetching) {
+    return <Loader />;
+  }
+
   return (
     <div className="container py-8 mx-auto">
       <div className="p-6 bg-white rounded-lg shadow-md">
@@ -193,7 +200,7 @@ const AdminTours = () => {
         <div className="overflow-hidden bg-white rounded-lg">
           <DataTable
             columns={columns}
-            data={data}
+            data={tours?.data}
             canCreate
             createText="Crear nuevo tour"
             onCreate={() => setFormVisible(true)}

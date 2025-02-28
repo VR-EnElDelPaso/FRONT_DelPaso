@@ -1,4 +1,5 @@
 import { getOneOrderById, PostOrderResponse } from "@/services/Orders";
+import Loader from "@/shared/components/Loader";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -48,7 +49,7 @@ export const OrderDetailPage = () => {
     fetchOrder();
   }, [fetchOrder]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loader />;
 
   if (errorMessage) return <div>{errorMessage}</div>;
 

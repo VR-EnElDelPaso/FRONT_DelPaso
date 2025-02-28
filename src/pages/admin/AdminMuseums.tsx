@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { Link, useLoaderData, useRevalidator } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { DataTable } from "@/shared/components/DataTable";
 import { Museum } from "@/types/Museums";
 import PhotoCellModal from "@/shared/components/PhotoCellModal";
@@ -10,10 +10,8 @@ import MuseumForm from "@/features/admin/components/MuseumForm";
 import HoursDisplay from "@/features/admin/components/HoursDisplay";
 import { Clock } from "lucide-react";
 import { MuseumHours } from "@/types/Museums";
-
-interface LoaderData {
-  data: Museum[];
-}
+import { useFetchMuseums } from "@/features/admin/queries/useMuseumsQuery";
+import Loader from "@/shared/components/Loader";
 
 const columns: ColumnDef<Museum>[] = [
   {
@@ -63,9 +61,9 @@ const columns: ColumnDef<Museum>[] = [
 ];
 
 const AdminMuseums = () => {
+  // ----------- Hooks -----------
+  const { data: museums, isFetching, refetch } = useFetchMuseums();
   const { toast } = useToast();
-  const { data } = useLoaderData() as LoaderData;
-  const { revalidate } = useRevalidator();
   const [formVisible, setFormVisible] = useState(false);
   const [initialValues, setInitialValues] = useState<Museum | undefined>(undefined);
 
@@ -78,7 +76,7 @@ const AdminMuseums = () => {
         if (response) {
           setFormVisible(false);
           setInitialValues(undefined);
-          revalidate();
+          refetch();
           toast({
             title: "¡Museo actualizado!",
             description: "El museo ha sido actualizado exitosamente.",
@@ -90,7 +88,7 @@ const AdminMuseums = () => {
         if (response) {
           setFormVisible(false);
           setInitialValues(undefined);
-          revalidate();
+          refetch();
           toast({
             title: "¡Museo creado!",
             description: "El museo ha sido creado exitosamente.",
@@ -111,7 +109,7 @@ const AdminMuseums = () => {
   const onDelete = async (id: string) => {
     try {
       await deleteMuseum(id);
-      revalidate();
+      refetch();
       toast({
         title: "¡Museo eliminado!",
         description: "El museo ha sido eliminado exitosamente.",
@@ -132,6 +130,10 @@ const AdminMuseums = () => {
     setInitialValues(undefined);
   }
 
+  if (isFetching) {
+    return <Loader />;
+  }
+
   return (
     <div className="container py-8 mx-auto">
       <div className="p-6 bg-white rounded-lg shadow-md">
@@ -147,7 +149,7 @@ const AdminMuseums = () => {
         <div className="overflow-hidden bg-white rounded-lg">
           <DataTable 
             columns={columns} 
-            data={data} 
+            data={museums?.data} 
             canCreate
             createText="Crear nuevo museo"
             onCreate={() => setFormVisible(true)}

@@ -3,8 +3,6 @@ import AdminMuseums from "@/pages/admin/AdminMuseums";
 import AdminStatistics from "@/pages/admin/AdminStats";
 import AdminTours from "@/pages/admin/AdminTours";
 import AdminUsers from "@/pages/admin/AdminUsers";
-import { getAllMuseums } from "@/services/Museums";
-import { getAllTours } from "@/services/Tour";
 
 const adminRoutes = {
   children: [
@@ -13,13 +11,11 @@ const adminRoutes = {
     {
       path: "museums",
       element: <AdminMuseums />,
-      loader: async () => await getAllMuseums(),
     },
     { path: "stats", element: <AdminStatistics /> },
     {
       path: "tours",
       element: <AdminTours />,
-      loader: async () => await getAllTours(),
     },
   ],
 };

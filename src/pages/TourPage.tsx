@@ -4,12 +4,13 @@ import useFetchTourById from "../hooks/useFetchTourById";
 import { FadeInOnScroll } from "../components/animations/FadeInOnScroll";
 import ReviewsList from "../components/Reviews/ReviewsList";
 import TourSuggestions from "../components/TourSuggestions/TourSuggestions";
+import Loader from "@/shared/components/Loader";
 
 export default function TourPage() {
   const { id } = useParams<{ id: string }>();
   const tourData = useFetchTourById(id || "");
 
-  if (!tourData) return <div>Cargando...</div>;
+  if (!tourData) return <Loader />;
 
   return (
     <div className="bg-gray-50">
