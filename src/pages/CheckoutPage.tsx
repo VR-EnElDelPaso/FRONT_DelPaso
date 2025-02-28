@@ -1,156 +1,230 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useMemo } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { getTours } from "../services/Tour";
 import { Tour } from "../shared/types/Tour";
-import { MdOutlineCancel } from "react-icons/md";
 import Skeleton from "../shared/components/Skeleton";
 import { useCartStore } from "../stores/useCartStore";
 import { useAuth } from "../hooks/useAuth";
 import { createOneOrder } from "@/services/Orders";
 import { createOnePreference } from "@/services/Preference";
+import { Loader2, AlertCircle } from "lucide-react";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
 
 export function CheckoutPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { cartItems } = useCartStore();
   const { isAuthenticated } = useAuth();
-  const [isLoadingPreference, setIsLoadingPreference] = useState<boolean>(false);
-  const [tours, setTours] = useState<Tour[]>([]);
-  const [isToursLoading, setIsToursLoading] = useState<boolean>(true);
+  const [orderState, setOrderState] = useState("Cart");
+  const [errorDialog, setErrorDialog] = useState({
+    isOpen: false,
+    title: "",
+    description: "",
+  });
 
-  // Obtener los IDs de tours del carrito
-  const tourIds = useMemo(() => {
-    return cartItems.filter((item) => item.isSelected).map((item) => item.id);
-  }, [cartItems]);
+  // Obtener IDs de tours y estado de URL
+  const tourIds = useMemo(
+    () => cartItems.filter((item) => item.isSelected).map((item) => item.id),
+    [cartItems]
+  );
 
-  const fetchTours = useCallback(async () => {
-    if (!tourIds || tourIds.length === 0) {
-      setIsToursLoading(false);
-      return;
-    }
+  // Consultas y mutaciones
+  const { data: toursResponse, isLoading } = useQuery({
+    queryKey: ["tours", tourIds],
+    queryFn: () => getTours(tourIds),
+    enabled: tourIds.length > 0,
+  });
 
-    const response = await getTours(tourIds);
-    if (!response.ok) {
-      setIsToursLoading(false);
-      return;
-    }
+  const tours = useMemo(
+    () => (toursResponse?.ok ? (toursResponse.data as Tour[]) : []),
+    [toursResponse]
+  );
 
-    setTours(response.data as Tour[]);
-    setIsToursLoading(false);
-  }, [tourIds]);
+  // Cálculo del total
+  const total = useMemo(
+    () => tours.reduce((acc, tour) => acc + Number(tour.price), 0).toFixed(2),
+    [tours]
+  );
 
-  const handlePay = useCallback(async () => {
-    setIsLoadingPreference(true);
+  const orderMutation = useMutation({ mutationFn: createOneOrder });
+  const preferenceMutation = useMutation({ mutationFn: createOnePreference });
+
+  // Obtener estado de la URL si viene de MercadoPago
+  const status = new URLSearchParams(location.search).get("status");
+  if (status && orderState !== status) {
+    setOrderState(status);
+  }
+
+  // Acciones
+  const showError = (title: string, description: string): void => {
+    setErrorDialog({ isOpen: true, title, description });
+  };
+
+  const handlePay = async (): Promise<void> => {
     try {
-      const order = await createOneOrder(tourIds);
-      if (!order.data?.id) return;
-      const preference = await createOnePreference(order.data.id);
-      if (!preference.data?.init_point) return;
+      if (!toursResponse?.ok || toursResponse.data.length !== tourIds.length) {
+        return showError(
+          "Tours no disponibles",
+          "Algunos tours ya no están disponibles."
+        );
+      }
+
+      const order = await orderMutation.mutateAsync(tourIds);
+      if (!order?.data?.id) {
+        return showError(
+          "Error al crear orden",
+          "No se pudo generar la orden."
+        );
+      }
+
+      const preference = await preferenceMutation.mutateAsync(order.data.id);
+      if (!preference?.data?.init_point) {
+        return showError("Error de MercadoPago", "No se pudo iniciar el pago.");
+      }
+
       window.location.href = preference.data.init_point;
     } catch (error) {
-      console.error("Error creating order:", error);
-    } finally {
-      setIsLoadingPreference(false);
+      console.error(error);
+      showError("Error en el pago", "Hubo un problema al procesar tu orden.");
     }
-  }, [tourIds]);
+  };
 
-  const total = useMemo(() => {
-    return tours
-      .reduce((acc, tour) => {
-        if (tour) {
-          return acc + Number(tour.price);
-        }
-        return acc;
-      }, 0)
-      .toFixed(2);
-  }, [tours]);
+  // Validaciones y redirecciones
+  if (!isAuthenticated) {
+    navigate("/auth", { state: { from: location }, replace: true });
+    return null;
+  }
 
-  useEffect(() => {
-    fetchTours();
-  }, [fetchTours]);
-
-  // Si no hay tours seleccionados, redirigir a /cart
-  useEffect(() => {
-    if (!isToursLoading && tours.length === 0) {
-      navigate("/cart");
-    }
-  }, [isToursLoading, tours.length, navigate]);
-
-  // Validación de autenticación y carrito
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate("/auth", { state: { from: location }, replace: true });
-      return;
-    }
-
-    if (cartItems.length === 0) {
-      navigate("/cart");
-      return;
-    }
-  }, [isAuthenticated, cartItems.length, navigate]);
-
-  // Si no hay items en el carrito, redirigir a /cart
-  useEffect(() => {
-    if (cartItems.length === 0) {
-      navigate("/cart");
-      return;
-    }
-  }, [cartItems.length, navigate]);
+  if (cartItems.length === 0 || (!isLoading && tours.length === 0)) {
+    navigate("/cart", { replace: true });
+    return null;
+  }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="overflow-hidden bg-white rounded-lg shadow-lg w-96">
-        <div className="py-4 text-center">
-          <h2 className="text-2xl font-bold">Resumen de Compra</h2>
-        </div>
-        <div className="p-6">
-          {/* Items list */}
-          {isToursLoading
-            ? Array.from({ length: 3 }).map((_, index) => (
-                <Skeleton key={index} paragraphRows={3} active paragraph />
-              ))
-            : tours.map((tour) => <CheckoutItem key={tour.id} tour={tour} />)}
+    <>
+      <div className="min-h-screen bg-gray-100 py-8 px-4">
+        <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-8">
+          <h2 className="text-4xl font-medium text-gray-800 mb-8 font-kaiseiDecol">
+            Resumen de compra
+          </h2>
 
-          <div className="pt-4 border-t border-gray-200">
-            <p className="mb-2 text-sm text-gray-600">Total a pagar:</p>
-            <p className="text-3xl font-bold text-blue-600">${total}</p>
+          {isLoading ? (
+            <div className="space-y-4">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <Skeleton key={i} paragraphRows={1} active paragraph />
+              ))}
+            </div>
+          ) : (
+            <div>
+              {tours.map((tour) => (
+                <div key={tour.id} className="border-2 rounded-lg p-4 mb-4">
+                  <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+                    <div className="md:col-span-4">
+                      <div className="text-gray-600 mb-1">Recorrido</div>
+                      <div className="font-medium break-words hyphens-auto overflow-hidden">
+                        {tour.name}
+                      </div>
+                    </div>
+                    <div className="md:col-span-3">
+                      <div className="text-gray-600 mb-1">Autor</div>
+                      <div className="font-medium">Emilio Rosado</div>
+                    </div>
+                    <div className="md:col-span-3">
+                      <div className="text-gray-600 mb-1">
+                        Cuota de Recuperación
+                      </div>
+                      <div className="font-medium">
+                        ${Number(tour.price).toFixed(2)}
+                      </div>
+                    </div>
+                    <div className="md:col-span-2 flex items-end justify-end mt-2 md:mt-0">
+                      <button
+                        onClick={() => navigate("/cart", { replace: true })}
+                        className="text-primary hover:text-primary/90"
+                      >
+                        Eliminar Recorrido
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div className="border-t my-6"></div>
+
+          <div className="flex justify-end mb-6">
+            <div className="text-right">
+              <div className="text-gray-600 mb-1">Total a Pagar</div>
+              <div className="text-2xl font-bold">${total}</div>
+            </div>
           </div>
-          <div className="mt-6">
-            <Button
-              className="w-full text-white"
-              onClick={handlePay}
-              disabled={isToursLoading}
-            >
-              {isLoadingPreference && <Loader2 className="animate-spin" />}
-              Pagar
-            </Button>
-            {/* Back button */}
+
+          <div className="flex justify-end gap-4">
             <button
               onClick={() => navigate("/cart", { replace: true })}
-              className="flex items-center justify-center w-full gap-2 py-2 mt-6 text-red-600 transition-all duration-300 border border-red-600 rounded-lg hover:bg-red-600 hover:text-white"
+              className="px-6 py-2 text-primary hover:text-primary/90"
             >
-              <MdOutlineCancel className="text-xl" /> Cancelar
+              Cancelar
+            </button>
+            <button
+              onClick={handlePay}
+              disabled={
+                isLoading ||
+                tours.length === 0 ||
+                orderMutation.isPending ||
+                preferenceMutation.isPending ||
+                orderState !== "Cart"
+              }
+              className="px-6 py-2 bg-primary hover:bg-primaryHover text-white rounded-[10px]"
+            >
+              {orderMutation.isPending || preferenceMutation.isPending ? (
+                <>
+                  <Loader2 className="animate-spin inline mr-2" /> Procesando...
+                </>
+              ) : (
+                "Pagar ahora"
+              )}
             </button>
           </div>
         </div>
       </div>
-    </div>
-  );
-}
 
-function CheckoutItem({ tour }: { tour: Tour }) {
-  return (
-    <>
-      <div className="mb-4">
-        <p className="text-sm text-gray-600">Tour:</p>
-        <p className="text-xl font-bold text-gray-800">{tour.name}</p>
-      </div>
-      <div>
-        <p className="text-sm text-gray-600">Cuota de recuperación:</p>
-        <p className="text-2xl font-bold text-blue-600">${tour.price}</p>
-      </div>
-      <hr className="my-2 bg-gray-400" />
+      <Dialog
+        open={errorDialog.isOpen}
+        onOpenChange={(open) =>
+          setErrorDialog((prev) => ({ ...prev, isOpen: open }))
+        }
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <AlertCircle className="h-5 w-5 text-destructive" />
+              {errorDialog.title}
+            </DialogTitle>
+            <DialogDescription>{errorDialog.description}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              className="text-white"
+              onClick={() =>
+                setErrorDialog((prev) => ({ ...prev, isOpen: false }))
+              }
+            >
+              Entendido
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

@@ -4,9 +4,20 @@ import { initMercadoPago } from "@mercadopago/sdk-react";
 import { Toaster } from "@/components/ui/toaster";
 import { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const isProd = import.meta.env.PROD;
-const queryClient = new QueryClient();
+
+// Crear una instancia de QueryClient
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutos
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 function App() {
   initMercadoPago(import.meta.env.VITE_MP_PUBLIC_KEY || "", {
@@ -30,12 +41,13 @@ function App() {
   }, []);
 
   return (
-    <>
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
-        <Toaster />
-      </QueryClientProvider>
-    </>
+    // Envolver la aplicación con el QueryClientProvider
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+      <Toaster />
+      {/* Incluir ReactQueryDevtools sólo en desarrollo */}
+      {!isProd && <ReactQueryDevtools initialIsOpen={false} />}
+    </QueryClientProvider>
   );
 }
 
