@@ -18,6 +18,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import Loader from "@/shared/components/Loader";
 
 export function CheckoutPage() {
   const navigate = useNavigate();
@@ -107,6 +108,10 @@ export function CheckoutPage() {
   if (cartItems.length === 0 || (!isLoading && tours.length === 0)) {
     navigate("/cart", { replace: true });
     return null;
+  }
+
+  if (isLoading) {
+    return <Loader />;
   }
 
   return (

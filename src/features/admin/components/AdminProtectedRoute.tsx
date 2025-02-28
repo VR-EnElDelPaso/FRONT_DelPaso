@@ -2,6 +2,7 @@ import { ReactNode, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { UserType } from "@/types/user";
 import useAuthStore from "@/stores/AuthStore";
+import Loader from "@/shared/components/Loader";
 
 interface AdminProtectedRouteProps {
   children: ReactNode;
@@ -15,7 +16,7 @@ const AdminProtectedRoute = ({ children }: AdminProtectedRouteProps) => {
   }, [verifyToken]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   if (!isAuthenticated || user?.role !== UserType.ADMIN) {
