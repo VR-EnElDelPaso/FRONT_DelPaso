@@ -3,19 +3,21 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/shared/components/DataTable";
 import { Tour } from "@/types/tour";
 import PhotoCellModal from "@/shared/components/PhotoCellModal";
-import { createTour, deleteTour, editTour } from "@/services/Tour";
+import { deleteTour, editTour } from "@/services/Tour";
 import { getAllMuseums } from "@/services/Museums";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
 import { Museum } from "@/types/Museums";
 import TourForm from "@/features/admin/components/TourForm";
 import { TagsCell } from "@/shared/components/TagCell";
-import { useFetchTours } from "@/features/admin/queries/useToursQuery";
+import { useCreateTour, useFetchTours } from "@/features/admin/queries/useToursQuery";
 import Loader from "@/shared/components/Loader";
+import { Tag } from "@/types/tag";
 
 const AdminTours = () => {
   // ----------- Hooks -----------
   const { data: tours, isFetching, refetch } = useFetchTours();
+  const { mutate: createMutation } = useCreateTour();
   const { toast } = useToast();
   const [formVisible, setFormVisible] = useState(false);
   const [initialValues, setInitialValues] = useState<Tour | undefined>(
@@ -101,7 +103,7 @@ const AdminTours = () => {
   ];
 
   // Rest of the component remains the same...
-  const onSubmit = async (values: Partial<Tour>) => {
+  const onSubmit = async (values: Partial<Tour> & { tags: Array<Tag | string> }) => {
     try {
       if (initialValues) {
         const response = await editTour(initialValues.id, values);
@@ -116,20 +118,26 @@ const AdminTours = () => {
           });
         }
       } else {
-        const response = await createTour({
-          ...values,
-          tags: values.tags || [],
+        createMutation(values, {
+          onSuccess: () => {
+            setFormVisible(false);
+            setInitialValues(undefined);
+            refetch();
+            toast({
+              title: "¡Tour creado!",
+              description: "El tour ha sido creado exitosamente.",
+              variant: "default",
+            });
+          },
+          onError: (error: unknown) => {
+            console.error(error);
+            toast({
+              title: "Error",
+              description: "Hubo un error en la operación solicitada.",
+              variant: "destructive",
+            });
+          },
         });
-        if (response) {
-          setFormVisible(false);
-          setInitialValues(undefined);
-          refetch();
-          toast({
-            title: "¡Tour creado!",
-            description: "El tour ha sido creado exitosamente.",
-            variant: "default",
-          });
-        }
       }
     } catch (error: unknown) {
       console.error(error);
