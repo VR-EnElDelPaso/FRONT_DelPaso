@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { getAllTours } from "../services/Tour";
+import { getAllTours } from "../services/tour.services";
 
 import { Tour } from "@/types/tour";
 

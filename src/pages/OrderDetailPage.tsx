@@ -1,4 +1,4 @@
-import { getOneOrderById, PostOrderResponse } from "@/services/Orders";
+import { getOneOrderById, PostOrderResponse } from "@/services/orders.services";
 import Loader from "@/shared/components/Loader";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";

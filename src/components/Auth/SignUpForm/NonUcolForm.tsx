@@ -2,7 +2,7 @@ import { useState } from "react";
 import { RegisterUser } from "@/types/user";
 import { useForm } from "react-hook-form";
 import { useRegisterStore } from "@/stores/RegisterStore";
-import { Register } from "@/services/Auth";
+import { Register } from "@/services/auth.services";
 import { useToast } from "@/hooks/use-toast";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ResponseDataTyped } from "../types/ResponseData";
+import { ResponseDataTyped } from "../shared/types/response-data.types";
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 

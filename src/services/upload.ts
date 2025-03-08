@@ -1,4 +1,4 @@
-import type ResponseData from "@/types/ResponseData";
+import type ResponseData from "@/shared/types/response-data.types";
 
 export const uploadImage = async (file: string): Promise<ResponseData> => {
   const base64Response = await fetch(file);

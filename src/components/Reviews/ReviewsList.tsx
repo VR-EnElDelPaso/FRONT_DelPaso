@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Review } from "@/types/Review";
-import { ReviewService } from "@/services/Review";
+import { ReviewService } from "@/services/review.services";
 import ReviewCard from "./ReviewCard";
 import ReviewCardSkeleton from "./ReviewCardSkeleton";
 

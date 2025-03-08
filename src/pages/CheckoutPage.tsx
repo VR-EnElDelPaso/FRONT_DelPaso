@@ -1,12 +1,12 @@
 import { useState, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { getTours } from "../services/Tour";
+import { getTours } from "../services/tour.services";
 import { Tour } from "../shared/types/Tour";
 import Skeleton from "../shared/components/Skeleton";
 import { useCartStore } from "../stores/useCartStore";
 import { useAuth } from "../hooks/useAuth";
-import { createOneOrder } from "@/services/Orders";
-import { createOnePreference } from "@/services/Preference";
+import { createOneOrder } from "@/services/orders.services";
+import { createOnePreference } from "@/services/preference.services";
 import { Loader2, AlertCircle } from "lucide-react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import {

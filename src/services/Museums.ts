@@ -1,5 +1,5 @@
 import { Museum } from "@/types/Museums";
-import ResponseData from "@/types/ResponseData";
+import ResponseData from "@/shared/types/response-data.types";
 import axios from "axios";
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;

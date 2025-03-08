@@ -1,6 +1,6 @@
-import { ResponseDataTyped } from "@/types/ResponseData";
+import { ResponseDataTyped } from "@/shared/types/response-data.types";
 import axios from "axios";
-import { getAuthConfig } from "./Preference";
+import { getAuthConfig } from "./preference.services";
 import { Tour } from "@/shared/types/Tour";
 
 export interface PostOrderResponse {

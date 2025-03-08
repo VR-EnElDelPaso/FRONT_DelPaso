@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { LocalLogin } from "@/services/Auth";
-import ResponseData from "@/types/ResponseData";
+import { LocalLogin } from "@/services/auth.services";
+import ResponseData from "@/shared/types/response-data.types";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";

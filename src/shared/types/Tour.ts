@@ -1,3 +1,5 @@
+// todo: move to features/tours/types
+
 export interface Tour {
   id: string;
   name: string;

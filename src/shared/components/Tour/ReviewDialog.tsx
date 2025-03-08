@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import RatingStars from "../RatingStars";
 import { useToast } from "@/hooks/use-toast";
-import { ReviewService } from "@/services/Review";
+import { ReviewService } from "@/services/review.services";
 
 interface ReviewDialogProps {
   isOpen: boolean;

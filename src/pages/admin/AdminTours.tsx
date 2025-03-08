@@ -3,14 +3,14 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/shared/components/DataTable";
 import { Tour } from "@/types/tour";
 import PhotoCellModal from "@/shared/components/PhotoCellModal";
-import { deleteTour, editTour } from "@/services/Tour";
+import { deleteTour, editTour } from "@/services/tour.services";
 import { getAllMuseums } from "@/services/Museums";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
 import { Museum } from "@/types/Museums";
 import TourForm from "@/features/admin/components/TourForm";
 import { TagsCell } from "@/shared/components/TagCell";
-import { useCreateTour, useFetchTours } from "@/features/admin/queries/useToursQuery";
+import { useCreateTour, useFetchTours } from "@/querys/tour.querys";
 import Loader from "@/shared/components/Loader";
 import { Tag } from "@/types/tag";
 

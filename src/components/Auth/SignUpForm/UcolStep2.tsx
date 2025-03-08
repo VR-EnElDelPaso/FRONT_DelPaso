@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useRegisterStore } from "@/stores/RegisterStore";
-import { Register } from "@/services/Auth";
+import { Register } from "@/services/auth.services";
 import { RegisterUser } from "@/types/user";
 import { useToast } from "@/hooks/use-toast";
 

@@ -1,7 +1,9 @@
 import axios from "axios";
-import ResponseData from "../types/ResponseData";
+import ResponseData, { ResponseDataTyped } from "../shared/types/response-data.types";
 import { Tour } from "@/types/tour";
 import { Tag } from "@/types/tag";
+import { CheckedTourSuccessResponse } from "@/features/tour/types/tour.types";
+import { getAuthConfig } from './preference.services';
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL as string;
 
@@ -13,6 +15,7 @@ interface ToursResponse {
 
 const headers = {
   "Content-Type": "application/json",
+  Authorization: `Bearer ${localStorage.getItem("auth-token")}`,
 };
 
 //get all tours
@@ -20,6 +23,17 @@ export const getAllTours = async (): Promise<ToursResponse> => {
   const response = await axios.get<ToursResponse>(`${apiBaseUrl}/tours`);
   return response.data;
 };
+
+export const checkPurchasedTour = async (tourId: string): Promise<ResponseDataTyped<CheckedTourSuccessResponse>> => {
+  const response = await axios.get<ResponseDataTyped<CheckedTourSuccessResponse>>(
+    `${apiBaseUrl}/tours/${tourId}/check-purchase`,
+    {
+      headers,
+      ...getAuthConfig().headers
+    }
+  );
+  return response.data;
+}
 
 //get tours
 export const getTours = async (tourIds: string[]): Promise<ResponseData> => {

@@ -6,7 +6,7 @@ import CarouselControls from "./CarouselControls";
 import { variants, swipeConfidenceThreshold, swipePower } from "./animations";
 import { dateFormatter } from "@/utils/dateFormatter";
 import { getMuseumTours } from "@/services/Museums";
-import { getAllTours } from "@/services/Tour";
+import { getAllTours } from "@/services/tour.services";
 
 interface Slide {
   image_url: string;

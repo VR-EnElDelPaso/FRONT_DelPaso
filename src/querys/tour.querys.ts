@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createTour, getAllTours } from "@/services/Tour";
+import { checkPurchasedTour, createTour, getAllTours } from "@/services/tour.services";
 import { Tour } from "@/types/tour";
 import { Tag } from "@/types/tag";
 
@@ -10,6 +10,13 @@ export const useFetchTours = () => {
   return useQuery({
     queryKey: [TOURS_QUERY_KEY],
     queryFn: getAllTours
+  })
+}
+
+export const useCheckPurchasedTour = (tourId: string) => {
+  return useQuery({
+    queryKey: [TOURS_QUERY_KEY, tourId],
+    queryFn: () => checkPurchasedTour(tourId)
   })
 }
 
