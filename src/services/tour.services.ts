@@ -1,9 +1,9 @@
 import axios from "axios";
 import ResponseData, { ResponseDataTyped } from "../shared/types/response-data.types";
-import { Tour } from "@/types/tour";
 import { Tag } from "@/types/tag";
 import { CheckedTourSuccessResponse } from "@/features/tour/types/tour.types";
 import { getAuthConfig } from './preference.services';
+import { Tour } from "@/shared/types/Tour";
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL as string;
 
@@ -49,14 +49,9 @@ export const getTours = async (tourIds: string[]): Promise<ResponseData> => {
 };
 
 //get tour by id
-export const getTourById = async (id: string) => {
-  try {
-    const response = await axios.get(`${apiBaseUrl}/tours/${id}`, { headers });
-    return response.data.data;
-  } catch (error) {
-    console.error("Error fetching tour", error);
-    return null;
-  }
+export const getTourById = async (id: string): Promise<ResponseDataTyped<Tour>> => {
+  const response = await axios.get(`${apiBaseUrl}/tours/${id}`, { headers });
+  return response.data;
 };
 
 // todo: get tour suggestions to use en tour suggestions component
