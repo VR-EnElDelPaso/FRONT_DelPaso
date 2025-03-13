@@ -3,6 +3,7 @@ import AdminMuseums from "@/pages/admin/AdminMuseums";
 import AdminStatistics from "@/pages/admin/AdminStats";
 import AdminTours from "@/pages/admin/AdminTours";
 import AdminUsers from "@/pages/admin/AdminUsers";
+import LandingPage from "@/pages/admin/LandingPage";
 
 const adminRoutes = {
   children: [
@@ -16,6 +17,10 @@ const adminRoutes = {
     {
       path: "tours",
       element: <AdminTours />,
+    },
+    {
+      path: "/admin/landing",
+      element: <LandingPage />,
     },
   ],
 };
