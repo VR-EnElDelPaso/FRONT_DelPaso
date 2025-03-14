@@ -1,31 +1,82 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { wrap } from 'popmotion';
-import CarouselSlide from './CarouselSlide';
-import { slides } from './slide-data';
-import { variants, swipeConfidenceThreshold, swipePower } from './animations';
-import SocialMediaIcons from '../SocialMediaIcons/SocialMediaIcons';
+// src/components/NewsCarousel/NewsCarousel.tsx
+import React, { useState, useEffect, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { wrap } from "popmotion";
+import CarouselSlide from "./CarouselSlide";
+import { variants, swipeConfidenceThreshold, swipePower } from "./animations";
+import SocialMediaIcons from "../SocialMediaIcons/SocialMediaIcons";
+import { getMainCarousel } from "@/services/Carousel";
+import CarouselSlideInterface from "./slide-data";
 
 const NewsCarousel: React.FC = () => {
+  const [slides, setSlides] = useState<CarouselSlideInterface[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [[page, direction], setPage] = useState([0, 0]);
 
-  const imageIndex = wrap(0, slides.length, page);
+  const imageIndex = wrap(0, Math.max(slides.length, 1), page);
 
-  const paginate = useCallback((newDirection: number) => {
-    setPage((prevPage) => [prevPage[0] + newDirection, newDirection]);
-  }, [setPage]);
+  const fetchCarouselData = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const response = await getMainCarousel();
+      if (response.ok && response.data && response.data.slides) {
+        // Convertir los datos de la API al formato que espera el componente
+        const formattedSlides = response.data.slides.map((slide) => ({
+          id: slide.id || slide.index,
+          title: slide.title || "",
+          description: slide.description || "",
+          imageUrl: slide.image_url || "",
+        }));
+        setSlides(formattedSlides);
+      }
+    } catch (error) {
+      console.error("Error loading carousel data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
+    fetchCarouselData();
+  }, [fetchCarouselData]);
+
+  const paginate = useCallback(
+    (newDirection: number) => {
+      setPage((prevPage) => [prevPage[0] + newDirection, newDirection]);
+    },
+    [setPage]
+  );
+
+  useEffect(() => {
+    if (slides.length < 1) return;
+
     const interval = setInterval(() => {
       paginate(1);
     }, 7000);
 
     return () => clearInterval(interval);
-  }, [paginate]);
+  }, [paginate, slides.length]);
 
   const handleSlideChange = (index: number) => {
     setPage([index, 0]);
   };
+
+  // Mostrar estado de carga o fallback si no hay slides
+  if (isLoading) {
+    return (
+      <div className="bg-black relative h-[calc(100vh-5rem)] flex items-center justify-center">
+        <div className="text-white">Cargando...</div>
+      </div>
+    );
+  }
+
+  if (slides.length === 0) {
+    return (
+      <div className="bg-black relative h-[calc(100vh-5rem)] flex items-center justify-center">
+        <div className="text-white">No hay slides disponibles</div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-black relative h-[calc(100vh-5rem)] overflow-hidden">
@@ -38,17 +89,19 @@ const NewsCarousel: React.FC = () => {
             initial="enter"
             animate={index === imageIndex ? "center" : "exit"}
             exit="exit"
-            className={`absolute inset-0 ${index === imageIndex ? 'z-10' : 'z-0 pointer-events-none'}`}
+            className={`absolute inset-0 ${
+              index === imageIndex ? "z-10" : "z-0 pointer-events-none"
+            }`}
             transition={{
               x: { type: "spring", stiffness: 300, damping: 30 },
-              opacity: { duration: 0.5 }
+              opacity: { duration: 0.5 },
             }}
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={1}
             onDragEnd={(_, { offset, velocity }) => {
               const swipe = swipePower(offset.x, velocity.x);
-              
+
               if (swipe < -swipeConfidenceThreshold) {
                 paginate(1);
               } else if (swipe > swipeConfidenceThreshold) {
@@ -68,16 +121,18 @@ const NewsCarousel: React.FC = () => {
       <div className="z-30 absolute bottom-4 sm:bottom-8 right-4 sm:right-8 md:right-40 flex space-x-2 sm:space-x-8">
         {slides.map((_, index) => (
           <button
-            key={slides[index].id}
+            key={index}
             onClick={() => handleSlideChange(index)}
-            className={`text-white ${imageIndex === index ? 'font-bold' : 'text-gray-300'} w-6 h-6 text-xs sm:text-sm`}
+            className={`text-white ${
+              imageIndex === index ? "font-bold" : "text-gray-300"
+            } w-6 h-6 text-xs sm:text-sm`}
           >
             {index + 1}
           </button>
         ))}
       </div>
-      <SocialMediaIcons 
-        containerClass="z-30 p-1 bg-black rounded-xl bg-opacity-65 absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 space-y-2 text-white hidden sm:block" 
+      <SocialMediaIcons
+        containerClass="z-30 p-1 bg-black rounded-xl bg-opacity-65 absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 space-y-2 text-white hidden sm:block"
         iconClass="text-xl sm:text-2xl md:text-3xl"
       />
     </div>
