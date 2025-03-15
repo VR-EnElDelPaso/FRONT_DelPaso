@@ -1,59 +1,48 @@
 // src/components/NewsCarousel/NewsCarousel.tsx
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { wrap } from "popmotion";
+import { useQuery } from "@tanstack/react-query";
 import CarouselSlide from "./CarouselSlide";
 import { variants, swipeConfidenceThreshold, swipePower } from "./animations";
 import SocialMediaIcons from "../SocialMediaIcons/SocialMediaIcons";
 import { getMainCarousel } from "@/services/Carousel";
 import CarouselSlideInterface from "./slide-data";
+import Loader from "@/shared/components/Loader";
 
 const NewsCarousel: React.FC = () => {
-  const [slides, setSlides] = useState<CarouselSlideInterface[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [[page, direction], setPage] = useState([0, 0]);
+
+  // Consulta para obtener los datos del carrusel
+  const { data: carouselResponse, isLoading } = useQuery({
+    queryKey: ["mainCarousel"],
+    queryFn: () => getMainCarousel(),
+  });
+
+  // Formatear los slides para el componente
+  const slides = React.useMemo<CarouselSlideInterface[]>(() => {
+    if (!carouselResponse?.ok || !carouselResponse.data?.slides) return [];
+
+    return carouselResponse.data.slides.map((slide) => ({
+      id: slide.id || slide.index,
+      title: slide.title || "",
+      description: slide.description || "",
+      imageUrl: slide.image_url || "",
+    }));
+  }, [carouselResponse]);
 
   const imageIndex = wrap(0, Math.max(slides.length, 1), page);
 
-  const fetchCarouselData = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const response = await getMainCarousel();
-      if (response.ok && response.data && response.data.slides) {
-        // Convertir los datos de la API al formato que espera el componente
-        const formattedSlides = response.data.slides.map((slide) => ({
-          id: slide.id || slide.index,
-          title: slide.title || "",
-          description: slide.description || "",
-          imageUrl: slide.image_url || "",
-        }));
-        setSlides(formattedSlides);
-      }
-    } catch (error) {
-      console.error("Error loading carousel data:", error);
-    } finally {
-      setIsLoading(false);
-    }
+  // Control de paginación
+  const paginate = useCallback((newDirection: number) => {
+    setPage((prevPage) => [prevPage[0] + newDirection, newDirection]);
   }, []);
 
-  useEffect(() => {
-    fetchCarouselData();
-  }, [fetchCarouselData]);
-
-  const paginate = useCallback(
-    (newDirection: number) => {
-      setPage((prevPage) => [prevPage[0] + newDirection, newDirection]);
-    },
-    [setPage]
-  );
-
-  useEffect(() => {
+  // Cambio automático de slides
+  React.useEffect(() => {
     if (slides.length < 1) return;
 
-    const interval = setInterval(() => {
-      paginate(1);
-    }, 7000);
-
+    const interval = setInterval(() => paginate(1), 7000);
     return () => clearInterval(interval);
   }, [paginate, slides.length]);
 
@@ -61,11 +50,11 @@ const NewsCarousel: React.FC = () => {
     setPage([index, 0]);
   };
 
-  // Mostrar estado de carga o fallback si no hay slides
+  // Renderizar estados de carga y error
   if (isLoading) {
     return (
       <div className="bg-black relative h-[calc(100vh-5rem)] flex items-center justify-center">
-        <div className="text-white">Cargando...</div>
+        <Loader />
       </div>
     );
   }
@@ -117,7 +106,9 @@ const NewsCarousel: React.FC = () => {
           </motion.div>
         ))}
       </AnimatePresence>
+
       <div className="absolute bottom-16 left-4 sm:left-8 md:left-12 right-4 sm:right-8 md:right-32 h-0.5 bg-white bg-opacity-50 z-20"></div>
+
       <div className="z-30 absolute bottom-4 sm:bottom-8 right-4 sm:right-8 md:right-40 flex space-x-2 sm:space-x-8">
         {slides.map((_, index) => (
           <button
@@ -131,6 +122,7 @@ const NewsCarousel: React.FC = () => {
           </button>
         ))}
       </div>
+
       <SocialMediaIcons
         containerClass="z-30 p-1 bg-black rounded-xl bg-opacity-65 absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 space-y-2 text-white hidden sm:block"
         iconClass="text-xl sm:text-2xl md:text-3xl"

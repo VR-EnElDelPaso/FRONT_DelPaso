@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   AlertCircle,
   Edit,
@@ -24,61 +24,45 @@ import {
 import { Button } from "@/components/ui/button";
 import CarouselForm from "@/features/admin/components/CarouselForm";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import Loader from "@/shared/components/Loader";
 
 // Services
 import { getMainCarousel, updateCarousel } from "@/services/Carousel";
 
 // Types
-import { Carousel, CarouselFormData } from "@/shared/types/Carousel";
+import { CarouselFormData } from "@/shared/types/Carousel";
 import { useToast } from "@/hooks/use-toast";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 const LandingPage = () => {
-  // Estados
-  const [carousel, setCarousel] = useState<Carousel | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
-
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
-  // Cargar datos del carrusel principal
-  const fetchCarousel = async () => {
-    setIsLoading(true);
-    setError(null);
+  // Consulta para obtener datos del carrusel
+  const {
+    data: carouselResponse,
+    isLoading,
+    error: queryError,
+  } = useQuery({
+    queryKey: ["mainCarousel"],
+    queryFn: getMainCarousel,
+  });
 
-    try {
-      const response = await getMainCarousel();
+  const carousel = carouselResponse?.ok ? carouselResponse.data : null;
+  const error = queryError ? "Error al cargar el carrusel principal" : null;
 
-      if (response.ok && response.data) {
-        setCarousel(response.data);
-      } else {
-        setError(response.message || "Error al cargar el carrusel principal");
-      }
-    } catch (error) {
-      console.error("Error fetching carousel:", error);
-      setError("Error al cargar el carrusel principal");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchCarousel();
-  }, []);
-
-  // Manejar actualización del carrusel
-  const handleUpdateCarousel = async (data: CarouselFormData) => {
-    if (!carousel) return;
-
-    try {
-      const response = await updateCarousel(carousel.id, data);
-
+  // Mutación para actualizar el carrusel
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: CarouselFormData }) =>
+      updateCarousel(id, data),
+    onSuccess: (response) => {
       if (response.ok) {
         toast({
           title: "Éxito",
           description: "Carrusel actualizado correctamente",
         });
-        fetchCarousel(); // Recargar datos
+        queryClient.invalidateQueries({ queryKey: ["mainCarousel"] });
       } else {
         toast({
           title: "Error",
@@ -86,29 +70,32 @@ const LandingPage = () => {
           variant: "destructive",
         });
       }
-    } catch (error) {
-      console.error("Error updating carousel:", error);
+    },
+    onError: () => {
       toast({
         title: "Error",
         description: "Error al actualizar el carrusel",
         variant: "destructive",
       });
-    }
+    },
+  });
+
+  // Manejar actualización del carrusel
+  const handleUpdateCarousel = (data: CarouselFormData) => {
+    if (!carousel) return;
+    updateMutation.mutate({ id: carousel.id, data });
+    setIsFormOpen(false);
   };
 
   return (
     <div className="container p-6 mx-auto space-y-8">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight">
+      <div>
+        <h1 className="mb-2 text-3xl font-bold text-gray-900">
           Gestión de Landing Page
         </h1>
-
-        <Button onClick={fetchCarousel} variant="outline" disabled={isLoading}>
-          <RefreshCw
-            className={`h-4 w-4 mr-2 ${isLoading ? "animate-spin" : ""}`}
-          />
-          Actualizar
-        </Button>
+        <p className="text-gray-600">
+          Gestiona el contenido del carrusel principal de la página principal
+        </p>
       </div>
 
       {error && (
@@ -137,18 +124,27 @@ const LandingPage = () => {
 
               <Button
                 onClick={() => setIsFormOpen(true)}
-                disabled={!carousel || isLoading}
+                disabled={!carousel || isLoading || updateMutation.isPending}
                 className="text-white self-start sm:self-center w-full sm:w-auto"
               >
-                <Edit className="h-4 w-4 mr-2" />
-                Editar Carrusel
+                {updateMutation.isPending ? (
+                  <>
+                    <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                    Actualizando...
+                  </>
+                ) : (
+                  <>
+                    <Edit className="h-4 w-4 mr-2" />
+                    Editar Carrusel
+                  </>
+                )}
               </Button>
             </div>
           </CardHeader>
           <CardContent>
             {isLoading ? (
               <div className="flex justify-center p-8">
-                <RefreshCw className="h-8 w-8 animate-spin text-gray-400" />
+                <Loader />
               </div>
             ) : carousel ? (
               <div className="space-y-4">

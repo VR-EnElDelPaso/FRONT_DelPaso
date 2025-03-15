@@ -1,8 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
-import { useState } from "react";
-import { Loader2, Plus, Trash2, Check, X } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Plus, Trash2, Check, X, RefreshCw } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
 
 // Components
 import {
@@ -67,10 +68,12 @@ const CarouselForm = ({
   initialValues,
 }: CarouselFormProps) => {
   // Estados
-  const [isUploading, setIsUploading] = useState(false);
   const [slideConfirmingDelete, setSlideConfirmingDelete] = useState<
     number | null
   >(null);
+  const lastSlideRef = useRef<HTMLDivElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const initialSlidesCount = useRef(initialValues?.slides.length || 1);
 
   // Hooks
   const { toast } = useToast();
@@ -94,6 +97,87 @@ const CarouselForm = ({
   const { fields, append, remove } = useFieldArray({
     name: "slides",
     control: form.control,
+  });
+
+  // Efecto para desplazarse al último slide cuando se añade uno nuevo
+  useEffect(() => {
+    if (lastSlideRef.current && fields.length > initialSlidesCount.current) {
+      // Esperar un momento para que el DOM se actualice
+      setTimeout(() => {
+        lastSlideRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }, 100);
+    }
+  }, [fields.length]);
+
+  // Manejar cierre del formulario
+  const handleDialogClose = () => {
+    // Restaurar valores iniciales
+    form.reset({
+      name: initialValues?.name || "",
+      description: initialValues?.description || "",
+      slides: initialValues?.slides.map((slide) => ({
+        index: slide.index,
+        image_url: slide.image_url,
+        title: slide.title,
+        description: slide.description,
+      })) || [{ index: 0, image_url: "", title: "", description: "" }],
+    });
+
+    // Cerrar el diálogo
+    onClose();
+  };
+
+  // Mutación para subir imágenes
+  const uploadMutation = useMutation({
+    mutationFn: async (values: FormValues) => {
+      // Procesar cada slide para subir imágenes si es necesario
+      const processedSlides = await Promise.all(
+        values.slides.map(async (slide, index) => {
+          let finalImageUrl = slide.image_url;
+
+          // Si la imagen es una base64, subirla al servidor
+          if (slide.image_url.startsWith("data:image")) {
+            const response = await uploadImage(slide.image_url);
+            if (!response.ok || !response.data?.url) {
+              throw new Error(
+                `Error al subir la imagen del slide ${index + 1}`
+              );
+            }
+            finalImageUrl = response.data.url;
+          }
+
+          return {
+            ...slide,
+            index, // Asegurar que el índice sea correcto
+            image_url: finalImageUrl,
+          };
+        })
+      );
+
+      // Retornar datos formateados
+      return {
+        page_id: initialValues?.page_id || "",
+        name: values.name,
+        description: values.description,
+        slides: processedSlides,
+      };
+    },
+    onSuccess: (formattedValues) => {
+      onSubmit(formattedValues);
+      onClose();
+    },
+    onError: (error) => {
+      console.error("Error al guardar el carrusel:", error);
+      toast({
+        title: "Error al guardar",
+        description:
+          "Ocurrió un error al guardar los cambios. Por favor, intenta de nuevo.",
+        variant: "destructive",
+      });
+    },
   });
 
   // Manejar solicitud de eliminación
@@ -123,7 +207,17 @@ const CarouselForm = ({
     setSlideConfirmingDelete(null);
   };
 
-  const handleSubmit = async (values: FormValues) => {
+  // Añadir nuevo slide
+  const handleAddSlide = () => {
+    append({
+      index: fields.length,
+      image_url: "",
+      title: "",
+      description: "",
+    });
+  };
+
+  const handleSubmit = (values: FormValues) => {
     if (values.slides.length === 0) {
       toast({
         title: "Error",
@@ -133,59 +227,15 @@ const CarouselForm = ({
       return;
     }
 
-    setIsUploading(true);
-
-    try {
-      // Procesar cada slide para subir imágenes si es necesario
-      const processedSlides = await Promise.all(
-        values.slides.map(async (slide, index) => {
-          let finalImageUrl = slide.image_url;
-
-          // Si la imagen es una base64, subirla al servidor
-          if (slide.image_url.startsWith("data:image")) {
-            const response = await uploadImage(slide.image_url);
-            if (!response.ok || !response.data?.url) {
-              throw new Error(
-                `Error al subir la imagen del slide ${index + 1}`
-              );
-            }
-            finalImageUrl = response.data.url;
-          }
-
-          return {
-            ...slide,
-            index, // Asegurar que el índice sea correcto
-            image_url: finalImageUrl,
-          };
-        })
-      );
-
-      // Preparar datos para enviar
-      const formattedValues: CarouselFormData = {
-        page_id: initialValues?.page_id || "", // Asumimos que ya tenemos el page_id
-        name: values.name,
-        description: values.description,
-        slides: processedSlides,
-      };
-
-      await onSubmit(formattedValues);
-      onClose();
-    } catch (error) {
-      console.error("Error al guardar el carrusel:", error);
-      toast({
-        title: "Error al guardar",
-        description:
-          "Ocurrió un error al guardar los cambios. Por favor, intenta de nuevo.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsUploading(false);
-    }
+    uploadMutation.mutate(values);
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto w-full max-w-2xl p-4 md:p-6">
+    <Dialog open={isOpen} onOpenChange={handleDialogClose}>
+      <DialogContent
+        ref={dialogRef}
+        className="max-h-[90vh] overflow-y-auto w-full max-w-2xl p-4 md:p-6"
+      >
         <DialogHeader className="space-y-3 pb-4 border-b">
           <DialogTitle className="text-xl font-semibold">
             Editar Carrusel Principal
@@ -241,14 +291,7 @@ const CarouselForm = ({
                   type="button"
                   variant="outline"
                   size="sm"
-                  onClick={() =>
-                    append({
-                      index: fields.length,
-                      image_url: "",
-                      title: "",
-                      description: "",
-                    })
-                  }
+                  onClick={handleAddSlide}
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   Añadir Slide
@@ -267,7 +310,11 @@ const CarouselForm = ({
 
               <div className="space-y-4">
                 {fields.map((field, index) => (
-                  <Card key={field.id} className="overflow-hidden relative">
+                  <Card
+                    key={field.id}
+                    className="overflow-hidden relative"
+                    ref={index === fields.length - 1 ? lastSlideRef : null}
+                  >
                     <CardContent className="p-4">
                       <div className="flex justify-between items-center mb-4">
                         <h3 className="font-medium">Slide {index + 1}</h3>
@@ -386,19 +433,19 @@ const CarouselForm = ({
               <Button
                 type="button"
                 variant="outline"
-                onClick={onClose}
-                disabled={isUploading}
+                onClick={handleDialogClose}
+                disabled={uploadMutation.isPending}
               >
                 Cancelar
               </Button>
               <Button
                 type="submit"
                 className="text-white"
-                disabled={isUploading}
+                disabled={uploadMutation.isPending}
               >
-                {isUploading ? (
+                {uploadMutation.isPending ? (
                   <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
                     Procesando...
                   </>
                 ) : (
