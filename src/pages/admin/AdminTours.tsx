@@ -14,6 +14,21 @@ import { useCreateTour, useFetchTours } from "@/querys/tour.querys";
 import Loader from "@/shared/components/Loader";
 import { Tag } from "@/types/tag";
 
+// Definir una interfaz correcta para los valores del formulario
+interface TourFormValues {
+  id?: string;
+  name?: string;
+  description?: string;
+  price: string;
+  stars?: number;
+  url?: string;
+  image_url?: string;
+  museum_id?: string;
+  tags: Array<Tag | string>;
+  created_at?: string;
+  updated_at?: string;
+}
+
 const AdminTours = () => {
   // ----------- Hooks -----------
   const { data: tours, isFetching, refetch } = useFetchTours();
@@ -102,11 +117,21 @@ const AdminTours = () => {
     },
   ];
 
-  // Rest of the component remains the same...
-  const onSubmit = async (values: Partial<Tour> & { tags: Array<Tag | string> }) => {
+  // Refactorized onSubmit function with proper type handling
+  const onSubmit = async (values: TourFormValues) => {
     try {
       if (initialValues) {
-        const response = await editTour(initialValues.id, values);
+        // When editing, convert string tags to Tag objects
+        const formattedTags: Tag[] = values.tags.map((tag) =>
+          typeof tag === "string" ? { id: tag, name: tag } : tag
+        );
+
+        const response = await editTour(initialValues.id, {
+          ...values,
+          price: parseFloat(values.price),
+          tags: formattedTags,
+        });
+
         if (response) {
           setFormVisible(false);
           setInitialValues(undefined);
@@ -118,26 +143,38 @@ const AdminTours = () => {
           });
         }
       } else {
-        createMutation(values, {
-          onSuccess: () => {
-            setFormVisible(false);
-            setInitialValues(undefined);
-            refetch();
-            toast({
-              title: "¡Tour creado!",
-              description: "El tour ha sido creado exitosamente.",
-              variant: "default",
-            });
+        // When creating a new tour, ensure tags are proper Tag objects
+        const formattedTags: Tag[] = values.tags.map((tag) =>
+          typeof tag === "string" ? { id: tag, name: tag } : tag
+        );
+
+        createMutation(
+          {
+            ...values,
+            price: parseFloat(values.price),
+            tags: formattedTags,
           },
-          onError: (error: unknown) => {
-            console.error(error);
-            toast({
-              title: "Error",
-              description: "Hubo un error en la operación solicitada.",
-              variant: "destructive",
-            });
-          },
-        });
+          {
+            onSuccess: () => {
+              setFormVisible(false);
+              setInitialValues(undefined);
+              refetch();
+              toast({
+                title: "¡Tour creado!",
+                description: "El tour ha sido creado exitosamente.",
+                variant: "default",
+              });
+            },
+            onError: (error: unknown) => {
+              console.error(error);
+              toast({
+                title: "Error",
+                description: "Hubo un error en la operación solicitada.",
+                variant: "destructive",
+              });
+            },
+          }
+        );
       }
     } catch (error: unknown) {
       console.error(error);
@@ -218,16 +255,23 @@ const AdminTours = () => {
           <TourForm
             isOpen={formVisible}
             onClose={handleClose}
-            onSubmit={(data) =>
+            onSubmit={(data) => {
+              // Convert tags to Tag objects before passing to onSubmit
+              const formattedTags: Array<Tag | string> = data.tags.map((tag) =>
+                typeof tag === "string" ? { id: tag, name: tag } : tag
+              );
+
               onSubmit({
                 ...data,
-                price: parseFloat(data.price),
-                tags: data.tags.map((tag) => ({ id: tag, name: tag })),
-              })
-            }
+                tags: formattedTags,
+              });
+            }}
             initialValues={
               initialValues
-                ? { ...initialValues, price: initialValues.price.toString() }
+                ? {
+                    ...initialValues,
+                    price: initialValues.price.toString(),
+                  }
                 : undefined
             }
           />
