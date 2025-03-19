@@ -32,6 +32,15 @@ export const checkPurchasedTour = async (tourId: string): Promise<ResponseDataTy
       ...getAuthConfig().headers
     }
   );
+  console.log(response.data);
+  return response.data;
+}
+
+export const getTourUrl = async (tourId: string): Promise<ResponseDataTyped<{ tour_url: string }>> => {
+  const response = await axios.get<ResponseDataTyped<{ tour_url: string }>>(
+    `${apiBaseUrl}/tours/${tourId}/url`,
+    { headers }
+  );
   return response.data;
 }
 

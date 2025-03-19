@@ -5,7 +5,7 @@ import TourIframe from "../shared/components/Tour/TourIframe";
 import ReviewsList from "../components/Reviews/ReviewsList";
 import TourSuggestions from "../components/TourSuggestions/TourSuggestions";
 import { dateFormatter } from "../utils/dateFormatter";
-import { useFetchTourById } from "@/querys/tour.querys";
+import { useCheckPurchasedTour, useFetchTourById, useFetchTourUrl } from "@/querys/tour.querys";
 import Loader from "@/shared/components/Loader";
 
 export default function SeeTourPage() {
@@ -15,7 +15,9 @@ export default function SeeTourPage() {
 
   // ----[ Hooks ]----
   const id = useParams().id ?? "";
-  const { data: TourResponse, isPending: TourResponseIsPending, error: TourResponseError } = useFetchTourById(id);
+  const { data: TourResponse, isPending: TourIsPending } = useFetchTourById(id);
+  const { data: TourPurchaseResponse, isPending: TourPurchaseIsPending } = useCheckPurchasedTour(id);
+  const { data: TourUrlResponse, isPending: TourUrlIsPending } = useFetchTourUrl(id, TourPurchaseResponse?.data?.purchased);
 
   // ----[ Constants ]----
   const tour = TourResponse?.data
@@ -25,18 +27,20 @@ export default function SeeTourPage() {
     console.log("Form submitted:", data);
   };
 
-  console.log(TourResponseError);
-
   // ----[ Render ]----
-  if (TourResponseIsPending) return <Loader />;
+  if (TourIsPending) return <Loader />;
   if (!tour) return <p>Tour not found</p>;
+  if (TourPurchaseIsPending) return <Loader />;
+  if (!TourPurchaseResponse?.data?.purchased) return <p>Not purchased</p>;
+  if (TourUrlIsPending) return <Loader />;
+  if (!TourUrlResponse?.data?.tour_url) return <p>URL not found</p>;
 
   return (
     <>
       <div className="relative font-inter text-dark">
         {/* Tour iframe */}
         <TourIframe
-          src={tour.url}
+          src={TourUrlResponse?.data?.tour_url}
           isBlurred={isBlurred}
           onStart={() => setIsBlurred(false)}
         />

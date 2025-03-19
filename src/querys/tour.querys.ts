@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { checkPurchasedTour, createTour, getAllTours, getTourById } from "@/services/tour.services";
+import { checkPurchasedTour, createTour, getAllTours, getTourById, getTourUrl } from "@/services/tour.services";
 import { Tour } from "@/types/tour";
 import { Tag } from "@/types/tag";
 
@@ -8,22 +8,32 @@ const TOURS_QUERY_KEY = "tours";
 // ----------- Queries -----------
 export const useFetchTours = () => {
   return useQuery({
-    queryKey: [TOURS_QUERY_KEY],
-    queryFn: getAllTours
+    queryKey: [TOURS_QUERY_KEY, "all"],
+    queryFn: getAllTours,
   })
 }
 
-export const useFetchTourById = (tourId: string) => {
+export const useFetchTourById = (tourId: string, enabled = true) => {
   return useQuery({
-    queryKey: [TOURS_QUERY_KEY, tourId],
-    queryFn: ({ queryKey }) => getTourById(queryKey[1])
+    queryKey: [TOURS_QUERY_KEY, "by-id", tourId],
+    queryFn: ({ queryKey }) => getTourById(queryKey[2]),
+    enabled: !!tourId && enabled,
   })
 }
 
-export const useCheckPurchasedTour = (tourId: string) => {
+export const useCheckPurchasedTour = (tourId: string, enabled = true) => {
   return useQuery({
-    queryKey: [TOURS_QUERY_KEY, tourId],
-    queryFn: () => checkPurchasedTour(tourId)
+    queryKey: [TOURS_QUERY_KEY, "check-purchase", tourId],
+    queryFn: () => checkPurchasedTour(tourId),
+    enabled: !!tourId && enabled,
+  })
+}
+
+export const useFetchTourUrl = (tourId: string, enabled = true) => {
+  return useQuery({
+    queryKey: [TOURS_QUERY_KEY, "url", tourId],
+    queryFn: () => getTourUrl(tourId),
+    enabled: !!tourId && enabled,
   })
 }
 

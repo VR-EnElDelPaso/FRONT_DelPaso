@@ -15,6 +15,8 @@ export const TourCardButtons = ({ tourId }: { tourId: string }) => {
   const { setCartItem } = useCartStore();
   const { data: purchasedResponse, isPending: isPurchasedPending } =
     useCheckPurchasedTour(tourId);
+  
+  console.log(purchasedResponse);
 
   // ----[ Handlers ]----
   const handleCloseAlert = () => setIsAlertOpen(false);
