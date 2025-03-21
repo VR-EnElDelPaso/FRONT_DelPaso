@@ -1,8 +1,8 @@
 import axios from "axios";
 import ResponseData, { ResponseDataTyped } from "../shared/types/response-data.types";
-import { Tour } from "@/types/tour";
 import { Tag } from "@/types/tag";
 import { CheckedTourSuccessResponse } from "@/features/tour/types/tour.types";
+import { Tour } from "@/shared/types/Tour";
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL as string;
 
@@ -32,6 +32,15 @@ export const checkPurchasedTour = async (tourId: string): Promise<ResponseDataTy
     {
       headers: getAuthHeaders(),
     }
+  );
+  console.log(response.data);
+  return response.data;
+}
+
+export const getTourUrl = async (tourId: string): Promise<ResponseDataTyped<{ tour_url: string }>> => {
+  const response = await axios.get<ResponseDataTyped<{ tour_url: string }>>(
+    `${apiBaseUrl}/tours/${tourId}/url`,
+    { headers: getAuthHeaders() }
   );
   return response.data;
 }

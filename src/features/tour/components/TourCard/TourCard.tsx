@@ -17,6 +17,7 @@ export default function TourCard({
 }: Tour) {
   // ----[ Hooks ]----
   const { toast } = useToast();
+  console.log("TourCard -> tourId", id);
 
   // ----[ Functions ]----
   const copyToClipboard = () => {

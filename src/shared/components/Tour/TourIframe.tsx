@@ -18,6 +18,8 @@ export default function TourIframe({
             : "blur-0 opacity-100 h-[640px]"
         }`}
         frameBorder="0"
+        name="tour-iframe"
+        title="tour-iframe"
         allow="xr-spatial-tracking; gyroscope; accelerometer"
         allowFullScreen
         scrolling="no"
@@ -29,7 +31,7 @@ export default function TourIframe({
           onClick={onStart}
         >
           <h2 className="font-semibold tracking-widest">SOLO EN MUVi</h2>
-          <h1 className="text-3xl md:text-5xl font-medium font-kaiseiDecol mt-2">
+          <h1 className="mt-2 text-3xl font-medium md:text-5xl font-kaiseiDecol">
             Empezar este recorrido
           </h1>
         </div>

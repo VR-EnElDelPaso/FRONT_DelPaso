@@ -1,16 +1,20 @@
 import { useParams } from "react-router-dom";
 import CardTour from "../features/tour/components/TourCard/TourCard";
-import useFetchTourById from "../hooks/useFetchTourById";
 import { FadeInOnScroll } from "../components/animations/FadeInOnScroll";
 import ReviewsList from "../components/Reviews/ReviewsList";
 import TourSuggestions from "../components/TourSuggestions/TourSuggestions";
 import Loader from "@/shared/components/Loader";
+import { useFetchTourById } from "@/querys/tour.querys";
 
 export default function TourPage() {
-  const { id } = useParams<{ id: string }>();
-  const tourData = useFetchTourById(id || "");
+  const id = useParams().id || "";
+  const { data: TourResponse, isPending: TourResponseIsPending } = useFetchTourById(id);
 
-  if (!tourData) return <Loader />;
+  if (TourResponseIsPending) return <Loader />;
+  console.log(TourResponse);
+  if (!TourResponse) return <div>Not found</div>;
+
+  const tourData = TourResponse;
 
   return (
     <div className="bg-gray-50">
