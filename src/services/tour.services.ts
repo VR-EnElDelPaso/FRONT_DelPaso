@@ -2,7 +2,6 @@ import axios from "axios";
 import ResponseData, { ResponseDataTyped } from "../shared/types/response-data.types";
 import { Tag } from "@/types/tag";
 import { CheckedTourSuccessResponse } from "@/features/tour/types/tour.types";
-import { getAuthConfig } from './preference.services';
 import { Tour } from "@/shared/types/Tour";
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL as string;
@@ -13,9 +12,12 @@ interface ToursResponse {
   data: Tour[];
 }
 
-const headers = {
-  "Content-Type": "application/json",
-  Authorization: `Bearer ${localStorage.getItem("auth-token")}`,
+const getAuthHeaders = () => {
+  const token = localStorage.getItem("auth-token");
+  return {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`
+  };
 };
 
 //get all tours
@@ -28,8 +30,7 @@ export const checkPurchasedTour = async (tourId: string): Promise<ResponseDataTy
   const response = await axios.get<ResponseDataTyped<CheckedTourSuccessResponse>>(
     `${apiBaseUrl}/tours/${tourId}/check-purchase`,
     {
-      headers,
-      ...getAuthConfig().headers
+      headers: getAuthHeaders(),
     }
   );
   console.log(response.data);
@@ -39,7 +40,7 @@ export const checkPurchasedTour = async (tourId: string): Promise<ResponseDataTy
 export const getTourUrl = async (tourId: string): Promise<ResponseDataTyped<{ tour_url: string }>> => {
   const response = await axios.get<ResponseDataTyped<{ tour_url: string }>>(
     `${apiBaseUrl}/tours/${tourId}/url`,
-    { headers }
+    { headers: getAuthHeaders() }
   );
   return response.data;
 }
@@ -51,16 +52,23 @@ export const getTours = async (tourIds: string[]): Promise<ResponseData> => {
     {
       ids: tourIds,
     },
-    { headers }
+    { headers: getAuthHeaders() }
   );
 
   return response.data;
 };
 
 //get tour by id
-export const getTourById = async (id: string): Promise<ResponseDataTyped<Tour>> => {
-  const response = await axios.get(`${apiBaseUrl}/tours/${id}`, { headers });
-  return response.data;
+export const getTourById = async (id: string) => {
+  try {
+    const response = await axios.get(`${apiBaseUrl}/tours/${id}`, { 
+      headers: getAuthHeaders() 
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error("Error fetching tour", error);
+    return null;
+  }
 };
 
 // todo: get tour suggestions to use en tour suggestions component
@@ -74,48 +82,74 @@ export const getTourSuggestions = async (
       excludedIds: excludedTourIds,
       quantity,
     },
-    { headers }
+    { headers: getAuthHeaders() }
   );
   return response.data;
 };
 
-//create tour
+// Refactorized createTour function with proper type handling
 export const createTour = async (
   tour: Partial<Tour> & { tags: Array<Tag | string> }
 ): Promise<Tour> => {
-  const dataToSend = {
-    ...tour,
-    // Si el tag es un objeto, tomamos su id, si es un string lo dejamos como está
-    tags: tour.tags.map((tag) => (typeof tag === "object" ? tag.id : tag)),
-  };
+  try {
+    // Process tags to match API expectations
+    const dataToSend = {
+      ...tour,
+      // Extract tag IDs for API
+      tags: tour.tags.map((tag) => (typeof tag === "object" ? tag.id : tag)),
+    };
 
-  const response = await axios.post(`${apiBaseUrl}/tours`, dataToSend);
-  return response.data;
+    const response = await axios.post(
+      `${apiBaseUrl}/tours`, 
+      dataToSend,
+      { headers: getAuthHeaders() }
+    );
+    
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(
+        error.response?.data?.message || "Error al crear el tour"
+      );
+    }
+    throw error;
+  }
 };
 
-//edit tour
+// Refactorized editTour function with proper type handling
 export const editTour = async (
   id: string,
-  tour: Partial<Tour>
+  tour: Partial<Tour> & { tags?: Tag[] }
 ): Promise<Tour> => {
-  // Si hay tags, extraemos solo los IDs antes de enviar
-  const dataToSend = {
-    ...tour,
-    tags: tour.tags?.map((tag) => tag.id), // Convertimos los tags a array de IDs
-  };
+  try {
+    // Process tags to match API expectations
+    const dataToSend = {
+      ...tour,
+      // Extract tag IDs for API
+      tags: tour.tags?.map(tag => tag.id)
+    };
 
-  const response = await axios.patch(`${apiBaseUrl}/tours/${id}`, dataToSend);
-  return response.data;
+    const response = await axios.patch(
+      `${apiBaseUrl}/tours/${id}`, 
+      dataToSend, 
+      { headers: getAuthHeaders() }
+    );
+    
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(
+        error.response?.data?.message || "Error al actualizar el tour"
+      );
+    }
+    throw error;
+  }
 };
 
 //delete reviews by tour id
 const deleteReviewsByTourId = async (tourId: string): Promise<void> => {
   try {
-    const token = localStorage.getItem("auth-token");
-    const headers = {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    };
+    const headers = getAuthHeaders();
 
     const response = await axios.get(`${apiBaseUrl}/reviews/${tourId}/reviews`);
     const reviews = response.data.data.reviews;
@@ -135,11 +169,7 @@ const deleteReviewsByTourId = async (tourId: string): Promise<void> => {
 //delete tour
 export const deleteTour = async (id: string): Promise<ResponseData> => {
   try {
-    const token = localStorage.getItem("auth-token");
-    const headers = {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    };
+    const headers = getAuthHeaders();
 
     // Primero eliminamos las reviews asociadas
     await deleteReviewsByTourId(id);

@@ -1,4 +1,4 @@
-import { Home, User, ChartBar } from "lucide-react";
+import { Home, User, ChartBar, Layout } from "lucide-react";
 import { MdOutlineMuseum, MdTour } from "react-icons/md";
 
 export const navigationItems = [
@@ -21,6 +21,11 @@ export const navigationItems = [
     title: "Recorridos",
     icon: MdTour,
     url: "/admin/tours",
+  },
+  {
+    title: "Landing",
+    icon: Layout,
+    url: "/admin/landing",
   },
   {
     title: "Estadísticas",

@@ -1,31 +1,71 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { wrap } from 'popmotion';
-import CarouselSlide from './CarouselSlide';
-import { slides } from './slide-data';
-import { variants, swipeConfidenceThreshold, swipePower } from './animations';
-import SocialMediaIcons from '../SocialMediaIcons/SocialMediaIcons';
+// src/components/NewsCarousel/NewsCarousel.tsx
+import React, { useState, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { wrap } from "popmotion";
+import { useQuery } from "@tanstack/react-query";
+import CarouselSlide from "./CarouselSlide";
+import { variants, swipeConfidenceThreshold, swipePower } from "./animations";
+import SocialMediaIcons from "../SocialMediaIcons/SocialMediaIcons";
+import { getMainCarousel } from "@/services/Carousel";
+import CarouselSlideInterface from "./slide-data";
+import Loader from "@/shared/components/Loader";
 
 const NewsCarousel: React.FC = () => {
   const [[page, direction], setPage] = useState([0, 0]);
 
-  const imageIndex = wrap(0, slides.length, page);
+  // Consulta para obtener los datos del carrusel
+  const { data: carouselResponse, isLoading } = useQuery({
+    queryKey: ["mainCarousel"],
+    queryFn: () => getMainCarousel(),
+  });
 
+  // Formatear los slides para el componente
+  const slides = React.useMemo<CarouselSlideInterface[]>(() => {
+    if (!carouselResponse?.ok || !carouselResponse.data?.slides) return [];
+
+    return carouselResponse.data.slides.map((slide) => ({
+      id: slide.id || slide.index,
+      title: slide.title || "",
+      description: slide.description || "",
+      imageUrl: slide.image_url || "",
+    }));
+  }, [carouselResponse]);
+
+  const imageIndex = wrap(0, Math.max(slides.length, 1), page);
+
+  // Control de paginación
   const paginate = useCallback((newDirection: number) => {
     setPage((prevPage) => [prevPage[0] + newDirection, newDirection]);
-  }, [setPage]);
+  }, []);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      paginate(1);
-    }, 7000);
+  // Cambio automático de slides
+  React.useEffect(() => {
+    if (slides.length < 1) return;
 
+    const interval = setInterval(() => paginate(1), 7000);
     return () => clearInterval(interval);
-  }, [paginate]);
+  }, [paginate, slides.length]);
 
   const handleSlideChange = (index: number) => {
     setPage([index, 0]);
   };
+
+  // Renderizar estados de carga y error
+  if (isLoading) {
+    return (
+      <div className="bg-black relative h-[calc(100vh-5rem)] flex items-center justify-center">
+        <Loader />
+      </div>
+    );
+  }
+
+  if (slides.length === 0) {
+    return (
+      <div className="bg-black relative h-[calc(100vh-5rem)] flex items-center justify-center">
+        <div className="text-white">No hay slides disponibles</div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-black relative h-[calc(100vh-5rem)] overflow-hidden">
@@ -38,17 +78,19 @@ const NewsCarousel: React.FC = () => {
             initial="enter"
             animate={index === imageIndex ? "center" : "exit"}
             exit="exit"
-            className={`absolute inset-0 ${index === imageIndex ? 'z-10' : 'z-0 pointer-events-none'}`}
+            className={`absolute inset-0 ${
+              index === imageIndex ? "z-10" : "z-0 pointer-events-none"
+            }`}
             transition={{
               x: { type: "spring", stiffness: 300, damping: 30 },
-              opacity: { duration: 0.5 }
+              opacity: { duration: 0.5 },
             }}
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={1}
             onDragEnd={(_, { offset, velocity }) => {
               const swipe = swipePower(offset.x, velocity.x);
-              
+
               if (swipe < -swipeConfidenceThreshold) {
                 paginate(1);
               } else if (swipe > swipeConfidenceThreshold) {
@@ -64,20 +106,25 @@ const NewsCarousel: React.FC = () => {
           </motion.div>
         ))}
       </AnimatePresence>
+
       <div className="absolute bottom-16 left-4 sm:left-8 md:left-12 right-4 sm:right-8 md:right-32 h-0.5 bg-white bg-opacity-50 z-20"></div>
+
       <div className="z-30 absolute bottom-4 sm:bottom-8 right-4 sm:right-8 md:right-40 flex space-x-2 sm:space-x-8">
         {slides.map((_, index) => (
           <button
-            key={slides[index].id}
+            key={index}
             onClick={() => handleSlideChange(index)}
-            className={`text-white ${imageIndex === index ? 'font-bold' : 'text-gray-300'} w-6 h-6 text-xs sm:text-sm`}
+            className={`text-white ${
+              imageIndex === index ? "font-bold" : "text-gray-300"
+            } w-6 h-6 text-xs sm:text-sm`}
           >
             {index + 1}
           </button>
         ))}
       </div>
-      <SocialMediaIcons 
-        containerClass="z-30 p-1 bg-black rounded-xl bg-opacity-65 absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 space-y-2 text-white hidden sm:block" 
+
+      <SocialMediaIcons
+        containerClass="z-30 p-1 bg-black rounded-xl bg-opacity-65 absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 space-y-2 text-white hidden sm:block"
         iconClass="text-xl sm:text-2xl md:text-3xl"
       />
     </div>
