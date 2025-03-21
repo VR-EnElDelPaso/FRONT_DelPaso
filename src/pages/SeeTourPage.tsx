@@ -20,7 +20,7 @@ export default function SeeTourPage() {
   const { data: TourUrlResponse, isPending: TourUrlIsPending } = useFetchTourUrl(id, TourPurchaseResponse?.data?.purchased);
 
   // ----[ Constants ]----
-  const tour = TourResponse?.data
+  const tour = TourResponse
 
   // ----[ Handlers ]----
   const handleSubmit = (data: { rating: number; comment: string }) => {

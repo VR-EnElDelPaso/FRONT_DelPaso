@@ -11,9 +11,10 @@ export default function TourPage() {
   const { data: TourResponse, isPending: TourResponseIsPending } = useFetchTourById(id);
 
   if (TourResponseIsPending) return <Loader />;
-  if (!TourResponse?.data) return <div>Not found</div>;
+  console.log(TourResponse);
+  if (!TourResponse) return <div>Not found</div>;
 
-  const tourData = TourResponse.data;
+  const tourData = TourResponse;
 
   return (
     <div className="bg-gray-50">
