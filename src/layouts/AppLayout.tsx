@@ -1,8 +1,9 @@
 import { Outlet } from "react-router-dom";
 import AppBar from "../components/AppBar/AppBar";
 import Footer from "../components/Footer";
+import CartCleaner from "../features/cart/components/CartCleaner";
 
-export default function AuthProvider() {
+export default function AppLayout() {
   return (
     <div className="font-inter">
       <AppBar />
@@ -10,6 +11,7 @@ export default function AuthProvider() {
         <Outlet />
       </div>
       <Footer />
+      <CartCleaner />
     </div>
   );
 }
