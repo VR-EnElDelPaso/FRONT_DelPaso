@@ -33,8 +33,55 @@ export const checkPurchasedTour = async (tourId: string): Promise<ResponseDataTy
       headers: getAuthHeaders(),
     }
   );
-  console.log(response.data);
   return response.data;
+}
+
+// Verificar múltiples tours comprados
+export const checkPurchasedTours = async (tourIds: string[]): Promise<ResponseDataTyped<string[]>> => {
+  try {
+    // Si no hay token o no hay tours para verificar, retornamos un array vacío
+    const token = localStorage.getItem("auth-token");
+    if (!token || tourIds.length === 0) {
+      return {
+        ok: true,
+        message: "No hay tours para verificar",
+        data: [],
+        pagination: { total: 0, page: 1, limit: 10, hasMore: false }
+      };
+    }
+
+    // Verificar cada tour individualmente y recopilar los IDs de los comprados activos
+    const purchaseChecks = await Promise.all(
+      tourIds.map(async (id) => {
+        try {
+          const response = await checkPurchasedTour(id);
+          // Solo consideramos comprado si purchased es true (si está activo)
+          return response.data?.purchased ? id : null;
+        } catch (error) {
+          console.error(`Error verificando compra del tour ${id}:`, error);
+          return null;
+        }
+      })
+    );
+
+    // Filtrar solo los IDs de tours que tienen compras activas (no nulos)
+    const activePurchasedTourIds = purchaseChecks.filter(id => id !== null) as string[];
+
+    return {
+      ok: true,
+      message: "Verificación de compras completada",
+      data: activePurchasedTourIds,
+      pagination: { total: activePurchasedTourIds.length, page: 1, limit: 10, hasMore: false }
+    };
+  } catch (error) {
+    console.error("Error al verificar tours comprados:", error);
+    return {
+      ok: false,
+      message: "Error al verificar tours comprados",
+      data: [],
+      pagination: { total: 0, page: 1, limit: 10, hasMore: false }
+    };
+  }
 }
 
 export const getTourUrl = async (tourId: string): Promise<ResponseDataTyped<{ tour_url: string }>> => {
