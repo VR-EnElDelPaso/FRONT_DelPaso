@@ -1,6 +1,6 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { getTours } from "../services/tour.services";
+import { getTours, checkPurchasedTours } from "../services/tour.services";
 import { Tour } from "../shared/types/Tour";
 import Skeleton from "../shared/components/Skeleton";
 import { useCartStore } from "../stores/useCartStore";
@@ -19,13 +19,15 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import Loader from "@/shared/components/Loader";
+import { useToast } from "@/hooks/use-toast";
 
 export function CheckoutPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { cartItems } = useCartStore();
+  const { cartItems, removeCartItem } = useCartStore();
   const { isAuthenticated } = useAuth();
   const [orderState, setOrderState] = useState("Cart");
+  const { toast } = useToast();
   const [errorDialog, setErrorDialog] = useState({
     isOpen: false,
     title: "",
@@ -50,6 +52,79 @@ export function CheckoutPage() {
     [toursResponse]
   );
 
+  // Check for ghost items and purchased items
+  useEffect(() => {
+    if (toursResponse?.ok && tourIds.length > 0) {
+      const fetchedTourIds = tours.map((tour) => tour.id);
+
+      // Check for ghost items
+      const ghostItemIds = tourIds.filter((id) => !fetchedTourIds.includes(id));
+
+      if (ghostItemIds.length > 0) {
+        // Remove each ghost item from the cart
+        ghostItemIds.forEach((id) => {
+          removeCartItem(id);
+        });
+
+        // Show a toast notification to inform the user
+        toast({
+          title: "Carrito actualizado",
+          description: `Se han eliminado ${ghostItemIds.length} tour(s) que ya no están disponibles.`,
+          variant: "default",
+        });
+      }
+
+      // Check for purchased tours with active access
+      const checkPurchased = async () => {
+        if (isAuthenticated && fetchedTourIds.length > 0) {
+          const purchasedToursResponse = await checkPurchasedTours(
+            fetchedTourIds
+          );
+
+          if (
+            purchasedToursResponse?.ok &&
+            (purchasedToursResponse.data?.length ?? 0) > 0
+          ) {
+            const activePurchasedTourIds = purchasedToursResponse.data || [];
+
+            // Eliminar solo los tours con compras activas del carrito
+            activePurchasedTourIds.forEach((id) => {
+              removeCartItem(id);
+            });
+
+            // Notificar al usuario y redirigir al carrito si todos los tours tienen acceso activo
+            toast({
+              title: "Carrito actualizado",
+              description: `Se ${
+                activePurchasedTourIds.length === 1 ? "ha" : "han"
+              } eliminado ${activePurchasedTourIds.length} tour${
+                activePurchasedTourIds.length === 1 ? "" : "s"
+              } que ya ${
+                activePurchasedTourIds.length === 1 ? "tiene" : "tienen"
+              } acceso activo.`,
+              variant: "default",
+            });
+
+            // Si todos los tours tienen acceso activo, redirigir al carrito
+            if (activePurchasedTourIds.length === fetchedTourIds.length) {
+              navigate("/cart", { replace: true });
+            }
+          }
+        }
+      };
+
+      checkPurchased();
+    }
+  }, [
+    toursResponse,
+    tourIds,
+    tours,
+    removeCartItem,
+    toast,
+    isAuthenticated,
+    navigate,
+  ]);
+
   // Cálculo del total
   const total = useMemo(
     () => tours.reduce((acc, tour) => acc + Number(tour.price), 0).toFixed(2),
@@ -72,10 +147,29 @@ export function CheckoutPage() {
 
   const handlePay = async (): Promise<void> => {
     try {
-      if (!toursResponse?.ok || toursResponse.data.length !== tourIds.length) {
+      if (!toursResponse?.ok) {
+        return showError(
+          "Error al cargar tours",
+          "No se pudieron cargar los detalles de los tours."
+        );
+      }
+
+      if (toursResponse.data.length !== tourIds.length) {
         return showError(
           "Tours no disponibles",
-          "Algunos tours ya no están disponibles."
+          "Algunos tours seleccionados ya no están disponibles."
+        );
+      }
+
+      // Verificar nuevamente si hay tours comprados antes de proceder
+      const purchasedToursResponse = await checkPurchasedTours(tourIds);
+      if (
+        purchasedToursResponse?.ok &&
+        (purchasedToursResponse.data?.length ?? 0) > 0
+      ) {
+        return showError(
+          "Tours ya comprados",
+          "Algunos tours ya han sido comprados previamente."
         );
       }
 
