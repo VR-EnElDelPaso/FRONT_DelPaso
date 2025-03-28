@@ -5,26 +5,71 @@ import TourIframe from "../shared/components/Tour/TourIframe";
 import ReviewsList from "../components/Reviews/ReviewsList";
 import TourSuggestions from "../components/TourSuggestions/TourSuggestions";
 import { dateFormatter } from "../utils/dateFormatter";
-import { useCheckPurchasedTour, useFetchTourById, useFetchTourUrl } from "@/querys/tour.querys";
+import {
+  useCheckPurchasedTour,
+  useFetchTourById,
+  useFetchTourUrl,
+} from "@/querys/tour.querys";
 import Loader from "@/shared/components/Loader";
+import { useToast } from "@/hooks/use-toast";
+import { ConfirmAlert } from "@/features/tour/components/TourCard/SeeTourAlert";
 
 export default function SeeTourPage() {
   // ----[ State ]----
   const [isBlurred, setIsBlurred] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [showStartConfirm, setShowStartConfirm] = useState(false);
+  const [startTourClicked, setStartTourClicked] = useState(false);
 
   // ----[ Hooks ]----
+  const { toast } = useToast();
   const id = useParams().id ?? "";
   const { data: TourResponse, isPending: TourIsPending } = useFetchTourById(id);
-  const { data: TourPurchaseResponse, isPending: TourPurchaseIsPending } = useCheckPurchasedTour(id);
-  const { data: TourUrlResponse, isPending: TourUrlIsPending } = useFetchTourUrl(id, TourPurchaseResponse?.data?.purchased);
+  const { data: TourPurchaseResponse, isPending: TourPurchaseIsPending } =
+    useCheckPurchasedTour(id);
+
+  // Only fetch the tour URL when the user has clicked the start button
+  const {
+    data: TourUrlResponse,
+    isPending: TourUrlIsPending,
+    error: TourUrlError,
+  } = useFetchTourUrl(
+    id,
+    TourPurchaseResponse?.data?.purchased && startTourClicked
+  );
 
   // ----[ Constants ]----
-  const tour = TourResponse
+  const tour = TourResponse;
 
   // ----[ Handlers ]----
   const handleSubmit = (data: { rating: number; comment: string }) => {
     console.log("Form submitted:", data);
+  };
+
+  const handleStartTourClick = () => {
+    setShowStartConfirm(true);
+  };
+
+  const handleConfirmStart = () => {
+    setShowStartConfirm(false);
+    setStartTourClicked(true);
+  };
+
+  const handleCancelStart = () => {
+    setShowStartConfirm(false);
+  };
+
+  const handleTourLoad = () => {
+    if (TourUrlResponse?.data?.tour_url) {
+      setIsBlurred(false);
+    } else if (TourUrlError) {
+      toast({
+        title: "Error",
+        description:
+          "No se pudo cargar el recorrido. Por favor, intenta de nuevo.",
+        variant: "destructive",
+      });
+    }
   };
 
   // ----[ Render ]----
@@ -32,17 +77,20 @@ export default function SeeTourPage() {
   if (!tour) return <p>Tour not found</p>;
   if (TourPurchaseIsPending) return <Loader />;
   if (!TourPurchaseResponse?.data?.purchased) return <p>Not purchased</p>;
-  if (TourUrlIsPending) return <Loader />;
-  if (!TourUrlResponse?.data?.tour_url) return <p>URL not found</p>;
+
+  // Show loading state only when startTourClicked is true and it's pending
+  const isLoadingTourUrl = startTourClicked && TourUrlIsPending;
 
   return (
     <>
       <div className="relative font-inter text-dark">
         {/* Tour iframe */}
         <TourIframe
-          src={TourUrlResponse?.data?.tour_url}
+          src={TourUrlResponse?.data?.tour_url || ""}
           isBlurred={isBlurred}
-          onStart={() => setIsBlurred(false)}
+          onStart={handleStartTourClick}
+          isLoading={isLoadingTourUrl}
+          onLoad={handleTourLoad}
         />
 
         {/* Content */}
@@ -92,6 +140,17 @@ export default function SeeTourPage() {
             isOpen={isDialogOpen}
             onClose={() => setIsDialogOpen(false)}
             onSubmit={handleSubmit}
+          />
+
+          <ConfirmAlert
+            isOpen={showStartConfirm}
+            onClose={handleCancelStart}
+            onConfirm={handleConfirmStart}
+            onCancel={handleCancelStart}
+            title="¿Estás seguro?"
+            description="Al hacer clic en 'Continuar', iniciarás el tour y solo tendrás acceso a él por 24 horas."
+            confirmText="Continuar"
+            cancelText="Cancelar"
           />
         </section>
       </div>

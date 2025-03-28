@@ -29,11 +29,12 @@ export const useCheckPurchasedTour = (tourId: string, enabled = true) => {
   })
 }
 
-export const useFetchTourUrl = (tourId: string, enabled = true) => {
+export const useFetchTourUrl = (tourId: string, enabled = false) => {
   return useQuery({
     queryKey: [TOURS_QUERY_KEY, "url", tourId],
     queryFn: () => getTourUrl(tourId),
     enabled: !!tourId && enabled,
+    retry: 1, // Limit retries in case of error
   })
 }
 
