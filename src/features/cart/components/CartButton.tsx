@@ -1,11 +1,27 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineShoppingCart } from "react-icons/ai";
-
 import { useCartStore } from '../../../stores/useCartStore';
 
 export default function CartButton() {
-  const { getItemCount } = useCartStore();
+  const { getItemCount, cleanGhostItems } = useCartStore();
   const navigate = useNavigate();
+  
+  // Usar getItemCount() directamente en lugar de mantener un estado local
+  // Esto garantiza que el componente se re-renderice cuando cartItems cambie
+  
+  useEffect(() => {
+    // Limpiar items fantasma al montar el componente
+    const checkGhostItems = async () => {
+      try {
+        await cleanGhostItems();
+      } catch (error) {
+        console.error("Error cleaning ghost items:", error);
+      }
+    };
+    
+    checkGhostItems();
+  }, [cleanGhostItems]);
   
   const handleClick = () => {
     navigate('/cart');

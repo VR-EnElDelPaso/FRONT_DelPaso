@@ -1,23 +1,25 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useCartStore } from "../stores/useCartStore";
-import { getTours } from "../services/tour.services";
+import { getTours, checkPurchasedTours } from "../services/tour.services";
 import { Tour } from "../shared/types/Tour";
 import { CartSuggestions } from "../features/cart/components/CartSuggestions";
 import { CartList } from "../features/cart/components/CartList";
 import { CartResume } from "../features/cart/components/CartResume";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { EmptyCartMessage } from "@/features/cart/components/EmptyCartMessage";
+import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function CartPage() {
   // ----[ State ]----
   const [fetchedTours, setFetchedTours] = useState<Tour[]>([]);
-  // const [paymentStatus, setPaymentStatus] = useState<string | null>();
-  // const [orderId, setOrderId] = useState<string | null>();
 
   // ----[ Hooks ]----
   const [searchParams] = useSearchParams();
-  const { cartItems, setCartItem } = useCartStore();
+  const { cartItems, setCartItem, removeCartItem } = useCartStore();
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const { isAuthenticated } = useAuth();
 
   // ----[ Memos ]----
   const toursIds = useMemo(() => cartItems.map((item) => item.id), [cartItems]);
@@ -35,10 +37,62 @@ export default function CartPage() {
 
   // ----[ Callbacks ]----
   const fetchTours = useCallback(async () => {
+    if (toursIds.length === 0) return;
+
     const response = await getTours(toursIds);
     if (!response.ok) return;
-    setFetchedTours(response.data);
-  }, [toursIds]);
+
+    const fetchedTours = response.data;
+    setFetchedTours(fetchedTours);
+
+    // Check for ghost items and remove them
+    const fetchedTourIds = fetchedTours.map((tour: Tour) => tour.id);
+    const ghostItemIds = toursIds.filter((id) => !fetchedTourIds.includes(id));
+
+    if (ghostItemIds.length > 0) {
+      // Remove each ghost item from the cart
+      ghostItemIds.forEach((id) => {
+        removeCartItem(id);
+      });
+
+      // Show a toast notification to inform the user
+      toast({
+        title: "Carrito actualizado",
+        description: `Se han eliminado ${ghostItemIds.length} tour(s) que ya no están disponibles.`,
+        variant: "default",
+      });
+    }
+
+    // También verificar tours con compras activas si el usuario está autenticado
+    if (isAuthenticated) {
+      const purchasedToursResponse = await checkPurchasedTours(fetchedTourIds);
+
+      if (
+        purchasedToursResponse?.ok &&
+        (purchasedToursResponse.data ?? []).length > 0
+      ) {
+        const activePurchasedTourIds = purchasedToursResponse.data;
+
+        // Eliminar solo los tours con compras activas del carrito
+        (activePurchasedTourIds ?? []).forEach((id: string) => {
+          removeCartItem(id);
+        });
+
+        // Notificar al usuario
+        toast({
+          title: "Carrito actualizado",
+          description: `Se ${
+            activePurchasedTourIds?.length === 1 ? "ha" : "han"
+          } eliminado ${activePurchasedTourIds?.length} tour${
+            activePurchasedTourIds?.length === 1 ? "" : "s"
+          } que ya ${
+            activePurchasedTourIds?.length === 1 ? "tiene" : "tienen"
+          } acceso activo.`,
+          variant: "default",
+        });
+      }
+    }
+  }, [toursIds, removeCartItem, toast, isAuthenticated]);
 
   // ----[ Effects ]----
   useEffect(() => {
@@ -76,7 +130,11 @@ export default function CartPage() {
       .map((item) => item.id);
 
     if (selectedItems.length === 0) {
-      alert("No hay tours seleccionados");
+      toast({
+        title: "No hay tours seleccionados",
+        description: "Por favor, selecciona al menos un tour para continuar.",
+        variant: "destructive",
+      });
       return;
     }
 
