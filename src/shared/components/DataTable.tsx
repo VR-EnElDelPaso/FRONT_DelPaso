@@ -30,6 +30,7 @@ interface DataTableProps<TData, TValue> {
   onCreate?: () => void;
   canEdit?: boolean;
   canDelete?: boolean;
+  disableDelete?: boolean; // Nueva propiedad para deshabilitar el botón de eliminar
   onEdit?: (data: TData) => void;
   onDelete?: (data: TData) => void;
 }
@@ -41,6 +42,7 @@ export function DataTable<TData, TValue>({
   createText = "Crear nuevo",
   canEdit,
   canDelete,
+  disableDelete = false, // Valor por defecto
   onEdit,
   onDelete,
   onCreate,
@@ -133,8 +135,22 @@ export function DataTable<TData, TValue>({
                             }}
                           >
                             <PopoverTrigger asChild>
-                              <Button variant="outline">
-                                <FaTrash className="text-red-500" />
+                              <Button
+                                variant="outline"
+                                disabled={disableDelete} // Usar la nueva propiedad para deshabilitar
+                                className={
+                                  disableDelete
+                                    ? "opacity-50 cursor-not-allowed"
+                                    : ""
+                                }
+                              >
+                                <FaTrash
+                                  className={`${
+                                    disableDelete
+                                      ? "text-gray-400"
+                                      : "text-red-500"
+                                  }`}
+                                />
                               </Button>
                             </PopoverTrigger>
                             <PopoverContent
@@ -174,7 +190,7 @@ export function DataTable<TData, TValue>({
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length}
+                  colSpan={columns.length + (canEdit || canDelete ? 1 : 0)}
                   className="h-24 text-center text-gray-500"
                 >
                   No se encontraron resultados.

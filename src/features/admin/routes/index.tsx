@@ -4,6 +4,7 @@ import AdminStatistics from "@/pages/admin/AdminStats";
 import AdminTours from "@/pages/admin/AdminTours";
 import AdminUsers from "@/pages/admin/AdminUsers";
 import LandingPage from "@/pages/admin/LandingPage";
+import AdminFaqs from "@/pages/admin/AdminFaqs";
 
 const adminRoutes = {
   children: [
@@ -21,6 +22,10 @@ const adminRoutes = {
     {
       path: "/admin/landing",
       element: <LandingPage />,
+    },
+    {
+      path: "/admin/faqs",
+      element: <AdminFaqs />,
     },
   ],
 };
