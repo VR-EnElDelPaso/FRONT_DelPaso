@@ -44,6 +44,7 @@ export default function AppBar() {
               <div className="flex items-center gap-10">
                 <NavLink href="/">{t('Home')}</NavLink>
                 <NavLink href="#">{t('About Muvi')}</NavLink>
+                <NavLink href="/faqs">{t('FAQs')}</NavLink>
                 <NavLink href="#">{t('Help')}</NavLink>
               </div>
               
@@ -77,6 +78,7 @@ export default function AppBar() {
           <div className="flex flex-col items-center mt-4 space-y-12 font-bold lg:hidden">
             <NavLink href="#">{t('Home')}</NavLink>
             <NavLink href="#">{t('About Muvi')}</NavLink>
+            <NavLink href="/faqs">{t('FAQs')}</NavLink>
             <NavLink href="#">{t('Help')}</NavLink>
             <LanguageSelector />
             <div className='flex flex-col gap-1'>
