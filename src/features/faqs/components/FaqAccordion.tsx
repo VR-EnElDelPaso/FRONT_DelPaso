@@ -8,7 +8,10 @@ interface FaqAccordionProps {
 }
 
 const FaqAccordion = ({ faqs, selectedFaqId }: FaqAccordionProps) => {
-  const [openFaqId, setOpenFaqId] = useState<string | null>(null);
+  // Inicializa el estado con la primera FAQ abierta si existe
+  const [openFaqId, setOpenFaqId] = useState<string | null>(
+    faqs.length > 0 ? faqs[0].id : null
+  );
 
   // Open the selected FAQ when it changes
   useEffect(() => {
