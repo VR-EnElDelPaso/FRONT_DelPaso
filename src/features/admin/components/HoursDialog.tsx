@@ -1,5 +1,5 @@
-// src/features/admin/components/HoursDialog.tsx
 import { useState, useEffect } from "react";
+import { z } from "zod";
 import {
   Dialog,
   DialogContent,
@@ -11,7 +11,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
-import { MuseumHours } from "@/types/Museums";
+import { MuseumHours, dayReverseMap } from "@/types/Museums";
+import { toast } from "@/hooks/use-toast";
 
 interface HoursDialogProps {
   isOpen: boolean;
@@ -21,15 +22,39 @@ interface HoursDialogProps {
   editingDay: string | null;
 }
 
+// Schema de validación con Zod
+const timeSchema = z.string().regex(/^([0-1][0-9]|2[0-3]):[0-5][0-9]$/, {
+  message: "Formato de hora inválido. Use HH:MM (24h)",
+});
+
+// Definición de los días de la semana con sus representaciones
 const daysOfWeek = [
-  { key: "D", label: "Domingo" },
-  { key: "L", label: "Lunes" },
-  { key: "M", label: "Martes" },
-  { key: "M", label: "Miércoles" },
-  { key: "J", label: "Jueves" },
-  { key: "V", label: "Viernes" },
-  { key: "S", label: "Sábado" },
+  { key: "D", label: "Domingo", apiName: "SUNDAY" },
+  { key: "L", label: "Lunes", apiName: "MONDAY" },
+  { key: "M", label: "Martes", apiName: "TUESDAY" },
+  { key: "W", label: "Miércoles", apiName: "WEDNESDAY" },
+  { key: "J", label: "Jueves", apiName: "THURSDAY" },
+  { key: "V", label: "Viernes", apiName: "FRIDAY" },
+  { key: "S", label: "Sábado", apiName: "SATURDAY" },
 ];
+
+// Función auxiliar para convertir un día de español a formato API
+const getApiDayName = (day: string): string => {
+  // Si es uno de los valores especiales, devolverlo tal cual
+  if (day === "all" || day === "weekdays" || day === "weekend") {
+    return day;
+  }
+
+  // Buscar en el mapa inverso
+  for (const [apiDay, spanishDay] of Object.entries(dayReverseMap)) {
+    if (spanishDay === day) {
+      return apiDay;
+    }
+  }
+
+  // Si no se encuentra, asumir que ya está en formato API
+  return day;
+};
 
 const HoursDialog = ({
   isOpen,
@@ -38,82 +63,186 @@ const HoursDialog = ({
   initialHours,
   editingDay,
 }: HoursDialogProps) => {
+  // Estados para el diálogo
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
   const [is24Hours, setIs24Hours] = useState(false);
   const [isClosed, setIsClosed] = useState(false);
   const [openTime, setOpenTime] = useState("");
   const [closeTime, setCloseTime] = useState("");
 
+  // Estados para validación
+  const [errors, setErrors] = useState<{
+    openTime?: string;
+    closeTime?: string;
+    timeComparison?: string;
+  }>({});
+
+  // Inicializar los estados basados en el día seleccionado
   useEffect(() => {
-    if (isOpen && initialHours.length > 0) {
-      let daysToSelect: string[] = [];
+    if (!isOpen) return;
 
-      if (editingDay === "all") {
-        daysToSelect = initialHours.map((h) => h.day);
-        // Resetear estados para edición múltiple
-        setIs24Hours(false);
-        setIsClosed(false);
-        setOpenTime("");
-        setCloseTime("");
-      } else if (editingDay === "weekdays") {
-        daysToSelect = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
-        // Resetear estados para edición múltiple
-        setIs24Hours(false);
-        setIsClosed(false);
-        setOpenTime("");
-        setCloseTime("");
-      } else if (editingDay) {
-        daysToSelect = [editingDay];
-        // Obtener el horario del día específico que se está editando
-        const referenceHours = initialHours.find((h) => h.day === editingDay);
-        if (referenceHours) {
-          setIs24Hours(
-            referenceHours.isOpen &&
-              (!referenceHours.openTime || !referenceHours.closeTime)
-          );
-          setIsClosed(!referenceHours.isOpen);
-          setOpenTime(referenceHours.openTime || "");
-          setCloseTime(referenceHours.closeTime || "");
-        }
-      }
-
-      setSelectedDays(daysToSelect);
+    // If initialHours is empty or undefined, return early or use a default value
+    if (!initialHours || initialHours.length === 0) {
+      console.log("No hay horas iniciales, utilizando valores predeterminados");
+      // You might want to set some default hours here if needed
+      return;
     }
+
+    let daysToSelect: string[] = [];
+
+    if (editingDay === "all") {
+      // Seleccionar todos los días
+      daysToSelect = initialHours.map((h) => h.day);
+      resetTimeInputs();
+    } else if (editingDay === "weekdays") {
+      // Seleccionar días de semana (lunes-viernes)
+      daysToSelect = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY"];
+      resetTimeInputs();
+    } else if (editingDay === "weekend") {
+      // Seleccionar fin de semana (sábado-domingo)
+      daysToSelect = ["SATURDAY", "SUNDAY"];
+      resetTimeInputs();
+    } else if (editingDay) {
+      // Seleccionar un día específico
+      const dayApiName = getApiDayName(editingDay);
+      daysToSelect = [dayApiName];
+
+      // Cargar la configuración actual del día
+      const dayConfig = initialHours.find((h) => h.day === dayApiName);
+      if (dayConfig) {
+        setIs24Hours(
+          dayConfig.isOpen && (!dayConfig.openTime || !dayConfig.closeTime)
+        );
+        setIsClosed(!dayConfig.isOpen);
+        setOpenTime(dayConfig.openTime || "");
+        setCloseTime(dayConfig.closeTime || "");
+      }
+    }
+
+    setSelectedDays(daysToSelect);
   }, [isOpen, initialHours, editingDay]);
 
-  const handleDayClick = (dayLabel: string) => {
+  // Función para resetear los inputs de tiempo
+  const resetTimeInputs = () => {
+    setIs24Hours(false);
+    setIsClosed(false);
+    setOpenTime("");
+    setCloseTime("");
+    setErrors({});
+  };
+
+  // Manejar la selección/deselección de un día
+  const handleDayClick = (apiDay: string) => {
     setSelectedDays((prev) => {
-      // Si el día está seleccionado y no es el único, quitarlo
-      if (prev.includes(dayLabel)) {
-        return prev.length > 1 ? prev.filter((d) => d !== dayLabel) : prev;
+      // Si ya está seleccionado y no es el único, quitarlo
+      if (prev.includes(apiDay)) {
+        return prev.length > 1 ? prev.filter((d) => d !== apiDay) : prev;
       }
-      // Si no está seleccionado, agregarlo
-      return [...prev, dayLabel];
+      // Añadirlo a la selección
+      return [...prev, apiDay];
     });
   };
 
+  // Validar los horarios
+  const validateHours = (): boolean => {
+    // Resetear errores
+    setErrors({});
+
+    // Si está cerrado o es 24 horas, no hay validación
+    if (isClosed || is24Hours) return true;
+
+    let isValid = true;
+    const newErrors: {
+      openTime?: string;
+      closeTime?: string;
+      timeComparison?: string;
+    } = {};
+
+    // Validar hora de apertura
+    if (!openTime) {
+      newErrors.openTime = "La hora de apertura es obligatoria";
+      isValid = false;
+    } else {
+      try {
+        timeSchema.parse(openTime);
+      } catch (error) {
+        if (error instanceof z.ZodError) {
+          newErrors.openTime = error.errors[0].message;
+          isValid = false;
+        }
+      }
+    }
+
+    // Validar hora de cierre
+    if (!closeTime) {
+      newErrors.closeTime = "La hora de cierre es obligatoria";
+      isValid = false;
+    } else {
+      try {
+        timeSchema.parse(closeTime);
+      } catch (error) {
+        if (error instanceof z.ZodError) {
+          newErrors.closeTime = error.errors[0].message;
+          isValid = false;
+        }
+      }
+    }
+
+    // Comparar horas (apertura debe ser anterior a cierre)
+    if (isValid && openTime && closeTime) {
+      const openMinutes =
+        parseInt(openTime.split(":")[0]) * 60 +
+        parseInt(openTime.split(":")[1]);
+      const closeMinutes =
+        parseInt(closeTime.split(":")[0]) * 60 +
+        parseInt(closeTime.split(":")[1]);
+
+      if (openMinutes >= closeMinutes) {
+        newErrors.timeComparison =
+          "La hora de cierre debe ser posterior a la de apertura";
+        isValid = false;
+      }
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  // Guardar los cambios
   const handleSave = () => {
-    // Crear una copia de los horarios iniciales
+    // Validar horarios si no está cerrado y no es 24 horas
+    if (!isClosed && !is24Hours) {
+      if (!validateHours()) {
+        toast({
+          title: "Error de validación",
+          description: "Por favor, corrija los errores en el formulario.",
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+
     const updatedHours = [...initialHours];
 
-    // Crear el nuevo horario para los días seleccionados
+    // Crear la configuración basada en los estados actuales
     const newSchedule = {
       isOpen: !isClosed,
-      openTime: is24Hours ? undefined : openTime,
-      closeTime: is24Hours ? undefined : closeTime,
+      // Para 24 horas, establecer explícitamente "00:00" y "23:59"
+      openTime: is24Hours ? "00:00" : openTime,
+      closeTime: is24Hours ? "23:59" : closeTime,
     };
+
+    console.log("Nueva configuración de horario:", newSchedule);
 
     // Actualizar cada día seleccionado
     selectedDays.forEach((day) => {
       const index = updatedHours.findIndex((h) => h.day === day);
       if (index !== -1) {
-        updatedHours[index] = {
-          ...updatedHours[index],
-          ...newSchedule,
-        };
+        updatedHours[index] = { ...updatedHours[index], ...newSchedule };
       }
     });
 
+    console.log("Horarios actualizados antes de guardar:", updatedHours);
     onSave(updatedHours);
   };
 
@@ -130,29 +259,32 @@ const HoursDialog = ({
             {daysOfWeek.map((day, index) => (
               <button
                 key={index}
-                onClick={() => handleDayClick(day.label)}
+                onClick={() => handleDayClick(day.apiName)}
                 className={cn(
                   "w-10 h-10 rounded-full flex items-center justify-center font-medium transition-colors",
-                  selectedDays.includes(day.label)
+                  selectedDays.includes(day.apiName)
                     ? "bg-primary text-white"
                     : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                 )}
+                title={day.label}
               >
                 {day.key}
               </button>
             ))}
           </div>
 
-          {/* Checkboxes */}
+          {/* Opciones de horario */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <Checkbox
                 id="24hours"
                 checked={is24Hours}
                 onCheckedChange={(checked) => {
-                  setIs24Hours(checked as boolean);
-                  if (checked) {
+                  const isChecked = !!checked;
+                  setIs24Hours(isChecked);
+                  if (isChecked) {
                     setIsClosed(false);
+                    setErrors({});
                   }
                 }}
                 disabled={isClosed}
@@ -165,9 +297,11 @@ const HoursDialog = ({
                 id="closed"
                 checked={isClosed}
                 onCheckedChange={(checked) => {
-                  setIsClosed(checked as boolean);
-                  if (checked) {
+                  const isChecked = !!checked;
+                  setIsClosed(isChecked);
+                  if (isChecked) {
                     setIs24Hours(false);
+                    setErrors({});
                   }
                 }}
               />
@@ -175,27 +309,56 @@ const HoursDialog = ({
             </div>
           </div>
 
-          {/* Inputs de horario */}
+          {/* Inputs de horario - solo visibles si no está cerrado y no es 24h */}
           {!is24Hours && !isClosed && (
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label className="text-gray-500 text-sm">Apertura</Label>
+                  <Label
+                    className={`text-sm ${
+                      errors.openTime ? "text-destructive" : "text-gray-500"
+                    }`}
+                  >
+                    Apertura
+                  </Label>
                   <Input
                     type="time"
                     value={openTime}
                     onChange={(e) => setOpenTime(e.target.value)}
+                    className={errors.openTime ? "border-destructive" : ""}
                   />
+                  {errors.openTime && (
+                    <p className="text-xs text-destructive mt-1">
+                      {errors.openTime}
+                    </p>
+                  )}
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-gray-500 text-sm">Cierre</Label>
+                  <Label
+                    className={`text-sm ${
+                      errors.closeTime ? "text-destructive" : "text-gray-500"
+                    }`}
+                  >
+                    Cierre
+                  </Label>
                   <Input
                     type="time"
                     value={closeTime}
                     onChange={(e) => setCloseTime(e.target.value)}
+                    className={errors.closeTime ? "border-destructive" : ""}
                   />
+                  {errors.closeTime && (
+                    <p className="text-xs text-destructive mt-1">
+                      {errors.closeTime}
+                    </p>
+                  )}
                 </div>
               </div>
+              {errors.timeComparison && (
+                <p className="text-xs text-destructive">
+                  {errors.timeComparison}
+                </p>
+              )}
             </div>
           )}
         </div>
