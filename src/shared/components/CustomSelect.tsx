@@ -1,10 +1,10 @@
 import { ChevronDown } from "lucide-react";
-import { Museum } from "@/types/Museums";
 
+// Mantener la interfaz original para compatibilidad
 interface CustomSelectProps {
   value: string;
   onChange: (value: string) => void;
-  options: Museum[];
+  options: { id: string; name: string }[]; // Tipo simplificado que acepta Museum, Tour y otros objetos similares
   placeholder: string;
   error?: boolean;
 }

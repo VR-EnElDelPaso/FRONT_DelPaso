@@ -1,4 +1,3 @@
-// src/features/admin/components/MuseumForm.tsx
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -26,13 +25,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { CustomSelect } from "@/shared/components/CustomSelect";
+
 import ImageUpload from "@/shared/components/ImageUpload";
 import HoursDialog from "./HoursDialog";
 
@@ -47,6 +41,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Tour } from "@/shared/types/Tour";
 import { MuseumHours } from "@/types/Museums";
 
+// Validation schema with Zod
 const formSchema = z.object({
   name: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
   description: z
@@ -55,6 +50,24 @@ const formSchema = z.object({
   address_name: z
     .string()
     .min(5, "La dirección debe tener al menos 5 caracteres"),
+  latitude: z
+    .union([
+      z.literal("").transform(() => undefined),
+      z.coerce
+        .number()
+        .min(-90, "La latitud debe estar entre -90 y 90")
+        .max(90, "La latitud debe estar entre -90 y 90"),
+    ])
+    .optional(),
+  longitude: z
+    .union([
+      z.literal("").transform(() => undefined),
+      z.coerce
+        .number()
+        .min(-180, "La longitud debe estar entre -180 y 180")
+        .max(180, "La longitud debe estar entre -180 y 180"),
+    ])
+    .optional(),
   main_tour_id: z.string().uuid().optional().nullable(),
   main_photo: z.string().min(1, "La imagen es requerida"),
 });
@@ -62,13 +75,13 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 const defaultHours: MuseumHours[] = [
-  { day: "Domingo", isOpen: false },
-  { day: "Lunes", isOpen: false },
-  { day: "Martes", isOpen: false },
-  { day: "Miércoles", isOpen: false },
-  { day: "Jueves", isOpen: false },
-  { day: "Viernes", isOpen: false },
-  { day: "Sábado", isOpen: false },
+  { day: "SUNDAY", isOpen: false },
+  { day: "MONDAY", isOpen: false },
+  { day: "TUESDAY", isOpen: false },
+  { day: "WEDNESDAY", isOpen: false },
+  { day: "THURSDAY", isOpen: false },
+  { day: "FRIDAY", isOpen: false },
+  { day: "SATURDAY", isOpen: false },
 ];
 
 interface MuseumFormProps {
@@ -81,6 +94,8 @@ interface MuseumFormProps {
     description: string;
     address_name: string;
     main_photo: string;
+    latitude?: number;
+    longitude?: number;
     main_tour_id?: string | null;
     hours?: MuseumHours[];
     created_at?: string;
@@ -98,10 +113,15 @@ const MuseumForm = ({
   const [museumTours, setMuseumTours] = useState<Tour[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [hoursDialogOpen, setHoursDialogOpen] = useState(false);
-  const [currentEditingDay, setCurrentEditingDay] = useState<string | null>(null);
-  const [museumHours, setMuseumHours] = useState<MuseumHours[]>(
-    initialValues?.hours || defaultHours
+  const [currentEditingDay, setCurrentEditingDay] = useState<string | null>(
+    null
   );
+  const [museumHours, setMuseumHours] = useState<MuseumHours[]>(
+    initialValues?.hours && initialValues.hours.length > 0
+      ? initialValues.hours
+      : defaultHours
+  );
+  const [hoursErrors, setHoursErrors] = useState<string[]>([]);
 
   // Hooks
   const { toast } = useToast();
@@ -113,6 +133,8 @@ const MuseumForm = ({
       name: initialValues?.name || "",
       description: initialValues?.description || "",
       address_name: initialValues?.address_name || "",
+      latitude: initialValues?.latitude || undefined,
+      longitude: initialValues?.longitude || undefined,
       main_tour_id: initialValues?.main_tour_id || null,
       main_photo: initialValues?.main_photo || "",
     },
@@ -135,11 +157,93 @@ const MuseumForm = ({
     fetchMuseumTours();
   }, [fetchMuseumTours]);
 
+  // Función que verifica si hay al menos un día con horario configurado
+  const hasConfiguredHours = () => {
+    return museumHours.some((hour) => hour.isOpen);
+  };
+
+  // Validar los horarios
+  const validateHours = (): boolean => {
+    const errors: string[] = [];
+
+    // Verificar cada día abierto
+    museumHours.forEach((hour) => {
+      if (hour.isOpen) {
+        const dayName =
+          hour.day === "SUNDAY"
+            ? "Domingo"
+            : hour.day === "MONDAY"
+            ? "Lunes"
+            : hour.day === "TUESDAY"
+            ? "Martes"
+            : hour.day === "WEDNESDAY"
+            ? "Miércoles"
+            : hour.day === "THURSDAY"
+            ? "Jueves"
+            : hour.day === "FRIDAY"
+            ? "Viernes"
+            : hour.day === "SATURDAY"
+            ? "Sábado"
+            : hour.day;
+
+        // Si no es 24h (que estaría representado por openTime y closeTime undefined o vacíos)
+        const is24Hours =
+          (!hour.openTime && !hour.closeTime) ||
+          (hour.openTime === "" && hour.closeTime === "") ||
+          (hour.openTime === "00:00" && hour.closeTime === "23:59");
+
+        if (!is24Hours) {
+          // Verificar que tenga hora de apertura
+          if (!hour.openTime || hour.openTime === "") {
+            errors.push(`${dayName}: Falta la hora de apertura`);
+          }
+
+          // Verificar que tenga hora de cierre
+          if (!hour.closeTime || hour.closeTime === "") {
+            errors.push(`${dayName}: Falta la hora de cierre`);
+          }
+
+          // Si tiene ambos valores, verificar que cierre sea posterior a apertura
+          if (hour.openTime && hour.closeTime) {
+            const openMinutes =
+              parseInt(hour.openTime.split(":")[0]) * 60 +
+              parseInt(hour.openTime.split(":")[1]);
+            const closeMinutes =
+              parseInt(hour.closeTime.split(":")[0]) * 60 +
+              parseInt(hour.closeTime.split(":")[1]);
+
+            if (openMinutes >= closeMinutes) {
+              errors.push(
+                `${dayName}: La hora de cierre debe ser posterior a la de apertura`
+              );
+            }
+          }
+        }
+      }
+    });
+
+    setHoursErrors(errors);
+    return errors.length === 0;
+  };
+
   const handleSubmit = async (values: FormValues) => {
+    // Validar horarios si hay al menos un día configurado
+    if (hasConfiguredHours() && !validateHours()) {
+      toast({
+        title: "Error de validación",
+        description:
+          "Hay errores en los horarios del museo. Por favor, revise los campos marcados.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsUploading(true);
 
     try {
       let finalImageUrl = values.main_photo;
+
+      // Si la imagen es nueva (formato data:image), subirla
       if (values.main_photo.startsWith("data:image")) {
         const response = await uploadImage(values.main_photo);
         if (!response.ok || !response.data?.url) {
@@ -148,16 +252,30 @@ const MuseumForm = ({
         finalImageUrl = response.data.url;
       }
 
+      // Asegurarse de que los horarios estén correctamente formateados
+      const formattedHours = museumHours.map((hour) => ({
+        ...hour,
+        // Si es 24 horas o cerrado, establecer valores adecuados
+        openTime: hour.isOpen ? hour.openTime || "00:00" : null,
+        closeTime: hour.isOpen ? hour.closeTime || "23:59" : null,
+      }));
+
+      console.log("Horarios formateados antes de enviar:", formattedHours);
+
+      // Crear el objeto con todos los datos
       const formattedValues = {
         ...values,
         main_photo: finalImageUrl,
-        hours: museumHours,
+        hours: formattedHours, // Siempre incluir hours
       };
+
+      console.log("Enviando al servidor:", formattedValues);
 
       await onSubmit(formattedValues);
       form.reset();
       onClose();
     } catch (error) {
+      console.error("Error al guardar:", error);
       toast({
         title: "Error al guardar",
         description:
@@ -234,6 +352,60 @@ const MuseumForm = ({
               )}
             />
 
+            {/* Campos de ubicación: latitud y longitud */}
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="latitude"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Latitud</FormLabel>
+                    <FormDescription className="text-xs text-gray-500">
+                      Valor entre -90 y 90
+                    </FormDescription>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        step="0.000001"
+                        placeholder="Ej. 19.4326"
+                        value={field.value ?? ""}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          field.onChange(value === "" ? "" : parseFloat(value));
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="longitude"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Longitud</FormLabel>
+                    <FormDescription className="text-xs text-gray-500">
+                      Valor entre -180 y 180
+                    </FormDescription>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        step="0.000001"
+                        placeholder="Ej. -99.1332"
+                        value={field.value ?? ""}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          field.onChange(value === "" ? "" : parseFloat(value));
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
             {initialValues && (
               <FormField
                 control={form.control}
@@ -241,30 +413,19 @@ const MuseumForm = ({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Recorrido Principal</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      value={field.value || ""}
-                      disabled={!museumTours.length}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue
-                            placeholder={
-                              !museumTours.length
-                                ? "No hay recorridos disponibles"
-                                : "Seleccione un recorrido"
-                            }
-                          />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {museumTours.map((tour) => (
-                          <SelectItem key={tour.id} value={tour.id}>
-                            {tour.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <FormControl>
+                      <CustomSelect
+                        value={field.value || ""}
+                        onChange={field.onChange}
+                        options={museumTours} // Pasar directamente los tours como options
+                        placeholder={
+                          !museumTours.length
+                            ? "No hay recorridos disponibles"
+                            : "Seleccione un recorrido"
+                        }
+                        error={!!form.formState.errors.main_tour_id}
+                      />
+                    </FormControl>
                     {!museumTours.length && (
                       <FormDescription>
                         <Link
@@ -284,38 +445,106 @@ const MuseumForm = ({
 
             {/* Horarios */}
             <div className="space-y-4">
-              <FormLabel>Horarios</FormLabel>
+              <div className="flex justify-between items-center">
+                <FormLabel>Horarios</FormLabel>
+                {hoursErrors.length > 0 && (
+                  <p className="text-xs text-destructive">
+                    Hay errores en los horarios
+                  </p>
+                )}
+              </div>
+              <div className="text-sm text-gray-500 mb-2">
+                Configura los horarios del museo. Si todos están cerrados, se
+                creará el museo sin horarios.
+              </div>
+
+              {/* Mostrar errores de horarios */}
+              {hoursErrors.length > 0 && (
+                <div className="bg-red-50 border border-red-200 rounded-md p-3 mb-4">
+                  <p className="text-sm font-medium text-red-800 mb-2">
+                    Por favor, corrija los siguientes errores:
+                  </p>
+                  <ul className="text-xs text-red-700 list-disc pl-5 space-y-1">
+                    {hoursErrors.map((error, index) => (
+                      <li key={index}>{error}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
               <div className="border divide-y rounded-md">
-                {museumHours.map((hour) => (
-                  <div
-                    key={hour.day}
-                    className="flex items-center justify-between p-3 hover:bg-gray-50"
-                  >
-                    <span className="font-medium text-gray-700">{hour.day}</span>
-                    <div className="flex items-center gap-3">
-                      <span className="text-gray-600">
-                        {hour.isOpen
-                          ? hour.openTime && hour.closeTime
-                            ? `${hour.openTime} - ${hour.closeTime}`
-                            : "Abierto 24h"
-                          : "Cerrado"}
-                      </span>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="w-8 h-8 p-0"
-                        onClick={() => {
-                          setHoursDialogOpen(true);
-                          setCurrentEditingDay(hour.day);
-                        }}
+                {museumHours.map((hour) => {
+                  const dayName =
+                    hour.day === "SUNDAY"
+                      ? "Domingo"
+                      : hour.day === "MONDAY"
+                      ? "Lunes"
+                      : hour.day === "TUESDAY"
+                      ? "Martes"
+                      : hour.day === "WEDNESDAY"
+                      ? "Miércoles"
+                      : hour.day === "THURSDAY"
+                      ? "Jueves"
+                      : hour.day === "FRIDAY"
+                      ? "Viernes"
+                      : hour.day === "SATURDAY"
+                      ? "Sábado"
+                      : hour.day;
+
+                  // Verificar si este día tiene errores
+                  const hasError = hoursErrors.some((error) =>
+                    error.startsWith(dayName)
+                  );
+
+                  return (
+                    <div
+                      key={hour.day}
+                      className={`flex items-center justify-between p-3 hover:bg-gray-50 ${
+                        hasError ? "bg-red-50" : ""
+                      }`}
+                    >
+                      <span
+                        className={`font-medium ${
+                          hasError ? "text-red-700" : "text-gray-700"
+                        }`}
                       >
-                        <Pencil className="w-4 h-4 text-gray-500" />
-                      </Button>
+                        {dayName}
+                      </span>
+                      <div className="flex items-center gap-3">
+                        <span
+                          className={
+                            hasError ? "text-red-600" : "text-gray-600"
+                          }
+                        >
+                          {hour.isOpen
+                            ? hour.openTime &&
+                              hour.closeTime &&
+                              (hour.openTime !== "00:00" ||
+                                hour.closeTime !== "23:59")
+                              ? `${hour.openTime} - ${hour.closeTime}`
+                              : "Abierto 24h"
+                            : "Cerrado"}
+                        </span>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="w-8 h-8 p-0"
+                          onClick={() => {
+                            setHoursDialogOpen(true);
+                            setCurrentEditingDay(hour.day);
+                          }}
+                        >
+                          <Pencil
+                            className={`w-4 h-4 ${
+                              hasError ? "text-red-500" : "text-gray-500"
+                            }`}
+                          />
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               <div className="flex flex-wrap gap-2">
@@ -342,6 +571,18 @@ const MuseumForm = ({
                   }}
                 >
                   Editar lun–vie
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="text-gray-700"
+                  onClick={() => {
+                    setHoursDialogOpen(true);
+                    setCurrentEditingDay("weekend");
+                  }}
+                >
+                  Editar sáb-dom
                 </Button>
               </div>
             </div>
@@ -407,6 +648,8 @@ const MuseumForm = ({
                 return updatedHour || hour;
               })
             );
+            // Validar horarios después de actualizarlos
+            setTimeout(() => validateHours(), 0);
             setHoursDialogOpen(false);
             setCurrentEditingDay(null);
           }}
