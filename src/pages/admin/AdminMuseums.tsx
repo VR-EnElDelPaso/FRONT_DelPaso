@@ -8,10 +8,11 @@ import { createMuseum, deleteMuseum, editMuseum } from "@/services/Museums";
 import { useToast } from "@/hooks/use-toast";
 import MuseumForm from "@/features/admin/components/MuseumForm";
 import HoursDisplay from "@/features/admin/components/HoursDisplay";
-import { Clock } from "lucide-react";
+import { Clock, MapPin } from "lucide-react";
 import { MuseumHours } from "@/types/Museums";
 import { useFetchMuseums } from "@/features/admin/queries/useMuseumsQuery";
 import Loader from "@/shared/components/Loader";
+import { AxiosError } from "axios";
 
 const columns: ColumnDef<Museum>[] = [
   {
@@ -20,7 +21,7 @@ const columns: ColumnDef<Museum>[] = [
     cell: ({ row }) => {
       const photo = row.getValue("main_photo") as string;
       return <PhotoCellModal photo={photo} />;
-    }  
+    },
   },
   {
     accessorKey: "name",
@@ -32,8 +33,8 @@ const columns: ColumnDef<Museum>[] = [
         <Link to={`/museum/${id}`} className="text-blue-500 hover:underline">
           {name}
         </Link>
-      )
-    }
+      );
+    },
   },
   {
     accessorKey: "description",
@@ -42,6 +43,32 @@ const columns: ColumnDef<Museum>[] = [
   {
     accessorKey: "address_name",
     header: "Dirección",
+  },
+  {
+    accessorKey: "location",
+    header: "Ubicación",
+    cell: ({ row }) => {
+      const latitude = row.original.latitude;
+      const longitude = row.original.longitude;
+
+      if (!latitude || !longitude) {
+        return (
+          <div className="flex items-center gap-2 text-gray-500">
+            <MapPin className="w-4 h-4" />
+            <span>No especificada</span>
+          </div>
+        );
+      }
+
+      return (
+        <div className="flex items-center gap-2">
+          <MapPin className="w-4 h-4 text-blue-500" />
+          <span>
+            {latitude.toFixed(4)}, {longitude.toFixed(4)}
+          </span>
+        </div>
+      );
+    },
   },
   {
     accessorKey: "hours",
@@ -56,8 +83,8 @@ const columns: ColumnDef<Museum>[] = [
           <span>No especificado</span>
         </div>
       );
-    }
-  }
+    },
+  },
 ];
 
 const AdminMuseums = () => {
@@ -65,46 +92,76 @@ const AdminMuseums = () => {
   const { data: museums, isFetching, refetch } = useFetchMuseums();
   const { toast } = useToast();
   const [formVisible, setFormVisible] = useState(false);
-  const [initialValues, setInitialValues] = useState<Museum | undefined>(undefined);
+  const [initialValues, setInitialValues] = useState<Museum | undefined>(
+    undefined
+  );
 
-  const onSubmit = async (values: Partial<Omit<Museum, 'main_tour_id'> & { main_tour_id?: string | null }>) => {
-    // todo: mejorar esta parte para no repetir lo mismo
-    console.log(values);
+  const onSubmit = async (
+    values: Partial<
+      Omit<Museum, "main_tour_id"> & { main_tour_id?: string | null }
+    >
+  ) => {
+    console.log("Enviando datos:", values);
     try {
       if (initialValues) {
+        // Editar museo existente
         const response = await editMuseum(initialValues.id, values as Museum);
         if (response) {
-          setFormVisible(false);
-          setInitialValues(undefined);
-          refetch();
           toast({
             title: "¡Museo actualizado!",
             description: "El museo ha sido actualizado exitosamente.",
             variant: "default",
           });
-        }
-      } else {
-        const response = await createMuseum(values as Museum);
-        if (response) {
           setFormVisible(false);
           setInitialValues(undefined);
-          refetch();
+          // Recargar datos después de operación exitosa
+          setTimeout(() => {
+            refetch();
+          }, 500);
+        }
+      } else {
+        // Crear nuevo museo
+        const response = await createMuseum(values as Museum);
+        if (response) {
           toast({
             title: "¡Museo creado!",
             description: "El museo ha sido creado exitosamente.",
             variant: "default",
           });
+          setFormVisible(false);
+          setInitialValues(undefined);
+          // Recargar datos después de operación exitosa
+          setTimeout(() => {
+            refetch();
+          }, 500);
         }
       }
     } catch (error: unknown) {
-      console.error(error);
+      console.error("Error en operación:", error);
+
+      // Obtener mensaje de error más detallado
+      let errorMessage = "Hubo un error en la operación solicitada.";
+      if (error && typeof error === "object") {
+        // Check if it's an axios error with response data
+        const axiosError = error as AxiosError<{ message?: string }>;
+        if (
+          axiosError.response?.data &&
+          "message" in axiosError.response.data
+        ) {
+          const responseData = axiosError.response.data;
+          if (typeof responseData.message === "string") {
+            errorMessage = responseData.message;
+          }
+        }
+      }
+
       toast({
         title: "Error",
-        description: "Hubo un error en la operación solicitada.",
+        description: errorMessage,
         variant: "destructive",
       });
     }
-  }
+  };
 
   const onDelete = async (id: string) => {
     try {
@@ -123,12 +180,12 @@ const AdminMuseums = () => {
         variant: "destructive",
       });
     }
-  }
+  };
 
   const handleClose = () => {
     setFormVisible(false);
     setInitialValues(undefined);
-  }
+  };
 
   if (isFetching) {
     return <Loader />;
@@ -142,14 +199,15 @@ const AdminMuseums = () => {
             Gestión de Museos
           </h1>
           <p className="text-gray-600">
-            Administra y organiza la información de los museos en la aplicación de manera eficiente.
+            Administra y organiza la información de los museos en la aplicación
+            de manera eficiente.
           </p>
         </div>
 
         <div className="overflow-hidden bg-white rounded-lg">
-          <DataTable 
-            columns={columns} 
-            data={museums?.data} 
+          <DataTable
+            columns={columns}
+            data={museums?.data}
             canCreate
             createText="Crear nuevo museo"
             onCreate={() => setFormVisible(true)}
@@ -164,7 +222,7 @@ const AdminMuseums = () => {
         </div>
 
         {formVisible && (
-          <MuseumForm 
+          <MuseumForm
             isOpen={formVisible}
             onClose={handleClose}
             onSubmit={onSubmit}
