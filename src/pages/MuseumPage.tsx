@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { getMuseumById } from "@/services/Museums";
-import { Museum } from "@/types/Museums";
+import { Museum, dayReverseMap } from "@/types/Museums";
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Clock, MapPin, DollarSign } from "lucide-react";
@@ -9,17 +9,193 @@ import { Button } from "@/components/ui/button";
 import MuseumStatus from "@/components/NowShowing/MuseumStatus";
 import { MuseumInfoCard } from "@/features/museum/componets/MuseumInfoCard";
 
+// Componente para mostrar los horarios del museo
+interface MuseumHourDisplayProps {
+  hours: {
+    day: string;
+    isOpen: boolean;
+    openTime?: string | null;
+    closeTime?: string | null;
+  }[];
+}
+
+// Tipo para los datos de días agrupados
+type DayGroup = {
+  days: string[];
+  schedule: string;
+};
+
+const MuseumHoursDisplay = ({ hours }: MuseumHourDisplayProps) => {
+  if (!hours || hours.length === 0) {
+    return <p className="text-black">Horario no disponible</p>;
+  }
+
+  // Ordenar los días según el orden tradicional (Lunes a Domingo para la visualización)
+  const orderedDayKeys = [
+    "MONDAY",
+    "TUESDAY",
+    "WEDNESDAY",
+    "THURSDAY",
+    "FRIDAY",
+    "SATURDAY",
+    "SUNDAY",
+  ];
+
+  // Función auxiliar para formatear hora y minutos
+  const formatTime = (time: string | null): string => {
+    if (!time) return "";
+    const [hours, minutes] = time.split(":");
+    const numHours = parseInt(hours);
+
+    // Formato 12h con a.m/p.m
+    const suffix = numHours >= 12 ? "p.m" : "a.m";
+    const displayHours = numHours % 12 || 12;
+
+    // Si los minutos son '00', mostrar solo la hora
+    if (minutes === "00") {
+      return `${displayHours} ${suffix}`;
+    } else {
+      return `${displayHours}:${minutes} ${suffix}`;
+    }
+  };
+
+  const sortedHours = [...hours].sort((a, b) => {
+    return orderedDayKeys.indexOf(a.day) - orderedDayKeys.indexOf(b.day);
+  });
+
+  // Función para obtener los grupos de días con horarios similares
+  const getDayGroups = (): DayGroup[] => {
+    const groups: DayGroup[] = [];
+
+    // Para agrupar días con el mismo horario
+    const scheduleMap: Record<string, string[]> = {};
+
+    // Procesar cada día
+    sortedHours.forEach((hour) => {
+      let scheduleKey = "";
+
+      if (!hour.isOpen) {
+        scheduleKey = "CLOSED";
+      } else if (!hour.openTime || !hour.closeTime) {
+        scheduleKey = "24H";
+      } else {
+        scheduleKey = `${hour.openTime}-${hour.closeTime}`;
+      }
+
+      if (!scheduleMap[scheduleKey]) {
+        scheduleMap[scheduleKey] = [];
+      }
+
+      scheduleMap[scheduleKey].push(hour.day);
+    });
+
+    // Convertir el mapa en grupos
+    Object.entries(scheduleMap).forEach(([key, days]) => {
+      // Ordenar los días según orderedDayKeys
+      days.sort(
+        (a, b) => orderedDayKeys.indexOf(a) - orderedDayKeys.indexOf(b)
+      );
+
+      // Determinar el texto del horario
+      let scheduleText = "";
+
+      if (key === "CLOSED") {
+        scheduleText = "Cerrado";
+      } else if (key === "24H") {
+        scheduleText = "Abierto 24h";
+      } else {
+        const [openTime, closeTime] = key.split("-");
+        scheduleText = `${formatTime(openTime)} - ${formatTime(closeTime)}`;
+      }
+
+      // Agrupar días consecutivos
+      const dayGroups: string[][] = [];
+      let currentGroup: string[] = [days[0]];
+
+      for (let i = 1; i < days.length; i++) {
+        const currentDay = days[i];
+        const prevDay = days[i - 1];
+
+        // Verificar si los días son consecutivos
+        if (
+          orderedDayKeys.indexOf(currentDay) ===
+          orderedDayKeys.indexOf(prevDay) + 1
+        ) {
+          currentGroup.push(currentDay);
+        } else {
+          dayGroups.push([...currentGroup]);
+          currentGroup = [currentDay];
+        }
+      }
+
+      if (currentGroup.length > 0) {
+        dayGroups.push(currentGroup);
+      }
+
+      // Crear grupo para cada conjunto de días consecutivos
+      dayGroups.forEach((groupDays) => {
+        groups.push({
+          days: groupDays,
+          schedule: scheduleText,
+        });
+      });
+    });
+
+    // Ordenar los grupos según el primer día de cada grupo
+    groups.sort((a, b) => {
+      return (
+        orderedDayKeys.indexOf(a.days[0]) - orderedDayKeys.indexOf(b.days[0])
+      );
+    });
+
+    return groups;
+  };
+
+  // Obtener los grupos de días
+  const dayGroups = getDayGroups();
+
+  // Formatear texto para rango de días
+  const formatDayRangeText = (days: string[]): string => {
+    if (days.length === 1) {
+      return `${dayReverseMap[days[0]]}:`;
+    } else {
+      return `${dayReverseMap[days[0]]} - ${
+        dayReverseMap[days[days.length - 1]]
+      }:`;
+    }
+  };
+
+  return (
+    <div className="text-black space-y-4">
+      {dayGroups.map((group, index) => (
+        <div key={index} className="flex flex-col">
+          <div className="font-bold">{formatDayRangeText(group.days)}</div>
+          <div>{group.schedule}</div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
 const MuseumPage = () => {
   // ----[ States ]----
   const [museum, setMuseum] = useState<Museum | null>(null);
+  const [loading, setLoading] = useState(true);
 
   // ----[ Hooks ]----
   const { id } = useParams<{ id: string }>();
 
   // ----[ Callbacks ]----
   const fetchMuseum = useCallback(async () => {
-    const museum = await getMuseumById(id as string);
-    setMuseum(museum);
+    try {
+      setLoading(true);
+      const museumData = await getMuseumById(id as string);
+      setMuseum(museumData);
+    } catch (error) {
+      console.error("Error al obtener datos del museo:", error);
+    } finally {
+      setLoading(false);
+    }
   }, [id]);
 
   // ----[ Effects ]----
@@ -27,7 +203,21 @@ const MuseumPage = () => {
     fetchMuseum();
   }, [fetchMuseum]);
 
-  if (!museum) return null;
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        Cargando...
+      </div>
+    );
+  }
+
+  if (!museum) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        Museo no encontrado
+      </div>
+    );
+  }
 
   return (
     <div className="w-full">
@@ -62,9 +252,13 @@ const MuseumPage = () => {
               title="Horarios"
               icon={<Clock className="w-6 h-6 text-white" />}
             >
-              <p className="text-sm text-muted-foreground">
-                Horario no disponible
-              </p>
+              {museum.hours && museum.hours.length > 0 ? (
+                <MuseumHoursDisplay hours={museum.hours} />
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  Horario no disponible
+                </p>
+              )}
             </MuseumInfoCard>
 
             {/* Ubicación */}
@@ -82,11 +276,24 @@ const MuseumPage = () => {
               title="Cuota de recuperación"
               icon={<DollarSign className="w-6 h-6 text-white" />}
             >
-              <p className="text-sm text-muted-foreground">
-                no disponible
-              </p>
+              <p className="text-sm text-muted-foreground">no disponible</p>
             </MuseumInfoCard>
           </div>
+
+          {/* Google Maps iframe */}
+          {museum.latitude && museum.longitude && (
+            <div className="mb-10 overflow-hidden border rounded-lg shadow-md">
+              <iframe
+                src={`https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d500!2d${museum.longitude}!3d${museum.latitude}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses-419!2smx!4v1620000000000!5m2!1ses-419!2smx`}
+                width="100%"
+                height="400"
+                style={{ border: 0 }}
+                allowFullScreen={true}
+                loading="lazy"
+                title={`Ubicación de ${museum.name}`}
+              ></iframe>
+            </div>
+          )}
 
           <div className="flex justify-end mt-4">
             <MuseumStatus />
@@ -168,7 +375,7 @@ const MuseumPage = () => {
                     variant="default"
                     size="lg"
                     className="font-medium text-white rounded-xl"
-                    >
+                  >
                     Ayuda
                   </Button>
                 </div>
@@ -180,4 +387,5 @@ const MuseumPage = () => {
     </div>
   );
 };
+
 export default MuseumPage;
