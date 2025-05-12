@@ -37,7 +37,7 @@ export const UserAvatar = () => {
 
   const handleMyPurchases = () => {
     setIsDropdownOpen(false);
-    navigate("/my-purchases"); // Ajusta la ruta según corresponda
+    navigate("/my-purchases");
   };
 
   return (
