@@ -7,6 +7,7 @@ export const es = {
         "Change language": "Cambiar idioma",
         "Login": "Iniciar sesión",
         "Logout": "Cerrar sesión",
+        "My Purchases": "Mis Compras",
         "help": {
             "title": "¿En qué te podemos ayudar?",
             "searchPlaceholder": "¿Cuál es tu duda?",

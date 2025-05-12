@@ -7,6 +7,7 @@ export const en = {
         "Change language": "Change language",
         "Login": "Login",
         "Logout": "Logout",
+        "My Purchases": "My Purchases",
         "help": {
             "title": "How can we help you?",
             "searchPlaceholder": "What's your question?",
