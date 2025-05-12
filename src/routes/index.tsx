@@ -1,6 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
 import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
-
 import HomePage from "../pages/Home";
 import TourPage from "../pages/TourPage";
 import AppLayout from "../layouts/AppLayout";
@@ -17,6 +16,7 @@ import { ErrorBoundary } from "@/components/Errors/ErrorBoundary";
 import MuseumPage from "@/pages/MuseumPage";
 import { OrderDetailPage } from "@/pages/OrderDetailPage";
 import FaqsPage from "@/pages/FaqsPage";
+import MyPurchasesPage from "@/pages/MyPurchasesPage";
 
 const router = createBrowserRouter([
   {
@@ -57,6 +57,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <CheckoutPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/my-purchases",
+        element: (
+          <ProtectedRoute>
+            <MyPurchasesPage />
           </ProtectedRoute>
         ),
       },

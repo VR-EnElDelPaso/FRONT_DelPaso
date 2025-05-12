@@ -58,14 +58,7 @@ export default function Footer() {
           </div>
 
           <div className='mt-8 py-4 border-t border-white/20'>
-            <div className='flex justify-between items-center'>
-              <div className='flex items-center gap-4'>
-                <img 
-                  src="/assets/images/identity/pleca2023.png" 
-                  alt="Pleca 2023"
-                  className="h-12"
-                />
-              </div>
+            <div className="flex items-center justify-center">              
               <div className='text-sm text-white/80'>
                 <p>© 2024, Museo Universitario Fernando del Paso. Todos los derechos reservados</p>
               </div>
