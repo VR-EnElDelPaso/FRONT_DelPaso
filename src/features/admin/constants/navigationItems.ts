@@ -13,7 +13,7 @@ export const navigationItems = [
     url: "/admin/museums",
   },
   {
-    title: "Recorridos",
+    title: "Tours",
     icon: MdTour,
     url: "/admin/tours",
   },
