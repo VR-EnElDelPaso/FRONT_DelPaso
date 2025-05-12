@@ -11,7 +11,6 @@ import CartButton from "../../features/cart/components/CartButton";
 import NavLink from "./NavLink";
 import { LoginButton } from "../Auth/LoginButton";
 import { UserAvatar } from "../Auth/UserAvatar";
-import { LogoutButton } from "../Auth/LogoutButton";
 
 export default function AppBar() {
   const { t } = useTranslation();
@@ -46,21 +45,13 @@ export default function AppBar() {
               <NavLink href="/">{t("Home")}</NavLink>
               <NavLink href="#">{t("About Muvi")}</NavLink>
               <NavLink href="/faqs">{t("FAQs")}</NavLink>
-              <NavLink href="#">{t("Help")}</NavLink>
             </div>
 
             {/* Botones acciones */}
             <div className="flex gap-5">
               <CartButton />
               <LanguageSelector />
-              {isAuthenticated ? (
-                <div className="flex items-center gap-5">
-                  <UserAvatar />
-                  <LogoutButton />
-                </div>
-              ) : (
-                <LoginButton />
-              )}
+              {isAuthenticated ? <UserAvatar /> : <LoginButton />}
             </div>
           </div>
           <div className="flex items-center lg:hidden">
@@ -76,14 +67,7 @@ export default function AppBar() {
             <NavLink href="#">{t("Help")}</NavLink>
             <LanguageSelector />
             <div className="flex flex-col gap-1">
-              {isAuthenticated ? (
-                <>
-                  <UserAvatar />
-                  <LogoutButton />
-                </>
-              ) : (
-                <LoginButton />
-              )}
+              {isAuthenticated ? <UserAvatar /> : <LoginButton />}
             </div>
             <SocialMediaIcons
               containerClass="flex space-x-5 pb-4"
