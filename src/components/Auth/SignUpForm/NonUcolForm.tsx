@@ -82,6 +82,27 @@ export const NonUcolForm = ({ onBack, onComplete }: NonUcolFormProps) => {
         {/* Contenedor con scroll */}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-2 w-full">
           <div className="space-y-2">
+            <label className="text-white">Nombre de usuario</label>
+            <input
+              type="text"
+              placeholder="Manuel Rosado"
+              className="w-full bg-gray-300/20 border border-gray-400/20 px-4 py-3 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none transition-shadow text-white placeholder-white/70"
+              {...register("username", {
+                required: "El nombre de usuario es requerido",
+                minLength: {
+                  value: 3,
+                  message:
+                    "El nombre de usuario debe tener al menos 3 caracteres",
+                },
+              })}
+            />
+            {errors.username && (
+              <span className="text-red-500 text-sm">
+                {errors.username.message}
+              </span>
+            )}
+          </div>
+          <div className="space-y-2">
             <label className="text-white">Correo</label>
             <input
               type="email"
@@ -102,27 +123,6 @@ export const NonUcolForm = ({ onBack, onComplete }: NonUcolFormProps) => {
             {errors.email && (
               <span className="text-red-500 text-sm">
                 {errors.email.message}
-              </span>
-            )}
-          </div>
-          <div className="space-y-2">
-            <label className="text-white">Nombre de usuario</label>
-            <input
-              type="text"
-              placeholder="Manuel Rosado"
-              className="w-full bg-gray-300/20 border border-gray-400/20 px-4 py-3 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none transition-shadow text-white placeholder-white/70"
-              {...register("username", {
-                required: "El nombre de usuario es requerido",
-                minLength: {
-                  value: 3,
-                  message:
-                    "El nombre de usuario debe tener al menos 3 caracteres",
-                },
-              })}
-            />
-            {errors.username && (
-              <span className="text-red-500 text-sm">
-                {errors.username.message}
               </span>
             )}
           </div>
