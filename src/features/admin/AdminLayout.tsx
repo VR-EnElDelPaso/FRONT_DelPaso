@@ -57,9 +57,7 @@ const AdminLayout = () => {
                     </div>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="end">
-                  <DropdownMenuItem>Mi Perfil</DropdownMenuItem>
-                  <DropdownMenuItem>Configuración</DropdownMenuItem>
+                <DropdownMenuContent className="w-56 py-2" align="end">
                   <DropdownMenuItem
                     className="text-red-600 hover:bg-red-50 dark:hover:bg-red-950 hover:cursor-pointer"
                     onClick={() => logout()}
