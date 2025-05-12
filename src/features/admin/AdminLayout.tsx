@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { SidebarCustomTrigger } from "@/components/ui/sidebar/custom-trigger";
-import { Bell, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,17 +35,6 @@ const AdminLayout = () => {
             </div>
 
             <div className="flex items-center gap-2 sm:gap-6">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="relative hidden sm:flex"
-              >
-                <Bell className="h-5 w-5" />
-                <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-red-500 text-[10px] text-white flex items-center justify-center">
-                  3
-                </span>
-              </Button>
-
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
