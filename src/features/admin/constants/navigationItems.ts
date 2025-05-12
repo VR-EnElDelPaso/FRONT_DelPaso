@@ -1,4 +1,4 @@
-import { Home, User, ChartBar, Layout, HelpCircle } from "lucide-react";
+import { Home, Layout, HelpCircle } from "lucide-react";
 import { MdOutlineMuseum, MdTour } from "react-icons/md";
 
 export const navigationItems = [
@@ -6,11 +6,6 @@ export const navigationItems = [
     title: "Dashboard",
     icon: Home,
     url: "/admin",
-  },
-  {
-    title: "Usuarios",
-    icon: User,
-    url: "/admin/users",
   },
   {
     title: "Museos",
@@ -31,10 +26,5 @@ export const navigationItems = [
     title: "FAQs",
     icon: HelpCircle,
     url: "/admin/faqs",
-  },
-  {
-    title: "Estadísticas",
-    icon: ChartBar,
-    url: "/admin/stats",
   },
 ];
