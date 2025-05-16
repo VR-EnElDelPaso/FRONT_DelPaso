@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 interface NavLinkProps {
   href: string;
   children: React.ReactNode;
@@ -5,8 +7,11 @@ interface NavLinkProps {
 
 export default function NavLink({ href, children }: NavLinkProps) {
   return (
-    <a className="border-b-2 border-transparent hover:border-primary hover:text-primary transition duration-300" href={href}>
+    <Link
+      to={href}
+      className="border-b-2 border-transparent hover:border-primary hover:text-primary transition duration-300"
+    >
       {children}
-    </a>
+    </Link>
   );
 }
