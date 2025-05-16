@@ -4,6 +4,7 @@ import { UcolStep1 } from "./UcolStep1";
 import { UcolStep2 } from "./UcolStep2";
 import { NonUcolForm } from "./NonUcolForm";
 import { useRegisterStore } from "@/stores/RegisterStore";
+import { CheckYourEmailStep } from "./CheckYourEmailStep";
 
 type SignUpFormProps = {
   onToggleForm: () => void;
@@ -59,7 +60,7 @@ const SignUpForm = ({ onToggleForm }: SignUpFormProps) => {
           <div className={commonClasses}>
             <UcolStep2
               onBack={() => handleStepChange("ucolForm1")}
-              onComplete={() => onToggleForm()}
+              onComplete={() => handleStepChange("verifyEmail")}
             />
           </div>
         );
@@ -68,10 +69,19 @@ const SignUpForm = ({ onToggleForm }: SignUpFormProps) => {
           <div className={commonClasses}>
             <NonUcolForm
               onBack={() => handleStepChange("initial")}
-              onComplete={() => onToggleForm()}
+              onComplete={() => handleStepChange("verifyEmail")}
             />
           </div>
         );
+      case "verifyEmail":
+        return (
+          <div className={commonClasses}>
+            <CheckYourEmailStep
+              onBack={() => handleStepChange("initial")}
+              onNext={() => onToggleForm()}
+            />
+          </div>
+        )
       default:
         return null;
     }

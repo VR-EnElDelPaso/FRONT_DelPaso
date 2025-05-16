@@ -56,12 +56,6 @@ export const NonUcolForm = ({ onBack, onComplete }: NonUcolFormProps) => {
 
     try {
       await Register(combinedData as RegisterUser);
-      
-      toast({
-        title: "¡Registro exitoso!",
-        description: "Tu cuenta ha sido creada exitosamente.",
-        variant: "default",
-      });
       onComplete();
     } catch (error: unknown) {
       console.error(error);
@@ -159,7 +153,7 @@ export const NonUcolForm = ({ onBack, onComplete }: NonUcolFormProps) => {
               className="w-full bg-gray-300/20 border border-gray-400/20 px-4 py-3 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none transition-shadow text-white placeholder-white/70"
               {...register("confirmPassword", {
                 required: "Debe confirmar la contraseña",
-                validate: (value) =>
+                validate: (value: string) =>
                   value === password || "Las contraseñas no coinciden",
               })}
             />
@@ -174,7 +168,7 @@ export const NonUcolForm = ({ onBack, onComplete }: NonUcolFormProps) => {
               type="submit"
               className="mt-2 bg-primary text-white w-full h-10 rounded-md font-normal text-sm tracking-wider hover:bg-primary/90 transform transition-all duration-300 hover:scale-105 active:scale-95"
             >
-              Registrate
+              Regístrate
             </button>
             <button
               type="button"

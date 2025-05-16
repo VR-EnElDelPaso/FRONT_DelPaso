@@ -39,11 +39,6 @@ export const UcolStep2 = ({ onBack, onComplete }: UcolStep2Props) => {
     
     try {
       await Register(combinedData);
-      toast({
-        title: "¡Registro exitoso!",
-        description: "Tu cuenta ha sido creada exitosamente.",
-        variant: "default",
-      });
       onComplete();
     } catch (error: unknown) {
       console.error(error);
