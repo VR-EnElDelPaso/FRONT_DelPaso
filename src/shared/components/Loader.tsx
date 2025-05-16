@@ -4,7 +4,7 @@ import MuviLogo from "@/assets/svgs/MUVI-logo-dark.svg";
 const Loader = () => {
   return (
     <motion.div 
-      className="fixed inset-0 flex flex-col items-center justify-center dark:bg-gray-900/90 backdrop-blur-md z-50"
+      className="fixed inset-0 flex flex-col items-center justify-center bg-white/90 dark:bg-gray-900/90 backdrop-blur-md z-50"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
