@@ -1,12 +1,23 @@
 // src/components/NewsCarousel/CarouselSlide.tsx
 import React from "react";
 import { CarouselSlideProps } from "./slide-data";
+import { useNavigate } from "react-router-dom";
 
 const CarouselSlide: React.FC<CarouselSlideProps> = ({
   title,
   description,
   imageUrl,
 }) => {
+  const navigate = useNavigate();
+
+  const handleSeeMore = () => {
+    navigate("/tours");
+  };
+
+  const handleVirtualTours = () => {
+    navigate("/tours");
+  };
+
   return (
     <div className="relative h-full">
       <img
@@ -30,10 +41,16 @@ const CarouselSlide: React.FC<CarouselSlideProps> = ({
             {description || ""}
           </h1>
           <div className="flex space-x-4">
-            <button className="px-4 py-2 text-sm text-black transition duration-200 bg-white bg-opacity-75 rounded-lg hover:bg-opacity-100 sm:text-base">
+            <button
+              onClick={handleSeeMore}
+              className="px-4 py-2 text-sm text-black transition duration-200 bg-white bg-opacity-75 rounded-lg hover:bg-opacity-100 sm:text-base"
+            >
               Conoce más
             </button>
-            <button className="px-4 py-2 text-sm text-white transition duration-300 border border-white rounded-lg hover:bg-white hover:text-black sm:text-base">
+            <button
+              onClick={handleVirtualTours}
+              className="px-4 py-2 text-sm text-white transition duration-300 border border-white rounded-lg hover:bg-white hover:text-black sm:text-base"
+            >
               Visitas Virtuales
             </button>
           </div>

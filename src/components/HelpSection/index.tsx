@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { Button } from "../ui/button";
 
 const HelpSection = () => {
   const navigate = useNavigate();
@@ -28,12 +29,11 @@ const HelpSection = () => {
         </p>
 
         <div className="flex justify-end">
-          <button
+          <Button
             onClick={handleHelpClick}
-            className="bg-primary/75 text-white px-8 py-3 rounded-full text-sm font-medium tracking-wide hover:bg-primary transition-colors duration-300"
           >
             Ayuda
-          </button>
+          </Button>
         </div>
       </div>
     </div>

@@ -11,6 +11,7 @@ import CartButton from "../../features/cart/components/CartButton";
 import NavLink from "./NavLink";
 import { LoginButton } from "../Auth/LoginButton";
 import { UserAvatar } from "../Auth/UserAvatar";
+import { Link } from "react-router-dom";
 
 export default function AppBar() {
   const { t } = useTranslation();
@@ -24,8 +25,8 @@ export default function AppBar() {
         <div className="container flex items-center justify-between h-20 p-4 mx-auto">
           {/* Logos */}
           <div className="h-full">
-            <a
-              href="/"
+            <Link
+              to="/"
               className="flex items-center h-full gap-4 transition-transform cursor-pointer hover:scale-105"
             >
               <img
@@ -35,7 +36,7 @@ export default function AppBar() {
               />
               <div className="h-12 w-[1px] bg-gray-200"></div>
               <img className="object-contain h-full" src={Udc} alt="Logo UDC" />
-            </a>
+            </Link>
           </div>
 
           {/* Acciones */}
