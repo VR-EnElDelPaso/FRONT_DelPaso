@@ -23,3 +23,7 @@ export const Register = async (user: RegisterUser) => (
 export const sendVerificationEmail = async (email: string) => (
     axios.post(`${apiBaseUrl}/users/send-verification-email`, { email }, { headers })
 )
+
+export const verifyEmail = async (token: string) => (
+    axios.post(`${apiBaseUrl}/users/email-verify`, { token }, { headers })
+)
