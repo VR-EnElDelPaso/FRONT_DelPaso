@@ -1,6 +1,14 @@
+import { useNavigate } from "react-router-dom";
 import { FadeInOnScroll } from "../animations/FadeInOnScroll";
+import { Button } from "../ui/button";
 
 export default function InfoSection() {
+  const navigate = useNavigate();
+
+  const handleInfoClick = () => {
+    navigate("/info");
+  };
+
   return (
     <div className="py-5 overflow-hidden m-8">
       <FadeInOnScroll distance={20} duration={2}>
@@ -26,9 +34,12 @@ export default function InfoSection() {
           </div>
 
           <div className="flex justify-end">
-            <button className="bg-primary/75 text-white font-bold px-6 py-2 rounded-full hover:bg-primary/90 transition-colors">
+            <Button
+              onClick={handleInfoClick}
+              // className="bg-primary/75 text-white font-bold px-6 py-2 rounded-full hover:bg-primary/90 transition-colors"
+            >
               Sobre MUVi
-            </button>
+            </Button>
           </div>
         </div>
       </FadeInOnScroll>

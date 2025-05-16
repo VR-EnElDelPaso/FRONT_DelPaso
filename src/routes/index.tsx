@@ -17,6 +17,7 @@ import MuseumPage from "@/pages/MuseumPage";
 import { OrderDetailPage } from "@/pages/OrderDetailPage";
 import FaqsPage from "@/pages/FaqsPage";
 import MyPurchasesPage from "@/pages/MyPurchasesPage";
+import { VerifyEmailPage } from "@/pages/VerifyEmailPage";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
         index: true,
         element: <Auth />,
       },
+      {
+        path: "verify-email/:token",
+        element: <VerifyEmailPage />,
+      },
     ],
   },
   {
@@ -36,9 +41,9 @@ const router = createBrowserRouter([
         <AdminLayout />
       </AdminProtectedRoute>
     ),
-    children: [ ...adminRoutes.children ],
+    children: [...adminRoutes.children],
     hasErrorBoundary: true,
-    ErrorBoundary: ErrorBoundary
+    ErrorBoundary: ErrorBoundary,
   },
   {
     path: "/",
@@ -83,23 +88,23 @@ const router = createBrowserRouter([
             path: "view/:id",
             element: <SeeTourPage />,
           },
-        ]
+        ],
       },
       {
         path: "/faqs",
-        element: <FaqsPage />
+        element: <FaqsPage />,
       },
       {
         path: "/museum/:id",
-        element: <MuseumPage />
+        element: <MuseumPage />,
       },
       {
         path: "/orders/:orderId",
-        element: <OrderDetailPage />
-      }
+        element: <OrderDetailPage />,
+      },
     ],
     hasErrorBoundary: true,
-    ErrorBoundary: ErrorBoundary
+    ErrorBoundary: ErrorBoundary,
   },
 ]);
 

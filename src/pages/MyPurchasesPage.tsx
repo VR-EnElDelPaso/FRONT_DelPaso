@@ -134,6 +134,7 @@ const MyPurchasesPage = () => {
     isLoading,
     error,
   } = useFetchUserOrders(user?.id || "", !!user?.id);
+  const navigate = useNavigate();
 
   if (isLoading) {
     return (
@@ -183,7 +184,10 @@ const MyPurchasesPage = () => {
           <p className="text-gray-500 mb-6">
             {t("When you make your first purchase, it will appear here")}
           </p>
-          <Button onClick={() => (window.location.href = "/tours")}>
+          <Button
+            onClick={() => (navigate("/tours"))}
+            className="text-white"
+          >
             {t("Explore Tours")}
           </Button>
         </div>
