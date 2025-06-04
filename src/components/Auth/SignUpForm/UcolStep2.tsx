@@ -29,14 +29,14 @@ export const UcolStep2 = ({ onBack, onComplete }: UcolStep2Props) => {
   const onSubmit = async (data: UcolStep2Inputs) => {
     const { password } = data;
 
-    const combinedData: RegisterUser = { 
+    const combinedData: RegisterUser = {
       ...formInputs,
       account_number: parseInt(formInputs.account_number),
       display_name: getDisplayName(),
       password,
-      role: getUserType()
+      role: getUserType(),
     };
-    
+
     try {
       await Register(combinedData);
       onComplete();
