@@ -1,11 +1,21 @@
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { LogIn } from "lucide-react";
 
 interface LoginButtonProps {
   onLogin?: () => void;
+  variant?: "default" | "outline" | "ghost";
+  size?: "default" | "sm" | "lg";
+  className?: string;
 }
 
-export const LoginButton = ({ onLogin }: LoginButtonProps) => {
+export const LoginButton = ({
+  onLogin,
+  variant = "default",
+  size = "default",
+  className = "",
+}: LoginButtonProps) => {
   // ----[ Hooks ]----
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -17,11 +27,28 @@ export const LoginButton = ({ onLogin }: LoginButtonProps) => {
   };
 
   return (
-    <button
+    <Button
       onClick={handleLogin}
-      className="px-4 py-1 font-normal text-white transition duration-200 bg-opacity-75 bg-primary rounded-xl hover:bg-opacity-100"
+      variant={variant}
+      size={size}
+      className={`
+        group
+        bg-primary 
+        hover:bg-primary/90 
+        text-white 
+        font-medium
+        transition-all 
+        duration-200 
+        shadow-sm 
+        hover:shadow-md
+        focus:ring-2 
+        focus:ring-primary 
+        focus:ring-offset-2
+        ${className}
+      `}
     >
+      <LogIn className="w-4 h-4 mr-2 transition-transform group-hover:scale-110" />
       {t("Login")}
-    </button>
+    </Button>
   );
 };
