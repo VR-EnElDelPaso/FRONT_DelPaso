@@ -1,28 +1,31 @@
-
-import { create } from 'zustand';
-import { UserType } from '@/types/user';
+import { create } from "zustand";
+import { UserType } from "@/types/user";
 
 interface formInputs {
-  name: string,
-  account_number: string,
-  email: string
+  name: string;
+  first_lastname: string;
+  second_lastname: string;
+  account_number: string;
+  email: string;
 }
 
 type State = {
-  hasUcolAccount: boolean,
-  formInputs: formInputs,
-  setHasUcolAccount: (hasUcolAccount: boolean) => void,
-  setFormInputs: (formInputs: formInputs) => void,
+  hasUcolAccount: boolean;
+  formInputs: formInputs;
+  setHasUcolAccount: (hasUcolAccount: boolean) => void;
+  setFormInputs: (formInputs: formInputs) => void;
   getUserType: () => UserType;
   getDisplayName: () => string;
-}
+};
 
 export const useRegisterStore = create<State>((set, get) => ({
   hasUcolAccount: false,
   formInputs: {
-    name: '',
-    account_number: '',
-    email: '',
+    name: "",
+    first_lastname: "",
+    second_lastname: "",
+    account_number: "",
+    email: "",
   },
   setHasUcolAccount: (hasUcolAccount) => set({ hasUcolAccount }),
   setFormInputs: (formInputs) => set({ formInputs }),
@@ -37,12 +40,12 @@ export const useRegisterStore = create<State>((set, get) => ({
     const { formInputs } = get();
     const { name } = formInputs;
 
-    const nameParts = name.trim().split(' ');
+    const nameParts = name.trim().split(" ");
 
     if (nameParts.length === 1) return nameParts[0];
 
     const displayName = `${nameParts[0]}${nameParts[1].charAt(0)}`;
 
     return displayName;
-  }
-}))
+  },
+}));
