@@ -14,14 +14,16 @@ type NonUcolFormProps = {
 };
 
 type NonUcolFormInputs = {
-  username: string;
+  name: string;
+  first_lastname: string;
+  second_lastname: string;
   email: string;
   password: string;
   confirmPassword: string;
 };
 
-type RegisterNonUcolUser = Omit<RegisterUser, "account_number"> & { 
-  account_number?: number 
+type RegisterNonUcolUser = Omit<RegisterUser, "account_number"> & {
+  account_number?: number;
 };
 
 export const NonUcolForm = ({ onBack, onComplete }: NonUcolFormProps) => {
@@ -38,21 +40,25 @@ export const NonUcolForm = ({ onBack, onComplete }: NonUcolFormProps) => {
   const password = watch("password");
 
   const onSubmit = async (data: NonUcolFormInputs) => {
-    const { username, email, password } = data;
+    const { name, first_lastname, second_lastname, email, password } = data;
 
     setFormInputs({
-      name: username,
+      name,
+      first_lastname,
+      second_lastname,
       account_number: "",
       email,
     });
 
     const combinedData: RegisterNonUcolUser = {
-      name: username,
+      name,
+      first_lastname,
+      second_lastname,
       display_name: getDisplayName(),
       email,
       password,
       role: getUserType(),
-    }
+    };
 
     try {
       await Register(combinedData as RegisterUser);
@@ -73,29 +79,72 @@ export const NonUcolForm = ({ onBack, onComplete }: NonUcolFormProps) => {
     <div className="transition-all duration-500 ease-in-out transform animate-slideIn">
       <h1 className="text-2xl font-bold mb-4 text-white">Registro</h1>
       <div className="max-h-[500px] overflow-y-auto overflow-x-hidden p-2">
-        {/* Contenedor con scroll */}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-2 w-full">
           <div className="space-y-2">
-            <label className="text-white">Nombre de usuario</label>
+            <label className="text-white">Nombres</label>
             <input
               type="text"
-              placeholder="Manuel Rosado"
+              placeholder="Nombres"
               className="w-full bg-gray-300/20 border border-gray-400/20 px-4 py-3 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none transition-shadow text-white placeholder-white/70"
-              {...register("username", {
-                required: "El nombre de usuario es requerido",
+              {...register("name", {
+                required: "Los nombres son requeridos",
                 minLength: {
-                  value: 3,
-                  message:
-                    "El nombre de usuario debe tener al menos 3 caracteres",
+                  value: 2,
+                  message: "Los nombres deben tener al menos 2 caracteres",
                 },
               })}
             />
-            {errors.username && (
+            {errors.name && (
               <span className="text-red-500 text-sm">
-                {errors.username.message}
+                {errors.name.message}
               </span>
             )}
           </div>
+
+          <div className="space-y-2">
+            <label className="text-white">Primer apellido</label>
+            <input
+              type="text"
+              placeholder="Primer apellido"
+              className="w-full bg-gray-300/20 border border-gray-400/20 px-4 py-3 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none transition-shadow text-white placeholder-white/70"
+              {...register("first_lastname", {
+                required: "El primer apellido es requerido",
+                minLength: {
+                  value: 2,
+                  message:
+                    "El primer apellido debe tener al menos 2 caracteres",
+                },
+              })}
+            />
+            {errors.first_lastname && (
+              <span className="text-red-500 text-sm">
+                {errors.first_lastname.message}
+              </span>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-white">Segundo apellido</label>
+            <input
+              type="text"
+              placeholder="Segundo apellido"
+              className="w-full bg-gray-300/20 border border-gray-400/20 px-4 py-3 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none transition-shadow text-white placeholder-white/70"
+              {...register("second_lastname", {
+                required: "El segundo apellido es requerido",
+                minLength: {
+                  value: 2,
+                  message:
+                    "El segundo apellido debe tener al menos 2 caracteres",
+                },
+              })}
+            />
+            {errors.second_lastname && (
+              <span className="text-red-500 text-sm">
+                {errors.second_lastname.message}
+              </span>
+            )}
+          </div>
+
           <div className="space-y-2">
             <label className="text-white">Correo</label>
             <input
@@ -110,7 +159,8 @@ export const NonUcolForm = ({ onBack, onComplete }: NonUcolFormProps) => {
                 },
                 validate: {
                   noSpecificDomain: (value) =>
-                    !value.endsWith("@ucol.mx") || "No se permiten correos UCOL en esta opción",
+                    !value.endsWith("@ucol.mx") ||
+                    "No se permiten correos UCOL en esta opción",
                 },
               })}
             />
@@ -120,6 +170,7 @@ export const NonUcolForm = ({ onBack, onComplete }: NonUcolFormProps) => {
               </span>
             )}
           </div>
+
           <div className="space-y-2">
             <label className="text-white">Contraseña</label>
             <input
@@ -145,6 +196,7 @@ export const NonUcolForm = ({ onBack, onComplete }: NonUcolFormProps) => {
               </span>
             )}
           </div>
+
           <div className="space-y-2">
             <label className="text-white">Confirmar contraseña</label>
             <input
@@ -163,6 +215,7 @@ export const NonUcolForm = ({ onBack, onComplete }: NonUcolFormProps) => {
               </span>
             )}
           </div>
+
           <div className="w-full space-y-4 mt-6">
             <button
               type="submit"

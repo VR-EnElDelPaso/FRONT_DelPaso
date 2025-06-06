@@ -5,6 +5,7 @@ export const en = {
     Help: "Help",
     FAQs: "FAQs",
     "Change language": "Change language",
+    Account: "Account",
     Login: "Login",
     Logout: "Logout",
     "My Purchases": "My Purchases",

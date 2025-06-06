@@ -11,12 +11,15 @@ type AuthState = {
   logout: () => void;
   updateUser: (userData: Partial<User>) => void;
   verifyToken: () => Promise<void>;
+  // Nuevos métodos para manejar los apellidos
+  getFullName: () => string;
+  getUserInitials: () => string;
 };
 
-const useAuthStore = create<AuthState>()((set) => ({
+const useAuthStore = create<AuthState>()((set, get) => ({
   isAuthenticated: false,
   user: null,
-  isLoading: true, // Cambiamos el valor inicial a true
+  isLoading: true,
   error: null,
 
   login: (token: string) => {
@@ -54,7 +57,7 @@ const useAuthStore = create<AuthState>()((set) => ({
     })),
 
   verifyToken: async () => {
-    set({ isLoading: true }); // Aseguramos que isLoading está en true al inicio
+    set({ isLoading: true });
     const token = localStorage.getItem("auth-token");
 
     if (!token) {
@@ -87,6 +90,27 @@ const useAuthStore = create<AuthState>()((set) => ({
         error: error instanceof Error ? error.message : "An error occurred",
       });
     }
+  },
+
+  // Método para obtener el nombre completo del usuario
+  getFullName: () => {
+    const { user } = get();
+    if (!user) return "";
+
+    // Devuelve: "Nombres Primer_Apellido Segundo_Apellido"
+    return `${user.name} ${user.first_lastname} ${user.second_lastname}`.trim();
+  },
+
+  // Método para obtener las iniciales del usuario
+  getUserInitials: () => {
+    const { user } = get();
+    if (!user) return "";
+
+    const nameParts = user.name.split(" ");
+    const firstNameInitial = nameParts[0]?.charAt(0) || "";
+    const firstLastnameInitial = user.first_lastname?.charAt(0) || "";
+
+    return `${firstNameInitial}${firstLastnameInitial}`.toUpperCase();
   },
 }));
 

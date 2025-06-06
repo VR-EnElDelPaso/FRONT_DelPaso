@@ -1,17 +1,22 @@
+import { ReactNode } from "react";
 import { Link } from "react-router-dom";
 
 interface NavLinkProps {
   href: string;
-  children: React.ReactNode;
+  children: ReactNode;
+  className?: string;
+  onClick?: () => void;
 }
 
-export default function NavLink({ href, children }: NavLinkProps) {
+const NavLink = ({ href, children, className, onClick }: NavLinkProps) => {
+  const defaultClassName =
+    "text-gray-700 hover:text-primary transition-colors duration-200 font-medium text-sm lg:text-base focus:outline-none focus:text-primary";
+
   return (
-    <Link
-      to={href}
-      className="border-b-2 border-transparent hover:border-primary hover:text-primary transition duration-300"
-    >
+    <Link to={href} className={className || defaultClassName} onClick={onClick}>
       {children}
     </Link>
   );
-}
+};
+
+export default NavLink;

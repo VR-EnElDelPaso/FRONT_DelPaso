@@ -5,6 +5,7 @@ export const es = {
     Help: "Ayuda",
     FAQs: "Preguntas Frecuentes",
     "Change language": "Cambiar idioma",
+    Account: "Cuenta",
     Login: "Iniciar sesión",
     Logout: "Cerrar sesión",
     "My Purchases": "Mis Compras",
