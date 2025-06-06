@@ -1,5 +1,6 @@
 import { Badge } from "@/components/ui/badge";
-import { GraduationCap } from "lucide-react";
+
+import AccreditableImage from "/assets/shared/images/acreditable.png";
 
 interface AccreditableBadgeProps {
   isAccreditable: boolean;
@@ -39,22 +40,35 @@ export const AccreditableBadge = ({
       case "compact":
         return (
           <>
-            <GraduationCap className="h-3 w-3 mr-1" />
-            Acreditable{formatHours(accreditableHours ?? null)}
+            <img
+              src={AccreditableImage}
+              alt="Acreditable"
+              className="inline h-4 w-auto mr-1 filter brightness-0 invert"
+            />
+            {formatHours(accreditableHours ?? null)}
           </>
         );
       case "detailed":
         return (
           <>
-            <GraduationCap className="h-4 w-4 mr-2" />
-            Tour Acreditable{formatHours(accreditableHours ?? null)}
+            <img
+              src={AccreditableImage}
+              alt="Acreditable"
+              className="inline h-5 w-auto mr-1 filter brightness-0 invert"
+            />
+            <div className="inline-block h-5 w-px bg-white opacity-40 mx-2 align-middle" />
+            Recorrido Acreditable {formatHours(accreditableHours ?? null)}
           </>
         );
       default:
         return (
           <>
-            <GraduationCap className="h-3 w-3 mr-1" />
-            Acreditable{formatHours(accreditableHours ?? null)}
+            <img
+              src={AccreditableImage}
+              alt="Acreditable"
+              className="inline h-4 w-auto mr-1 filter brightness-0 invert"
+            />
+            {formatHours(accreditableHours ?? null)}
           </>
         );
     }
