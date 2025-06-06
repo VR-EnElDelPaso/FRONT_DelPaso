@@ -145,7 +145,7 @@ export default function Slide({
           {isAccreditable && (
             <div className="pt-2 p-3 bg-green-50 rounded-lg border-l-4 border-green-500 transition-all duration-300 group-hover:bg-green-100 group-hover:border-green-600">
               <p className="text-sm text-green-800 font-medium">
-                ✓ Este tour otorga horas de acreditaciones culturales y
+                ✓ Este recorrido otorga horas de acreditaciones culturales y
                 deportivas.
                 {/* Preparado para mostrar horas en el futuro */}
                 {accreditableHours &&

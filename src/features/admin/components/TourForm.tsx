@@ -275,7 +275,7 @@ const TourForm = ({
                           Tour Acreditable
                         </FormLabel>
                         <div className="text-sm text-muted-foreground">
-                          Marque si este tour otorga créditos académicos
+                          Marque si este recorrido otorga créditos académicos
                         </div>
                       </div>
                       <FormControl>

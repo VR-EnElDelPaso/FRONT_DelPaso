@@ -193,7 +193,7 @@ const Tours = () => {
                       {/* Información adicional de acreditación */}
                       {tour.is_accreditable && (
                         <div className="mt-2 text-sm text-green-700 font-medium transition-colors duration-300 group-hover:text-green-800">
-                          ✓ Tour con créditos académicos
+                          ✓ Recorrido con créditos académicos
                           {/* Preparado para mostrar horas */}
                           {tour.accreditable_hours && false && (
                             <span className="text-green-600">
