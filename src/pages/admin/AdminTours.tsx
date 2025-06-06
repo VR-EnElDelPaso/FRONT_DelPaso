@@ -13,6 +13,7 @@ import { TagsCell } from "@/shared/components/TagCell";
 import { useCreateTour, useFetchTours } from "@/querys/tour.querys";
 import Loader from "@/shared/components/Loader";
 import { Tag } from "@/types/tag";
+import { Badge } from "@/components/ui/badge";
 
 // Definir una interfaz correcta para los valores del formulario
 interface TourFormValues {
@@ -25,6 +26,8 @@ interface TourFormValues {
   image_url?: string;
   museum_id?: string;
   tags: Array<Tag | string>;
+  is_accreditable?: boolean;
+  accreditable_hours?: number | null;
   created_at?: string;
   updated_at?: string;
 }
@@ -59,7 +62,7 @@ const AdminTours = () => {
     return museum?.name || "N/A";
   };
 
-  const columns: ColumnDef<Tour>[] = [
+  const columns: ColumnDef<Tour, unknown>[] = [
     {
       accessorKey: "image_url",
       header: "Imagen",
@@ -108,6 +111,21 @@ const AdminTours = () => {
       },
     },
     {
+      accessorKey: "is_accreditable",
+      header: "Acreditable",
+      cell: ({ row }) => {
+        const isAccreditable = row.getValue("is_accreditable") as boolean;
+        return (
+          <Badge
+            className="text-white"
+            variant={isAccreditable ? "default" : "secondary"}
+          >
+            {isAccreditable ? "Sí" : "No"}
+          </Badge>
+        );
+      },
+    },
+    {
       accessorKey: "tags",
       header: "Tags",
       cell: ({ row }) => {
@@ -130,6 +148,8 @@ const AdminTours = () => {
           ...values,
           price: parseFloat(values.price),
           tags: formattedTags,
+          is_accreditable: values.is_accreditable || false,
+          accreditable_hours: values.accreditable_hours,
         });
 
         if (response) {
@@ -153,6 +173,8 @@ const AdminTours = () => {
             ...values,
             price: parseFloat(values.price),
             tags: formattedTags,
+            is_accreditable: values.is_accreditable || false,
+            accreditable_hours: values.accreditable_hours,
           },
           {
             onSuccess: () => {
