@@ -10,6 +10,8 @@ export interface Tour {
   image_url: string;
   museum_id: string;
   tags: Tag[];
+  is_accreditable: boolean;
+  accreditable_hours: number | null;
   created_at: string;
   updated_at: string;
 }
