@@ -4,6 +4,7 @@ import { dateFormatter } from "../../../../utils/dateFormatter";
 import { Button } from "../../../../components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { TourCardButtons } from "./TourCardButtons";
+import { AccreditableBadge } from "@/shared/components/Tour/AccreditableBadge";
 
 export default function TourCard({
   id,
@@ -14,6 +15,8 @@ export default function TourCard({
   stars,
   image_url,
   url,
+  is_accreditable,
+  accreditable_hours,
 }: Tour) {
   // ----[ Hooks ]----
   const { toast } = useToast();
@@ -33,11 +36,23 @@ export default function TourCard({
   return (
     <>
       <div className="flex flex-col items-center justify-center max-w-4xl gap-8 mx-auto md:flex-row">
-        <img
-          src={image_url}
-          alt={name}
-          className="w-full md:w-auto h-[300px] md:h-[400px] object-cover rounded-sm"
-        />
+        <div className="relative">
+          <img
+            src={image_url}
+            alt={name}
+            className="w-full md:w-auto h-[300px] md:h-[400px] object-cover rounded-sm"
+          />
+
+          {/* ETIQUETA ACREDITABLE */}
+          <AccreditableBadge
+            isAccreditable={is_accreditable}
+            accreditableHours={accreditable_hours}
+            variant="detailed"
+            showHours={false} // Oculto por ahora según ticket
+            className="absolute top-3 left-3"
+          />
+        </div>
+
         <div className="flex flex-col w-full text-left md:w-1/2">
           <div className="space-y-2">
             <h1 className="text-[28px] md:text-[32px] font-kaiseiDecol font-normal text-dark">
@@ -56,6 +71,23 @@ export default function TourCard({
               {description}
             </p>
             <h1 className="pt-2 text-xl font-bold text-dark">${price} MXN</h1>
+
+            {/* Información de acreditación en la descripción cuando esté disponible */}
+            {is_accreditable && (
+              <div className="pt-2 p-3 bg-green-50 rounded-lg border-l-4 border-green-500">
+                <p className="text-sm text-green-800 font-medium">
+                  ✓ Este tour otorga horas de acreditaciones culturales y
+                  deportivas.
+                  {/* Preparado para mostrar horas en el futuro */}
+                  {accreditable_hours &&
+                    false && ( // false mantiene oculto por ahora
+                      <span className="block text-xs text-green-600 mt-1">
+                        Duración acreditable: {accreditable_hours} horas
+                      </span>
+                    )}
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Main buttons */}

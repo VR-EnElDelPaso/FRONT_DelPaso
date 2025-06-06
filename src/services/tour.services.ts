@@ -1,8 +1,10 @@
 import axios from "axios";
-import ResponseData, { ResponseDataTyped } from "../shared/types/response-data.types";
+import ResponseData, {
+  ResponseDataTyped,
+} from "../shared/types/response-data.types";
 import { Tag } from "@/types/tag";
 import { CheckedTourSuccessResponse } from "@/features/tour/types/tour.types";
-import { Tour } from "@/shared/types/Tour";
+import { Tour } from "@/types/tour";
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL as string;
 
@@ -16,7 +18,7 @@ const getAuthHeaders = () => {
   const token = localStorage.getItem("auth-token");
   return {
     "Content-Type": "application/json",
-    Authorization: `Bearer ${token}`
+    Authorization: `Bearer ${token}`,
   };
 };
 
@@ -26,18 +28,21 @@ export const getAllTours = async (): Promise<ToursResponse> => {
   return response.data;
 };
 
-export const checkPurchasedTour = async (tourId: string): Promise<ResponseDataTyped<CheckedTourSuccessResponse>> => {
-  const response = await axios.get<ResponseDataTyped<CheckedTourSuccessResponse>>(
-    `${apiBaseUrl}/tours/${tourId}/check-purchase`,
-    {
-      headers: getAuthHeaders(),
-    }
-  );
+export const checkPurchasedTour = async (
+  tourId: string
+): Promise<ResponseDataTyped<CheckedTourSuccessResponse>> => {
+  const response = await axios.get<
+    ResponseDataTyped<CheckedTourSuccessResponse>
+  >(`${apiBaseUrl}/tours/${tourId}/check-purchase`, {
+    headers: getAuthHeaders(),
+  });
   return response.data;
-}
+};
 
 // Verificar múltiples tours comprados
-export const checkPurchasedTours = async (tourIds: string[]): Promise<ResponseDataTyped<string[]>> => {
+export const checkPurchasedTours = async (
+  tourIds: string[]
+): Promise<ResponseDataTyped<string[]>> => {
   try {
     // Si no hay token o no hay tours para verificar, retornamos un array vacío
     const token = localStorage.getItem("auth-token");
@@ -46,7 +51,7 @@ export const checkPurchasedTours = async (tourIds: string[]): Promise<ResponseDa
         ok: true,
         message: "No hay tours para verificar",
         data: [],
-        pagination: { total: 0, page: 1, limit: 10, hasMore: false }
+        pagination: { total: 0, page: 1, limit: 10, hasMore: false },
       };
     }
 
@@ -65,13 +70,20 @@ export const checkPurchasedTours = async (tourIds: string[]): Promise<ResponseDa
     );
 
     // Filtrar solo los IDs de tours que tienen compras activas (no nulos)
-    const activePurchasedTourIds = purchaseChecks.filter(id => id !== null) as string[];
+    const activePurchasedTourIds = purchaseChecks.filter(
+      (id) => id !== null
+    ) as string[];
 
     return {
       ok: true,
       message: "Verificación de compras completada",
       data: activePurchasedTourIds,
-      pagination: { total: activePurchasedTourIds.length, page: 1, limit: 10, hasMore: false }
+      pagination: {
+        total: activePurchasedTourIds.length,
+        page: 1,
+        limit: 10,
+        hasMore: false,
+      },
     };
   } catch (error) {
     console.error("Error al verificar tours comprados:", error);
@@ -79,18 +91,20 @@ export const checkPurchasedTours = async (tourIds: string[]): Promise<ResponseDa
       ok: false,
       message: "Error al verificar tours comprados",
       data: [],
-      pagination: { total: 0, page: 1, limit: 10, hasMore: false }
+      pagination: { total: 0, page: 1, limit: 10, hasMore: false },
     };
   }
-}
+};
 
-export const getTourUrl = async (tourId: string): Promise<ResponseDataTyped<{ tour_url: string }>> => {
+export const getTourUrl = async (
+  tourId: string
+): Promise<ResponseDataTyped<{ tour_url: string }>> => {
   const response = await axios.get<ResponseDataTyped<{ tour_url: string }>>(
     `${apiBaseUrl}/tours/${tourId}/url`,
     { headers: getAuthHeaders() }
   );
   return response.data;
-}
+};
 
 //get tours
 export const getTours = async (tourIds: string[]): Promise<ResponseData> => {
@@ -106,10 +120,10 @@ export const getTours = async (tourIds: string[]): Promise<ResponseData> => {
 };
 
 //get tour by id
-export const getTourById = async (id: string) => {
+export const getTourById = async (id: string): Promise<Tour | null> => {
   try {
-    const response = await axios.get(`${apiBaseUrl}/tours/${id}`, { 
-      headers: getAuthHeaders() 
+    const response = await axios.get(`${apiBaseUrl}/tours/${id}`, {
+      headers: getAuthHeaders(),
     });
     return response.data.data;
   } catch (error) {
@@ -134,9 +148,13 @@ export const getTourSuggestions = async (
   return response.data;
 };
 
-// Refactorized createTour function with proper type handling
+// Refactorized createTour function with proper type handling including new fields
 export const createTour = async (
-  tour: Partial<Tour> & { tags: Array<Tag | string> }
+  tour: Partial<Tour> & {
+    tags: Array<Tag | string>;
+    is_accreditable?: boolean;
+    accreditable_hours?: number | null;
+  }
 ): Promise<Tour> => {
   try {
     // Process tags to match API expectations
@@ -144,14 +162,15 @@ export const createTour = async (
       ...tour,
       // Extract tag IDs for API
       tags: tour.tags.map((tag) => (typeof tag === "object" ? tag.id : tag)),
+      // Ensure new fields are included
+      is_accreditable: tour.is_accreditable || false,
+      accreditable_hours: tour.accreditable_hours || null,
     };
 
-    const response = await axios.post(
-      `${apiBaseUrl}/tours`, 
-      dataToSend,
-      { headers: getAuthHeaders() }
-    );
-    
+    const response = await axios.post(`${apiBaseUrl}/tours`, dataToSend, {
+      headers: getAuthHeaders(),
+    });
+
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -163,25 +182,32 @@ export const createTour = async (
   }
 };
 
-// Refactorized editTour function with proper type handling
+// Refactorized editTour function with proper type handling including new fields
 export const editTour = async (
   id: string,
-  tour: Partial<Tour> & { tags?: Tag[] }
+  tour: Partial<Tour> & {
+    tags?: Tag[];
+    is_accreditable?: boolean;
+    accreditable_hours?: number | null;
+  }
 ): Promise<Tour> => {
   try {
     // Process tags to match API expectations
     const dataToSend = {
       ...tour,
       // Extract tag IDs for API
-      tags: tour.tags?.map(tag => tag.id)
+      tags: tour.tags?.map((tag) => tag.id),
+      // Ensure new fields are included if provided
+      is_accreditable: tour.is_accreditable,
+      accreditable_hours: tour.accreditable_hours,
     };
 
     const response = await axios.patch(
-      `${apiBaseUrl}/tours/${id}`, 
-      dataToSend, 
+      `${apiBaseUrl}/tours/${id}`,
+      dataToSend,
       { headers: getAuthHeaders() }
     );
-    
+
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {

@@ -8,12 +8,17 @@ import { dateFormatter } from "@/utils/dateFormatter";
 import { getMuseumTours } from "@/services/Museums";
 import { getAllTours } from "@/services/tour.services";
 
+// ACTUALIZAR INTERFACE PARA INCLUIR ID DEL TOUR
 interface Slide {
+  id: string; // AGREGAR ID
   image_url: string;
   created_at: string;
   name: string;
   stars: number;
   description: string;
+  // CAMPOS DE ACREDITACIÓN
+  is_accreditable: boolean;
+  accreditable_hours: number | null;
 }
 
 interface CarouselProps {
@@ -87,6 +92,8 @@ export default function Carousel({ museum_id = "" }: CarouselProps) {
     );
   }
 
+  const currentSlide = slides[imageIndex];
+
   return (
     <div className="relative w-full mt-4 sm:mt-8">
       <div className="relative w-full h-[50vh] min-h-[300px] max-h-[500px] overflow-hidden mb-8">
@@ -117,15 +124,20 @@ export default function Carousel({ museum_id = "" }: CarouselProps) {
             className="absolute w-full h-full"
           >
             <Slide
-              imageSrc={slides[imageIndex]?.image_url || ""}
+              imageSrc={currentSlide?.image_url || ""}
               date={
-                slides[imageIndex]?.created_at
-                  ? dateFormatter(slides[imageIndex].created_at)
+                currentSlide?.created_at
+                  ? dateFormatter(currentSlide.created_at)
                   : ""
               }
-              title={slides[imageIndex]?.name || ""}
-              rating={slides[imageIndex]?.stars || 0}
-              description={slides[imageIndex]?.description || ""}
+              title={currentSlide?.name || ""}
+              rating={currentSlide?.stars || 0}
+              description={currentSlide?.description || ""}
+              // PROPS DE ACREDITACIÓN
+              isAccreditable={currentSlide?.is_accreditable || false}
+              accreditableHours={currentSlide?.accreditable_hours || null}
+              // NUEVO PROP: TOUR ID PARA NAVEGACIÓN
+              tourId={currentSlide?.id || ""}
             />
           </motion.div>
         </AnimatePresence>

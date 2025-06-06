@@ -1,4 +1,3 @@
-// src/features/admin/components/TourForm.tsx
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -26,6 +25,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Switch } from "@/components/ui/switch";
 import ImageUpload from "@/shared/components/ImageUpload";
 import { TagManager } from "./TagManager";
 import { CustomSelect } from "@/shared/components/CustomSelect";
@@ -59,6 +59,9 @@ const formSchema = z.object({
       name: z.string(),
     })
   ),
+  // NUEVOS CAMPOS
+  is_accreditable: z.boolean().default(false),
+  // accreditable_hours se omite del formulario por ahora según el ticket
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -67,7 +70,7 @@ interface TourFormProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: Omit<FormValues, "tags"> & { tags: string[] }) => void;
-  initialValues?: Partial<FormValues>;
+  initialValues?: Partial<FormValues & { accreditable_hours?: number | null }>;
 }
 
 const TourForm = ({
@@ -99,6 +102,8 @@ const TourForm = ({
       image_url: initialValues?.image_url || "",
       museum_id: initialValues?.museum_id || "",
       tags: initialValues?.tags || [],
+      // NUEVOS VALORES POR DEFECTO
+      is_accreditable: initialValues?.is_accreditable || false,
     },
   });
 
@@ -138,6 +143,8 @@ const TourForm = ({
         ...values,
         image_url: finalImageUrl,
         tags: values.tags.map((tag) => tag.id),
+        // AGREGAR VALOR CONSTANTE PARA accreditable_hours (según el ticket)
+        accreditable_hours: values.is_accreditable ? 2.0 : null, // Valor constante temporal
       };
 
       await onSubmit(formattedValues);
@@ -253,6 +260,30 @@ const TourForm = ({
                         />
                       </FormControl>
                       <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* NUEVO CAMPO: Tour Acreditable */}
+                <FormField
+                  control={form.control}
+                  name="is_accreditable"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                      <div className="space-y-0.5">
+                        <FormLabel className="text-base">
+                          Tour Acreditable
+                        </FormLabel>
+                        <div className="text-sm text-muted-foreground">
+                          Marque si este tour otorga créditos académicos
+                        </div>
+                      </div>
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
                     </FormItem>
                   )}
                 />
