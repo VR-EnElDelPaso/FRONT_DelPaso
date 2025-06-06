@@ -36,8 +36,8 @@ const adminRoutes = [
   {
     id: "tours",
     path: "/admin/tours",
-    title: "Gestión de Tours",
-    description: "Administra tours, precios, calificaciones y etiquetas",
+    title: "Gestión de Recorridos",
+    description: "Administra recorridos, precios, calificaciones y etiquetas",
     icon: Route,
     color: "text-green-600",
     bgColor: "bg-green-50",

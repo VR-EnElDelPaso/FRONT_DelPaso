@@ -182,8 +182,8 @@ const AdminTours = () => {
               setInitialValues(undefined);
               refetch();
               toast({
-                title: "¡Tour creado!",
-                description: "El tour ha sido creado exitosamente.",
+                title: "¡Recorrido creado!",
+                description: "El recorrido ha sido creado exitosamente.",
                 variant: "default",
               });
             },
@@ -214,8 +214,8 @@ const AdminTours = () => {
       if (response.ok) {
         refetch();
         toast({
-          title: "¡Tour eliminado!",
-          description: "El tour ha sido eliminado exitosamente.",
+          title: "Recorrido eliminado!",
+          description: "El recorrido ha sido eliminado exitosamente.",
           variant: "default",
         });
       } else {
@@ -228,7 +228,7 @@ const AdminTours = () => {
         description:
           error instanceof Error
             ? error.message
-            : "Hubo un error al intentar eliminar el tour.",
+            : "Hubo un error al intentar eliminar el recorrido.",
         variant: "destructive",
       });
     }
@@ -248,10 +248,10 @@ const AdminTours = () => {
       <div className="p-6 bg-white rounded-lg shadow-md">
         <div className="mb-8">
           <h1 className="mb-2 text-3xl font-bold text-gray-900">
-            Gestión de Tours
+            Gestión de Recorridos
           </h1>
           <p className="text-gray-600">
-            Administra y organiza la información de los tours disponibles en los
+            Administra y organiza la información de los recorridos disponibles en los
             museos.
           </p>
         </div>
