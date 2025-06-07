@@ -4,7 +4,7 @@ import NowShowing from "../components/NowShowing";
 import { FadeInOnScroll } from "../components/animations/FadeInOnScroll";
 import StatsSection from "@/components/StatsSection";
 import HelpSection from "@/components/HelpSection";
-import { CarruselMuseums } from "@/features/home/components/CarrouselMuseums";
+import { CarruselMuseums } from "@/features/home/components/CarruselMuseums/CarrouselMuseums";
 
 function HomePage() {
   return (

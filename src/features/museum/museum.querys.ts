@@ -11,12 +11,12 @@ export const QUERY_KEYS = {
  * Hook para obtener todos los museos
  * @returns Consulta con la lista de museos
  */
-export const useFetchMuseums = () => {
+export const useFetchMuseums = (focusRefetch = false) => {
   return useQuery({
     queryKey: [QUERY_KEYS.museums],
     queryFn: getAllMuseums,
     staleTime: 5 * 60 * 1000, // 5 minutos
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: focusRefetch,
   });
 };
 
