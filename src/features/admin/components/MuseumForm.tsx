@@ -39,7 +39,7 @@ import { useToast } from "@/hooks/use-toast";
 
 // Types
 import { Tour } from "@/shared/types/Tour";
-import { MuseumHours } from "@/types/Museums";
+import { MuseumHours } from "@/shared/types/museums.types";
 
 // Validation schema with Zod
 const formSchema = z.object({

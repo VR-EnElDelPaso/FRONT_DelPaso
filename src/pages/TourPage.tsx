@@ -4,7 +4,7 @@ import { FadeInOnScroll } from "../components/animations/FadeInOnScroll";
 import ReviewsList from "../components/Reviews/ReviewsList";
 import TourSuggestions from "../components/TourSuggestions/TourSuggestions";
 import Loader from "@/shared/components/Loader";
-import { useFetchTourById } from "@/querys/tour.querys";
+import { useFetchTourById } from "@/features/tour/tour.querys";
 
 export default function TourPage() {
   const id = useParams().id || "";

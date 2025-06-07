@@ -38,7 +38,7 @@ import { uploadImage } from "@/services/upload";
 import { useToast } from "@/hooks/use-toast";
 
 // Types
-import { Museum } from "@/types/Museums";
+import { Museum } from "@/shared/types/museums.types";
 import { Tag } from "@/types/tag";
 
 const formSchema = z.object({

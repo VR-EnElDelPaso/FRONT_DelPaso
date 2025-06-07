@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useCheckPurchasedTour } from "@/querys/tour.querys";
+import { useCheckPurchasedTour } from "@/features/tour/tour.querys";
 import { useCartStore } from "@/stores/useCartStore";
 import { useNavigate } from "react-router-dom";
 

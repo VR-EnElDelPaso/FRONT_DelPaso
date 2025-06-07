@@ -1,5 +1,5 @@
 import { useAuth } from "@/hooks/useAuth";
-import { useFetchUserOrders, type Order } from "@/querys/orders.querys";
+import { useFetchUserOrders, type Order } from "@/features/orders/orders.querys";
 import Loader from "@/shared/components/Loader";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

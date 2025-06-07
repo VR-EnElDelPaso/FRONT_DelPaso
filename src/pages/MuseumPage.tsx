@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { getMuseumById } from "@/services/Museums";
-import { Museum, dayReverseMap } from "@/types/Museums";
+import { Museum, dayReverseMap } from "@/shared/types/museums.types";
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Clock, MapPin, DollarSign } from "lucide-react";
