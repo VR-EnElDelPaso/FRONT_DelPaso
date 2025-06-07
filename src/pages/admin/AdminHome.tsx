@@ -138,7 +138,7 @@ const AdminHome = () => {
       iconColor: "text-blue-600",
     },
     {
-      label: "Tours Activos",
+      label: "Recorridos Activos",
       value: stats.tours.toString(),
       icon: Route,
       iconColor: "text-green-600",

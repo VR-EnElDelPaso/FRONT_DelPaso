@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
-import { MuseumHours, dayReverseMap } from "@/types/Museums";
+import { MuseumHours, dayReverseMap } from "@/shared/types/museums.types";
 import { toast } from "@/hooks/use-toast";
 
 interface HoursDialogProps {

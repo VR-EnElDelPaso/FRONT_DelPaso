@@ -9,7 +9,7 @@ import {
   useCheckPurchasedTour,
   useFetchTourById,
   useFetchTourUrl,
-} from "@/querys/tour.querys";
+} from "@/features/tour/tour.querys";
 import Loader from "@/shared/components/Loader";
 import { useToast } from "@/hooks/use-toast";
 import { ConfirmAlert } from "@/features/tour/components/TourCard/SeeTourAlert";

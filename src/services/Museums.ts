@@ -1,4 +1,4 @@
-import { Museum, MuseumHours } from "@/types/Museums";
+import { Museum, MuseumHours } from "@/shared/types/museums.types";
 import ResponseData from "@/shared/types/response-data.types";
 import axios from "axios";
 

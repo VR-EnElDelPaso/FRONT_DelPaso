@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
-import HomePage from "../pages/Home";
+import HomePage from "../pages/HomePage";
 import TourPage from "../pages/TourPage";
 import AppLayout from "../layouts/AppLayout";
 import NoAppBarLayout from "../layouts/NoAppBarLayout";

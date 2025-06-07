@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MuseumHours } from "@/types/Museums";
+import { MuseumHours } from "@/shared/types/museums.types";
 import { Clock } from "lucide-react";
 import {
   Dialog,
