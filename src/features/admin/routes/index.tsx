@@ -23,6 +23,10 @@ const adminRoutes = {
       path: "faqs",
       element: <AdminFaqs />,
     },
+    {
+      path: "accreditations",
+      element: <div>Admin Acreditations Page</div>, // Placeholder for Acreditations page
+    }
   ],
 };
 

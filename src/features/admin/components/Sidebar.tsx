@@ -51,7 +51,16 @@ const AdminSidebar = () => {
                         ? 'bg-gray-50 text-gray-900' 
                         : 'text-gray-400 hover:bg-gray-50 hover:text-gray-900'}`}
                   >
-                    <item.icon className={`w-[18px] h-[18px] ${isActiveRoute(item.url) ? 'opacity-100' : 'opacity-60'}`} />
+                    {item?.icon && (
+                      <item.icon className={`w-[18px] h-[18px] ${isActiveRoute(item.url) ? 'opacity-100' : 'opacity-60'}`} />
+                    )}
+                    {item?.imageSrc && (
+                      <img 
+                        src={item.imageSrc} 
+                        alt={item.title} 
+                        className={`w-[18px] h-[18px] ${isActiveRoute(item.url) ? 'filter brightness-50' : 'opacity-60'}`} 
+                      />
+                    )}
                     <span className="ml-3 text-sm font-medium">{item.title}</span>
                   </Link>
                 </SidebarMenuButton>
