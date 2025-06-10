@@ -23,7 +23,7 @@ export const navigationItems = [
     url: "/admin/landing",
   },
   {
-    title: "acreditaciones",
+    title: "Acreditaciones",
     icon: null,
     imageSrc: "/assets/shared/images/acreditable-icon.png",
     url: "/admin/accreditations",

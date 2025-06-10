@@ -3,6 +3,7 @@ import AdminMuseums from "@/pages/admin/AdminMuseums";
 import AdminTours from "@/pages/admin/AdminTours";
 import LandingPage from "@/pages/admin/LandingPage";
 import AdminFaqs from "@/pages/admin/AdminFaqs";
+import { AdminAccreditationsPage } from "@/pages/admin/AdminAccreditationsPage";
 
 const adminRoutes = {
   children: [
@@ -25,7 +26,7 @@ const adminRoutes = {
     },
     {
       path: "accreditations",
-      element: <div>Admin Acreditations Page</div>, // Placeholder for Acreditations page
+      element: <AdminAccreditationsPage />,
     }
   ],
 };
