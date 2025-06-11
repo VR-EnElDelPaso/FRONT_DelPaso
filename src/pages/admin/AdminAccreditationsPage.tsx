@@ -1,29 +1,54 @@
+import { useGetAllAccreditations } from "@/features/accreditations/accreditations.querys";
 import { Accreditation } from "@/features/accreditations/accreditations.types";
 import { DataTable } from "@/shared/components/DataTable";
+import { dateFormatter } from "@/utils/dateFormatter";
+import { timeFormatter } from "@/utils/timeFormatter";
 import { ColumnDef } from "@tanstack/react-table";
 
 const columns: ColumnDef<Accreditation, unknown>[] = [
   {
-    accessorKey: "id",
-    header: "ID",
+    accessorKey: "user.name",
+    header: "Nombre del Usuario",
   },
   {
-    accessorKey: "price",
-    header: "Cuota de recuperación",
-    cell: ({ row }) => {
-      return `$${row.getValue("price")}`;
-    },
+    accessorKey: "user.first_lastname",
+    header: "Primer Apellido",
   },
   {
-    accessorKey: "stars",
-    header: "Calificación",
+    accessorKey: "user.second_lastname",
+    header: "Segundo Apellido",
+  },
+  {
+    accessorKey: "user.account_number",
+    header: "Número de Cuenta",
+  },
+  {
+    accessorKey: "tour.name",
+    header: "Tour",
+  },
+  {
+    accessorKey: "tour.accreditable_hours",
+    header: "Horas de Acreditación",
+  },
+  {
+    accessorKey: "expires_at",
+    header: "Fecha de procesado",
     cell: ({ row }) => {
-      return `${row.getValue("stars")} ⭐`;
+      const date = row.getValue("expires_at") as string;
+      return (
+        <div className="text-gray-600">
+          {dateFormatter(date)} a las {timeFormatter(date)}
+        </div>
+      );
     },
   },
 ];
 
 export const AdminAccreditationsPage = () => {
+  const { data: accreditationsResponse } = useGetAllAccreditations();
+  const accreditations = accreditationsResponse?.data || [];
+
+  console.log("accreditations", accreditations);
   return (
     <div className="container py-8 mx-auto">
       <div className="p-6 bg-white rounded-lg shadow-md">
@@ -40,14 +65,7 @@ export const AdminAccreditationsPage = () => {
         <div className="overflow-hidden bg-white rounded-lg">
           <DataTable
             columns={columns}
-            data={[]}
-            canCreate
-            createText="Crear nuevo tour"
-            // onCreate={() => {}}
-            canEdit
-            canDelete
-            // onEdit={() => {}}
-            // onDelete={(values) => onDelete(values.id)}
+            data={accreditations}
           />
         </div>
       </div>
