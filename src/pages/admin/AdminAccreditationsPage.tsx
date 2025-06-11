@@ -1,6 +1,6 @@
 import { useGetAllAccreditations } from "@/features/accreditations/accreditations.querys";
 import { Accreditation } from "@/features/accreditations/accreditations.types";
-import { DataTable } from "@/shared/components/DataTable";
+import { DataTable, ExportColumn } from "@/shared/components/DataTable";
 import { dateFormatter } from "@/utils/dateFormatter";
 import { timeFormatter } from "@/utils/timeFormatter";
 import { ColumnDef } from "@tanstack/react-table";
@@ -44,21 +44,45 @@ const columns: ColumnDef<Accreditation, unknown>[] = [
   },
 ];
 
+const exportColumns: ExportColumn<Accreditation>[] = [
+  {
+    accessorKey: "user.name",
+    header: "Nombre del Usuario",
+  },
+  {
+    accessorKey: "user.first_lastname",
+    header: "Primer Apellido",
+  },
+  {
+    accessorKey: "user.second_lastname",
+    header: "Segundo Apellido",
+  },
+  {
+    accessorKey: "user.account_number",
+    header: "Número de Cuenta",
+  },
+  {
+    accessorKey: "tour.accreditable_hours",
+    header: "Horas de Acreditación",
+  },
+];
+
 export const AdminAccreditationsPage = () => {
   const { data: accreditationsResponse } = useGetAllAccreditations();
   const accreditations = accreditationsResponse?.data || [];
 
   console.log("accreditations", accreditations);
+
   return (
     <div className="container py-8 mx-auto">
       <div className="p-6 bg-white rounded-lg shadow-md">
         <div className="mb-8">
           <h1 className="mb-2 text-3xl font-bold text-gray-900">
-            Gestión de Recorridos
+            Gestión de Acreditaciones
           </h1>
           <p className="text-gray-600">
-            Administra y organiza la información de los recorridos disponibles
-            en los museos.
+            Administra y organiza la información de las acreditaciones de los
+            usuarios.
           </p>
         </div>
 
@@ -66,6 +90,11 @@ export const AdminAccreditationsPage = () => {
           <DataTable
             columns={columns}
             data={accreditations}
+            canExport={true}
+            exportFileName="acreditaciones"
+            exportSheetName="Acreditaciones"
+            exportColumns={exportColumns}
+            useTableColumnsForExport={false} // Usar configuración personalizada
           />
         </div>
       </div>
