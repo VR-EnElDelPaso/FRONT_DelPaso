@@ -18,6 +18,7 @@ import { OrderDetailPage } from "@/pages/OrderDetailPage";
 import FaqsPage from "@/pages/FaqsPage";
 import MyPurchasesPage from "@/pages/MyPurchasesPage";
 import { VerifyEmailPage } from "@/pages/VerifyEmailPage";
+import AboutPage from "@/pages/AboutPage";
 
 const router = createBrowserRouter([
   {
@@ -89,6 +90,10 @@ const router = createBrowserRouter([
             element: <SeeTourPage />,
           },
         ],
+      },
+      {
+        path: "/about",
+        element: <AboutPage />,
       },
       {
         path: "/faqs",
