@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useCartStore } from "../stores/useCartStore";
-import { getTours, checkPurchasedTours } from "../services/tour.services";
+import { getTours, checkPurchasedTours } from "../features/tour/tour.services";
 import { Tour } from "../shared/types/Tour";
 import { CartSuggestions } from "../features/cart/components/CartSuggestions";
 import { CartList } from "../features/cart/components/CartList";

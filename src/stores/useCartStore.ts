@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { getTours } from "../services/tour.services";
+import { getTours } from "../features/tour/tour.services";
 import { Tour } from "../shared/types/Tour";
 
 

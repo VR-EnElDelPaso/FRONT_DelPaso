@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import RatingStars from "../RatingStars";
 import { useToast } from "@/hooks/use-toast";
 import { ReviewService } from "@/services/review.services";
+import { markTourAsCompleted } from "@/features/tour/tour.services";
 
 interface ReviewDialogProps {
   isOpen: boolean;
@@ -17,6 +18,7 @@ export default function ReviewDialog({
 }: ReviewDialogProps) {
   const { id: tourId } = useParams();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
@@ -90,8 +92,13 @@ export default function ReviewDialog({
         variant: "default",
       });
 
+      const responmse = await markTourAsCompleted(tourId);
+      
+      console.log("Tour marked as completed:", responmse);
+
       resetForm();
       onClose();
+      navigate(`/tours/${tourId}`); // Navigate to the tour page
     } catch (error) {
       toast({
         title: "Error",
@@ -111,13 +118,13 @@ export default function ReviewDialog({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-2">
       <div
-        className="fixed inset-0 bg-black/50 transition-opacity"
+        className="fixed inset-0 transition-opacity bg-black/50"
         onClick={onClose}
         aria-hidden="true"
       />
 
-      <div className="relative bg-white rounded-lg p-6 w-full max-w-5xl shadow-xl">
-        <h2 className="text-3xl font-medium text-dark font-kaiseiDecol mb-6">
+      <div className="relative w-full max-w-5xl p-6 bg-white rounded-lg shadow-xl">
+        <h2 className="mb-6 text-3xl font-medium text-dark font-kaiseiDecol">
           Comparte tu experiencia en este recorrido
         </h2>
 
@@ -132,18 +139,18 @@ export default function ReviewDialog({
               onChange={(e) => setComment(e.target.value)}
             />
             {errors.comment && (
-              <p className="text-red-500 text-sm">{errors.comment}</p>
+              <p className="text-sm text-red-500">{errors.comment}</p>
             )}
           </div>
 
           {/* Rating Stars */}
           <div className="space-y-2">
-            <label className="block text-sm text-gray-600 mb-1">
+            <label className="block mb-1 text-sm text-gray-600">
               Calificación
             </label>
             <RatingStars value={rating} onChange={setRating} />
             {errors.rating && (
-              <p className="text-red-500 text-sm">{errors.rating}</p>
+              <p className="text-sm text-red-500">{errors.rating}</p>
             )}
           </div>
 
@@ -152,14 +159,14 @@ export default function ReviewDialog({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-primary hover:bg-gray-100 rounded-lg border border-primary"
+              className="px-4 py-2 border rounded-lg text-primary hover:bg-gray-100 border-primary"
               disabled={isSubmitting}
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-opacity-90"
+              className="px-4 py-2 text-white rounded-lg bg-primary hover:bg-opacity-90"
               disabled={isSubmitting}
             >
               {isSubmitting ? "Enviando..." : "Enviar opinión"}

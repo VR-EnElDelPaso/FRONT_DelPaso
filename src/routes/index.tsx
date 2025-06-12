@@ -7,7 +7,6 @@ import NoAppBarLayout from "../layouts/NoAppBarLayout";
 import Tours from "../pages/Tours";
 import CartPage from "../pages/CartPage";
 import { CheckoutPage } from "../pages/CheckoutPage";
-import SeeTourPage from "../pages/SeeTourPage";
 import Auth from "@/pages/Auth";
 import AdminProtectedRoute from "@/features/admin/components/AdminProtectedRoute";
 import AdminLayout from "@/features/admin/AdminLayout";
@@ -18,6 +17,7 @@ import { OrderDetailPage } from "@/pages/OrderDetailPage";
 import FaqsPage from "@/pages/FaqsPage";
 import MyPurchasesPage from "@/pages/MyPurchasesPage";
 import { VerifyEmailPage } from "@/pages/VerifyEmailPage";
+import { SeeTourPage } from "@/pages/SeeTourPage";
 
 const router = createBrowserRouter([
   {

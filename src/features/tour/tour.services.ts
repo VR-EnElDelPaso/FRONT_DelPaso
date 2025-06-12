@@ -1,7 +1,7 @@
 import axios from "axios";
 import ResponseData, {
   ResponseDataTyped,
-} from "../shared/types/response-data.types";
+} from "../../shared/types/response-data.types";
 import { Tag } from "@/types/tag";
 import { CheckedTourSuccessResponse } from "@/features/tour/types/tour.types";
 import { Tour } from "@/types/tour";
@@ -261,3 +261,13 @@ export const deleteTour = async (id: string): Promise<ResponseData> => {
     throw error;
   }
 };
+
+
+export const markTourAsCompleted = async (id: string): Promise<ResponseData> => {
+  const response = await axios.post<ResponseData>(
+    `${apiBaseUrl}/tours/${id}/complete`,
+    {},
+    { headers: getAuthHeaders() }
+  );
+  return response.data;
+}
