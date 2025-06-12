@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import Loader from "@/shared/components/Loader";
 import { getAllMuseums } from "@/services/Museums";
-import { getAllTours } from "@/services/tour.services";
+import { getAllTours } from "@/features/tour/tour.services";
 import { getAllFaqs } from "@/services/Faqs";
 import { getMainCarousel } from "@/services/Carousel";
 

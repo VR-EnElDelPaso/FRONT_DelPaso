@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { checkPurchasedTour, createTour, getAllTours, getTourById, getTourUrl } from "@/services/tour.services";
+import { checkPurchasedTour, createTour, getAllTours, getTourById, getTourUrl } from "@/features/tour/tour.services";
 import { Tour } from "@/types/tour";
 import { Tag } from "@/types/tag";
 

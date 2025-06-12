@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { getTours, checkPurchasedTours } from "../services/tour.services";
+import { getTours, checkPurchasedTours } from "../features/tour/tour.services";
 import { Tour } from "../shared/types/Tour";
 import Skeleton from "../shared/components/Skeleton";
 import { useCartStore } from "../stores/useCartStore";

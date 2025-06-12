@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Tour } from "../../../shared/types/Tour";
 import { CartListItem } from "./CartList";
-import { getTourSuggestions, checkPurchasedTours } from "../../../services/tour.services";
+import { getTourSuggestions, checkPurchasedTours } from "../../tour/tour.services";
 import { useCartStore } from "../../../stores/useCartStore";
 import RatingStars from "@/shared/components/RatingStars";
 import { useAuth } from "@/hooks/useAuth";
