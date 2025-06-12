@@ -1,3 +1,4 @@
+// src/components/Auth/UserAvatar.tsx - Versión actualizada
 import { useAuth } from "@/hooks/useAuth";
 import useAuthStore from "@/stores/AuthStore";
 import { useState, useRef, useEffect } from "react";
@@ -6,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { RxAvatar } from "react-icons/rx";
 import { IoLogOutOutline } from "react-icons/io5";
 import { BsCart3 } from "react-icons/bs";
+import { FaUser } from "react-icons/fa";
 
 export const UserAvatar = () => {
   const { user, logout } = useAuth();
@@ -42,21 +44,30 @@ export const UserAvatar = () => {
     navigate("/my-purchases");
   };
 
-  // Renderizar iniciales si no hay imagen
+  const handleProfile = () => {
+    setIsDropdownOpen(false);
+    navigate("/profile");
+  };
+
+  // Renderizar avatar usando iniciales si no hay imagen
   const renderAvatar = () => {
     if (user?.image) {
       return (
         <img
           src={user.image}
           alt={getFullName()}
-          className="w-8 h-8 rounded-full object-cover border-2 border-gray-200"
+          className="w-8 h-8 rounded-full object-cover border-2 border-gray-200 cursor-pointer hover:scale-110 transition-transform duration-200"
+          onClick={handleProfile}
         />
       );
     }
 
     const initials = getUserInitials();
     return (
-      <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm font-medium border-2 border-primary">
+      <div
+        className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm font-medium border-2 border-primary cursor-pointer hover:scale-110 transition-transform duration-200"
+        onClick={handleProfile}
+      >
         {initials || <RxAvatar className="text-lg" />}
       </div>
     );
@@ -70,7 +81,15 @@ export const UserAvatar = () => {
         aria-expanded={isDropdownOpen}
         aria-haspopup="true"
       >
-        {renderAvatar()}
+        <div
+          className="cursor-pointer hover:scale-110 transition-transform duration-200"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleProfile();
+          }}
+        >
+          {renderAvatar()}
+        </div>
         <div className="flex-1 text-left min-w-0">
           <h4 className="truncate font-medium text-gray-900">
             {user?.display_name}
@@ -102,7 +121,12 @@ export const UserAvatar = () => {
           {/* Usuario info con información completa */}
           <div className="px-4 py-3 border-b border-gray-100">
             <div className="flex items-center space-x-3">
-              {renderAvatar()}
+              <div
+                className="cursor-pointer hover:scale-110 transition-transform duration-200"
+                onClick={handleProfile}
+              >
+                {renderAvatar()}
+              </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-gray-900 truncate">
                   {getFullName()}
@@ -119,6 +143,15 @@ export const UserAvatar = () => {
 
           {/* Menu items */}
           <div className="py-1">
+            {/* Profile */}
+            <button
+              onClick={handleProfile}
+              className="flex items-center w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200 focus:outline-none focus:bg-gray-50"
+            >
+              <FaUser className="mr-3 text-lg text-gray-600 flex-shrink-0" />
+              <span>{t("My Profile")}</span>
+            </button>
+
             <button
               onClick={handleMyPurchases}
               className="flex items-center w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200 focus:outline-none focus:bg-gray-50"
