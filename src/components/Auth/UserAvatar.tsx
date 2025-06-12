@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { RxAvatar } from "react-icons/rx";
 import { IoLogOutOutline } from "react-icons/io5";
 import { BsCart3 } from "react-icons/bs";
+import { FaUser } from "react-icons/fa";
 
 export const UserAvatar = () => {
   const { user, logout } = useAuth();
@@ -42,7 +43,12 @@ export const UserAvatar = () => {
     navigate("/my-purchases");
   };
 
-  // Renderizar iniciales si no hay imagen
+  const handleProfile = () => {
+    setIsDropdownOpen(false);
+    navigate("/profile");
+  };
+
+  // Renderizar avatar usando iniciales si no hay imagen
   const renderAvatar = () => {
     if (user?.image) {
       return (
@@ -119,6 +125,15 @@ export const UserAvatar = () => {
 
           {/* Menu items */}
           <div className="py-1">
+            {/* Profile */}
+            <button
+              onClick={handleProfile}
+              className="flex items-center w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200 focus:outline-none focus:bg-gray-50"
+            >
+              <FaUser className="mr-3 text-lg text-gray-600 flex-shrink-0" />
+              <span>{t("My Profile")}</span>
+            </button>
+
             <button
               onClick={handleMyPurchases}
               className="flex items-center w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200 focus:outline-none focus:bg-gray-50"
