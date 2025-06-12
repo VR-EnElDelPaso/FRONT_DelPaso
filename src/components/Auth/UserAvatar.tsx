@@ -1,3 +1,4 @@
+// src/components/Auth/UserAvatar.tsx - Versión actualizada
 import { useAuth } from "@/hooks/useAuth";
 import useAuthStore from "@/stores/AuthStore";
 import { useState, useRef, useEffect } from "react";
@@ -55,14 +56,18 @@ export const UserAvatar = () => {
         <img
           src={user.image}
           alt={getFullName()}
-          className="w-8 h-8 rounded-full object-cover border-2 border-gray-200"
+          className="w-8 h-8 rounded-full object-cover border-2 border-gray-200 cursor-pointer hover:scale-110 transition-transform duration-200"
+          onClick={handleProfile}
         />
       );
     }
 
     const initials = getUserInitials();
     return (
-      <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm font-medium border-2 border-primary">
+      <div
+        className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm font-medium border-2 border-primary cursor-pointer hover:scale-110 transition-transform duration-200"
+        onClick={handleProfile}
+      >
         {initials || <RxAvatar className="text-lg" />}
       </div>
     );
@@ -76,7 +81,15 @@ export const UserAvatar = () => {
         aria-expanded={isDropdownOpen}
         aria-haspopup="true"
       >
-        {renderAvatar()}
+        <div
+          className="cursor-pointer hover:scale-110 transition-transform duration-200"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleProfile();
+          }}
+        >
+          {renderAvatar()}
+        </div>
         <div className="flex-1 text-left min-w-0">
           <h4 className="truncate font-medium text-gray-900">
             {user?.display_name}
@@ -108,7 +121,12 @@ export const UserAvatar = () => {
           {/* Usuario info con información completa */}
           <div className="px-4 py-3 border-b border-gray-100">
             <div className="flex items-center space-x-3">
-              {renderAvatar()}
+              <div
+                className="cursor-pointer hover:scale-110 transition-transform duration-200"
+                onClick={handleProfile}
+              >
+                {renderAvatar()}
+              </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-gray-900 truncate">
                   {getFullName()}
