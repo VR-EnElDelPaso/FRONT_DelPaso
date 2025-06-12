@@ -18,6 +18,7 @@ import FaqsPage from "@/pages/FaqsPage";
 import MyPurchasesPage from "@/pages/MyPurchasesPage";
 import { VerifyEmailPage } from "@/pages/VerifyEmailPage";
 import { SeeTourPage } from "@/pages/SeeTourPage";
+import UserProfilePage from "@/pages/UserProfilePage";
 
 const router = createBrowserRouter([
   {
@@ -70,6 +71,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <MyPurchasesPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/profile", // Nueva ruta protegida
+        element: (
+          <ProtectedRoute>
+            <UserProfilePage />
           </ProtectedRoute>
         ),
       },
