@@ -1,32 +1,36 @@
-import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Navigate, useParams } from "react-router-dom";
 import ReviewDialog from "../shared/components/Tour/ReviewDialog";
 import TourIframe from "../shared/components/Tour/TourIframe";
 import ReviewsList from "../components/Reviews/ReviewsList";
 import TourSuggestions from "../components/TourSuggestions/TourSuggestions";
 import { dateFormatter } from "../utils/dateFormatter";
-import {
-  useCheckPurchasedTour,
-  useFetchTourById,
-  useFetchTourUrl,
-} from "@/features/tour/tour.querys";
+import { useFetchTourById, useFetchTourUrl } from "@/features/tour/tour.querys";
 import Loader from "@/shared/components/Loader";
 import { useToast } from "@/hooks/use-toast";
 import { ConfirmAlert } from "@/features/tour/components/TourCard/SeeTourAlert";
+import NotFound from "@/shared/components/NotFound";
+import { CheckedTourSuccessResponse } from "@/features/tour/types/tour.types";
+import { ResponseDataTyped } from "@/shared/types/response-data.types";
+import { checkPurchasedTour } from "@/features/tour/tour.services";
 
-export default function SeeTourPage() {
+export const SeeTourPage = () => {
   // ----[ State ]----
   const [isBlurred, setIsBlurred] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [showStartConfirm, setShowStartConfirm] = useState(false);
   const [startTourClicked, setStartTourClicked] = useState(false);
 
+  // Estados para manejar la compra del tour manualmente
+  const [tourPurchaseData, setTourPurchaseData] =
+    useState<ResponseDataTyped<CheckedTourSuccessResponse> | null>(null);
+  const [tourPurchaseLoading, setTourPurchaseLoading] = useState(true);
+  const [tourPurchaseError, setTourPurchaseError] = useState<unknown>(null);
+
   // ----[ Hooks ]----
   const { toast } = useToast();
   const id = useParams().id ?? "";
   const { data: TourResponse, isPending: TourIsPending } = useFetchTourById(id);
-  const { data: TourPurchaseResponse, isPending: TourPurchaseIsPending } =
-    useCheckPurchasedTour(id);
 
   // Only fetch the tour URL when the user has clicked the start button
   const {
@@ -35,8 +39,29 @@ export default function SeeTourPage() {
     error: TourUrlError,
   } = useFetchTourUrl(
     id,
-    TourPurchaseResponse?.data?.purchased && startTourClicked
+    tourPurchaseData?.data?.purchased && startTourClicked
   );
+
+  // ----[ Effects ]----
+  useEffect(() => {
+    const fetchTourPurchase = async () => {
+      if (!id) return;
+
+      try {
+        setTourPurchaseLoading(true);
+        setTourPurchaseError(null);
+        const response = await checkPurchasedTour(id);
+        setTourPurchaseData(response);
+      } catch (error) {
+        setTourPurchaseError(error);
+        console.error("Error checking tour purchase:", error);
+      } finally {
+        setTourPurchaseLoading(false);
+      }
+    };
+
+    fetchTourPurchase();
+  }, [id]);
 
   // ----[ Constants ]----
   const tour = TourResponse;
@@ -74,9 +99,17 @@ export default function SeeTourPage() {
 
   // ----[ Render ]----
   if (TourIsPending) return <Loader />;
-  if (!tour) return <p>Tour not found</p>;
-  if (TourPurchaseIsPending) return <Loader />;
-  if (!TourPurchaseResponse?.data?.purchased) return <p>Not purchased</p>;
+  if (!tour) return <NotFound />;
+  if (tourPurchaseLoading) return <Loader />;
+
+  // Manejo de error en la verificación de compra
+  if (tourPurchaseError) {
+    console.error("Tour purchase check error:", tourPurchaseError);
+    // Podrías mostrar un componente de error o redirigir
+  }
+
+  if (!tourPurchaseData?.data?.purchased)
+    return <Navigate to={`/tours/${id}`} replace />;
 
   // Show loading state only when startTourClicked is true and it's pending
   const isLoadingTourUrl = startTourClicked && TourUrlIsPending;
@@ -95,14 +128,16 @@ export default function SeeTourPage() {
 
         {/* Content */}
         <section className="mx-6 my-8 md:mx-24">
-          <div className="flex justify-end mb-8 md:mb-2">
-            <button
-              className="px-6 py-2 text-sm font-bold text-white transition-colors duration-200 rounded-lg hover:bg-opacity-90 bg-primary/90"
-              onClick={() => setIsDialogOpen(true)}
-            >
-              Marcar como terminado
-            </button>
-          </div>
+          {TourUrlResponse?.data?.tour_url && (
+            <div className="flex justify-end mb-8 transition-all md:mb-2">
+              <button
+                className="px-6 py-2 text-sm font-bold text-white transition-colors duration-200 rounded-lg hover:bg-opacity-90 bg-primary/90"
+                onClick={() => setIsDialogOpen(true)}
+              >
+                Marcar como terminado
+              </button>
+            </div>
+          )}
 
           {/* Texts */}
           <h2 className="mb-2 text-4xl font-medium font-kaiseiDecol">
@@ -156,4 +191,4 @@ export default function SeeTourPage() {
       </div>
     </>
   );
-}
+};

@@ -3,7 +3,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/shared/components/DataTable";
 import { Tour } from "@/types/tour";
 import PhotoCellModal from "@/shared/components/PhotoCellModal";
-import { deleteTour, editTour } from "@/services/tour.services";
+import { deleteTour, editTour } from "@/features/tour/tour.services";
 import { getAllMuseums } from "@/services/Museums";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";

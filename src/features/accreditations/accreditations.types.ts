@@ -6,6 +6,7 @@ export interface Accreditation {
     first_lastname: string;
     second_lastname: string;
     account_number: number;
+    email: string;
   };
   tour: {
     id: string;

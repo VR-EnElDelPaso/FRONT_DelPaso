@@ -9,31 +9,27 @@ const HelpSection = () => {
   };
 
   return (
-    <div className="container mx-auto py-16 px-4 sm:px-6 md:px-8">
+    <div className="container px-4 py-16 mx-auto sm:px-6 md:px-8">
       <div className="flex flex-col w-full">
         <div className="flex items-center mb-4">
-          <span className="text-2xl mr-2 text-primary/50">•</span>
-          <p className="text-sm font-bold text-primary/50 tracking-widest uppercase">
+          <span className="mr-2 text-2xl text-primary/50">•</span>
+          <p className="text-sm font-bold tracking-widest uppercase text-primary/50">
             Ayuda
           </p>
         </div>
 
-        <h1 className="text-4xl font-kaiseiDecol mb-8">¿Tienes preguntas?</h1>
+        <h1 className="mb-8 text-4xl font-kaiseiDecol">¿Tienes preguntas?</h1>
 
-        <p className="text-gray-600 text-lg leading-relaxed mb-12">
-          Si tienes alguna duda sobre nuestras exposiciones, horarios, entradas
-          u otros servicios, por favor visita nuestra sección de preguntas
-          frecuentes o contáctanos directamente a través de nuestro correo
-          electrónico o llamando al teléfono de atención. Estamos aquí para
-          ayudarte a disfrutar de tu visita al Museo Fernando del Paso.
+        <p className="mb-12 text-lg leading-relaxed text-gray-600">
+          Si necesitas más información sobre nuestros recorridos virtuales, las
+          exposiciones o los museos universitarios que forman parte de MUVI, no
+          te preocupes, estamos aquí para resolver todas tus preguntas y con
+          gusto te responderemos lo antes posible. ¡Queremos que disfrutes al
+          máximo la experiencia MUVI!
         </p>
 
         <div className="flex justify-end">
-          <Button
-            onClick={handleHelpClick}
-          >
-            Ayuda
-          </Button>
+          <Button onClick={handleHelpClick}>Ayuda</Button>
         </div>
       </div>
     </div>

@@ -8,6 +8,8 @@ import Carousel from "@/components/NowShowing/Carousel";
 import { Button } from "@/components/ui/button";
 import MuseumStatus from "@/components/NowShowing/MuseumStatus";
 import { MuseumInfoCard } from "@/features/museum/componets/MuseumInfoCard";
+import NotFound from "@/shared/components/NotFound";
+import Loader from "@/shared/components/Loader";
 
 // Componente para mostrar los horarios del museo
 interface MuseumHourDisplayProps {
@@ -166,7 +168,7 @@ const MuseumHoursDisplay = ({ hours }: MuseumHourDisplayProps) => {
   };
 
   return (
-    <div className="text-black space-y-4">
+    <div className="space-y-4 text-black">
       {dayGroups.map((group, index) => (
         <div key={index} className="flex flex-col">
           <div className="font-bold">{formatDayRangeText(group.days)}</div>
@@ -203,20 +205,10 @@ const MuseumPage = () => {
     fetchMuseum();
   }, [fetchMuseum]);
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        Cargando...
-      </div>
-    );
-  }
+  if (loading) return <Loader />;
 
   if (!museum) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        Museo no encontrado
-      </div>
-    );
+    return <NotFound />;
   }
 
   return (
@@ -341,7 +333,7 @@ const MuseumPage = () => {
                 <div className="absolute inset-0 z-20 flex flex-col items-center justify-center text-white">
                   <p className="mb-2 text-lg font-medium">Solo En Muvi</p>
                   <h2 className="px-4 text-3xl font-bold text-center md:text-4xl font-kaiseiDecol">
-                    Ver Instalaciones de Fernando del Paso
+                    Ver Instalaciones del museo "{museum.name}""
                   </h2>
                 </div>
               </div>
@@ -362,12 +354,12 @@ const MuseumPage = () => {
                 </h2>
 
                 <p className="text-base leading-7 text-muted-foreground">
-                  Si tienes alguna duda sobre nuestras exposiciones, horarios,
-                  entradas u otros servicios, por favor visita nuestra sección
-                  de preguntas frecuentes o contáctanos directamente a través de
-                  contacto@muvi.com o llamando al +52 333 123 4567. Estamos aquí
-                  para ayudarte a disfrutar de tu visita al Museo Fernando del
-                  Paso.
+                  Si necesitas más información sobre nuestros recorridos
+                  virtuales, las exposiciones o los museos universitarios que
+                  forman parte de MUVI, no te preocupes, estamos aquí para
+                  resolver todas tus preguntas y con gusto te responderemos lo
+                  antes posible. ¡Queremos que disfrutes al máximo la
+                  experiencia MUVI!
                 </p>
 
                 <div className="flex justify-end">

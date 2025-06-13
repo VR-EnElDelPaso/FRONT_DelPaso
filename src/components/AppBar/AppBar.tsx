@@ -12,9 +12,13 @@ import NavLink from "./NavLink";
 import { LoginButton } from "../Auth/LoginButton";
 import { UserAvatar } from "../Auth/UserAvatar";
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
+import { Dispatch, useEffect } from "react";
 
-export default function AppBar() {
+interface AppBarProps {
+  setIsMenuOpen: Dispatch<React.SetStateAction<boolean>>;
+}
+
+export default function AppBar({ setIsMenuOpen: setIsMenuOpen }: AppBarProps) {
   const { t } = useTranslation();
   const { isAuthenticated } = useAuth();
   const [menuOpen, toggleMenu] = useToggle(false);
@@ -56,25 +60,25 @@ export default function AppBar() {
   }, [menuOpen, toggleMenu]);
 
   return (
-    <nav className="sticky top-0 z-50 bg-white shadow-md border-b border-gray-100">
+    <nav className="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-md">
       <ZoomInOnScroll duration={2} initialScale={0.95}>
         {/* Header principal */}
-        <div className="container flex items-center justify-between h-16 sm:h-20 px-4 sm:px-6 lg:px-8 mx-auto gap-4 min-w-0">
+        <div className="container flex items-center justify-between h-16 min-w-0 gap-4 px-4 mx-auto sm:h-20 sm:px-6 lg:px-8">
           {/* Logo section */}
-          <div className="flex-shrink-0 h-10 sm:h-12 lg:h-14 min-w-0">
+          <div className="flex-shrink-0 h-10 min-w-0 sm:h-12 lg:h-14">
             <Link
               to="/"
-              className="flex items-center h-full gap-2 sm:gap-4 transition-transform duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-lg min-w-0"
+              className="flex items-center h-full min-w-0 gap-2 transition-transform duration-300 rounded-lg sm:gap-4 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
               aria-label="Ir al inicio - MUVi"
             >
               <img
-                className="object-contain h-full p-1 flex-shrink-0"
+                className="flex-shrink-0 object-contain h-full p-1"
                 src={Muvi}
                 alt="Logo MUVi"
               />
               <div className="h-8 sm:h-10 lg:h-12 w-[1px] bg-gray-200 flex-shrink-0"></div>
               <img
-                className="object-contain h-full flex-shrink-0"
+                className="flex-shrink-0 object-contain h-full"
                 src={Udc}
                 alt="Logo Universidad de Colima"
               />
@@ -82,15 +86,24 @@ export default function AppBar() {
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-8 flex-1 justify-end min-w-0">
+          <div className="items-center justify-end flex-1 hidden min-w-0 space-x-8 lg:flex">
             {/* Navigation Links */}
-            <div className="flex items-center space-x-8 mr-8">
+            <div className="flex items-center mr-8 space-x-8">
               <NavLink href="/about">{t("About Muvi")}</NavLink>
+              <NavLink href="/tours">{t("Tours")}</NavLink>
+              <NavLink
+                href="#"
+                onClick={() => {
+                  setIsMenuOpen((prev) => !prev);
+                }}
+              >
+                {t("Museums")}
+              </NavLink>
               <NavLink href="/faqs">{t("FAQs")}</NavLink>
             </div>
 
             {/* Action Buttons */}
-            <div className="flex items-center space-x-3 flex-shrink-0">
+            <div className="flex items-center flex-shrink-0 space-x-3">
               <CartButton />
               <LanguageSelector />
               {isAuthenticated ? <UserAvatar /> : <LoginButton />}
@@ -98,7 +111,7 @@ export default function AppBar() {
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="flex items-center space-x-3 lg:hidden flex-shrink-0 ml-4">
+          <div className="flex items-center flex-shrink-0 ml-4 space-x-3 lg:hidden">
             <CartButton />
             <MenuButton isOpen={menuOpen} onClick={toggleMenu} />
           </div>
@@ -106,20 +119,20 @@ export default function AppBar() {
 
         {/* Mobile Menu */}
         {menuOpen && (
-          <div className="relative z-50 lg:hidden bg-white border-t border-gray-100 shadow-lg">
-            <div className="container mx-auto px-4 py-6">
+          <div className="relative z-50 bg-white border-t border-gray-100 shadow-lg lg:hidden">
+            <div className="container px-4 py-6 mx-auto">
               {/* Navigation Links */}
-              <div className="flex flex-col space-y-4 mb-6">
+              <div className="flex flex-col mb-6 space-y-4">
                 <NavLink
                   href="/about"
-                  className="text-gray-700 hover:text-primary transition-colors duration-200 py-2 px-3 rounded-lg hover:bg-gray-50"
+                  className="px-3 py-2 text-gray-700 transition-colors duration-200 rounded-lg hover:text-primary hover:bg-gray-50"
                   onClick={toggleMenu}
                 >
                   {t("About Muvi")}
                 </NavLink>
                 <NavLink
                   href="/faqs"
-                  className="text-gray-700 hover:text-primary transition-colors duration-200 py-2 px-3 rounded-lg hover:bg-gray-50"
+                  className="px-3 py-2 text-gray-700 transition-colors duration-200 rounded-lg hover:text-primary hover:bg-gray-50"
                   onClick={toggleMenu}
                 >
                   {t("FAQs")}

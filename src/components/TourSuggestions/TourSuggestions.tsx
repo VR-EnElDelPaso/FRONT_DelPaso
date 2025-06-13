@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Tour } from "../../types/tour";
-import { getTourSuggestions } from "../../services/tour.services";
+import { getTourSuggestions } from "../../features/tour/tour.services";
 import TourSuggestionCard from "./TourSuggestionCard";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";

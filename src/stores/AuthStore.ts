@@ -53,7 +53,14 @@ const useAuthStore = create<AuthState>()((set, get) => ({
 
   updateUser: (userData: Partial<User>) =>
     set((state) => ({
-      user: state.user ? { ...state.user, ...userData } : null,
+      user: state.user
+        ? {
+            ...state.user,
+            ...userData,
+            // Asegurar que updated_at se actualice
+            updated_at: new Date().toISOString(),
+          }
+        : null,
     })),
 
   verifyToken: async () => {
