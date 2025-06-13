@@ -30,7 +30,7 @@ const MuseumScroller: React.FC<MuseumScrollerProps> = ({ museums }) => {
           <div
             key={museum.id}
             className="flex items-center gap-2 px-3 py-2 text-white transition-all duration-300 rounded-md cursor-pointer hover:bg-white/10 hover:scale-105 active:scale-95"
-            onClick={() => navigate(`/museums/${museum.id}`)}
+            onClick={() => navigate(`/museum/${museum.id}`)}
           >
             <RiGovernmentLine className="text-xl" />
             <span className="font-medium">{museum.name}</span>
