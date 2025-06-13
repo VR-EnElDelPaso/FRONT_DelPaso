@@ -11,7 +11,7 @@ const CarouselSlide: React.FC<CarouselSlideProps> = ({
   const navigate = useNavigate();
 
   const handleSeeMore = () => {
-    navigate("/tours");
+    navigate("/about");
   };
 
   const handleVirtualTours = () => {

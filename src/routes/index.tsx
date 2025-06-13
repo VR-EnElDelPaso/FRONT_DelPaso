@@ -3,7 +3,6 @@ import { ProtectedRoute } from "@/components/ProtectedRoute/ProtectedRoute";
 import HomePage from "../pages/HomePage";
 import TourPage from "../pages/TourPage";
 import AppLayout from "../layouts/AppLayout";
-import NoAppBarLayout from "../layouts/NoAppBarLayout";
 import Tours from "../pages/Tours";
 import CartPage from "../pages/CartPage";
 import { CheckoutPage } from "../pages/CheckoutPage";
@@ -17,13 +16,14 @@ import { OrderDetailPage } from "@/pages/OrderDetailPage";
 import FaqsPage from "@/pages/FaqsPage";
 import MyPurchasesPage from "@/pages/MyPurchasesPage";
 import { VerifyEmailPage } from "@/pages/VerifyEmailPage";
+import NoFooterLayout from "@/layouts/NoFooterLayout";
 import { SeeTourPage } from "@/pages/SeeTourPage";
 import UserProfilePage from "@/pages/UserProfilePage";
 
 const router = createBrowserRouter([
   {
     path: "/auth",
-    element: <NoAppBarLayout />,
+    element: <NoFooterLayout />,
     children: [
       {
         index: true,
