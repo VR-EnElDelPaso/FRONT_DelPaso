@@ -5,6 +5,7 @@ import CartCleaner from "../features/cart/components/CartCleaner";
 import { useFetchMuseums } from "@/features/museum/museum.querys";
 import { useState } from "react";
 import MuseumScroller from "@/components/AppBar/MuseumScroller/MuseumScoller";
+import ScrollToTop from "@/shared/components/ScrollToTop";
 
 export default function AppLayout() {
   const [museumsBanner, setMuseumsBanner] = useState(false);
@@ -12,6 +13,8 @@ export default function AppLayout() {
   const museums = museumsResponse?.data || [];
   return (
     <div className="font-inter">
+      <ScrollToTop />
+      {/* Barra de navegación y carrusel de museos */}
       <div className="sticky top-0 z-50 ">
         <AppBar setIsMenuOpen={setMuseumsBanner} />
         {museumsBanner && <MuseumScroller museums={museums} />}
