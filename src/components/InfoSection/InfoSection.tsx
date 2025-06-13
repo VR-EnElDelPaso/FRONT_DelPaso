@@ -6,7 +6,7 @@ export default function InfoSection() {
   const navigate = useNavigate();
 
   const handleInfoClick = () => {
-    navigate("/info");
+    navigate("/about");
   };
 
   return (
