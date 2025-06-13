@@ -1,8 +1,11 @@
 export const en = {
   translation: {
+    // AppBar
     Home: "Home",
     "About Muvi": "About Muvi",
     Help: "Help",
+    Tours: "Tours",
+    Museums: "Museums",
     FAQs: "FAQs",
     "Change language": "Change language",
     Account: "Account",
@@ -10,6 +13,7 @@ export const en = {
     Logout: "Logout",
     "My Purchases": "My Purchases",
     "My Profile": "My Profile", // Nueva
+    NoMuseums: "No museums available at the moment",
 
     // User Profile Page - Nuevas traducciones
     "User Profile": "User Profile",
