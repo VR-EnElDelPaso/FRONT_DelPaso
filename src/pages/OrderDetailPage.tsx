@@ -1,5 +1,6 @@
 import { getOneOrderById, PostOrderResponse } from "@/services/orders.services";
 import Loader from "@/shared/components/Loader";
+import NotFound from "@/shared/components/NotFound";
 import Skeleton from "@/shared/components/Skeleton";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -111,7 +112,7 @@ export const OrderDetailPage = () => {
 
   if (loading) return <Loader />;
 
-  if (errorMessage) return <div>{errorMessage}</div>;
+  if (errorMessage) return <NotFound />;
 
   return (
     <>

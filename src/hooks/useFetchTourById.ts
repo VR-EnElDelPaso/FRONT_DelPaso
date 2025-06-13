@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { getTourById } from "../services/tour.services";
+import { getTourById } from "../features/tour/tour.services";
 import { Tour } from "../types/tour";
 
 const useFetchTourById = (id: string) => {

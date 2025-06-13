@@ -8,6 +8,7 @@ import Carousel from "@/components/NowShowing/Carousel";
 import { Button } from "@/components/ui/button";
 import MuseumStatus from "@/components/NowShowing/MuseumStatus";
 import { MuseumInfoCard } from "@/features/museum/componets/MuseumInfoCard";
+import NotFound from "@/shared/components/NotFound";
 
 // Componente para mostrar los horarios del museo
 interface MuseumHourDisplayProps {
@@ -166,7 +167,7 @@ const MuseumHoursDisplay = ({ hours }: MuseumHourDisplayProps) => {
   };
 
   return (
-    <div className="text-black space-y-4">
+    <div className="space-y-4 text-black">
       {dayGroups.map((group, index) => (
         <div key={index} className="flex flex-col">
           <div className="font-bold">{formatDayRangeText(group.days)}</div>
@@ -205,18 +206,14 @@ const MuseumPage = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex items-center justify-center h-screen">
         Cargando...
       </div>
     );
   }
 
   if (!museum) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        Museo no encontrado
-      </div>
-    );
+    return <NotFound />;
   }
 
   return (

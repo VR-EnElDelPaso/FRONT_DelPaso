@@ -6,7 +6,7 @@ import CarouselControls from "./CarouselControls";
 import { variants, swipeConfidenceThreshold, swipePower } from "./animations";
 import { dateFormatter } from "@/utils/dateFormatter";
 import { getMuseumTours } from "@/services/Museums";
-import { getAllTours } from "@/services/tour.services";
+import { getAllTours } from "@/features/tour/tour.services";
 
 // ACTUALIZAR INTERFACE PARA INCLUIR ID DEL TOUR
 interface Slide {

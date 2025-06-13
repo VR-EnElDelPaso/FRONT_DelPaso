@@ -6,7 +6,6 @@ import AppLayout from "../layouts/AppLayout";
 import Tours from "../pages/Tours";
 import CartPage from "../pages/CartPage";
 import { CheckoutPage } from "../pages/CheckoutPage";
-import SeeTourPage from "../pages/SeeTourPage";
 import Auth from "@/pages/Auth";
 import AdminProtectedRoute from "@/features/admin/components/AdminProtectedRoute";
 import AdminLayout from "@/features/admin/AdminLayout";
@@ -18,6 +17,8 @@ import FaqsPage from "@/pages/FaqsPage";
 import MyPurchasesPage from "@/pages/MyPurchasesPage";
 import { VerifyEmailPage } from "@/pages/VerifyEmailPage";
 import NoFooterLayout from "@/layouts/NoFooterLayout";
+import { SeeTourPage } from "@/pages/SeeTourPage";
+import UserProfilePage from "@/pages/UserProfilePage";
 
 const router = createBrowserRouter([
   {
@@ -70,6 +71,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <MyPurchasesPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/profile", // Nueva ruta protegida
+        element: (
+          <ProtectedRoute>
+            <UserProfilePage />
           </ProtectedRoute>
         ),
       },

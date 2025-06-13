@@ -16,6 +16,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { AccreditableBadge } from "@/shared/components/Tour/AccreditableBadge";
 import { useState } from "react";
+import Loader from "@/shared/components/Loader";
 
 const Tours = () => {
   const navigate = useNavigate();
@@ -55,12 +56,14 @@ const Tours = () => {
     }, 100);
   };
 
+  if (!tours || tours.length === 0) return <Loader />;
+
   return (
-    <div className="container mx-auto max-w-6xl p-4 space-y-8">
-      <div className="flex flex-col md:flex-row justify-between gap-4">
+    <div className="container max-w-6xl p-4 mx-auto space-y-8">
+      <div className="flex flex-col justify-between gap-4 md:flex-row">
         {/* Search */}
         <div className="relative w-full md:w-1/2">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+          <Search className="absolute w-4 h-4 transform -translate-y-1/2 left-3 top-1/2 text-muted-foreground" />
           <Input
             type="search"
             placeholder="Buscar..."
@@ -93,7 +96,7 @@ const Tours = () => {
             onClick={() => setShowAccreditableOnly(!showAccreditableOnly)}
             className="flex items-center gap-2"
           >
-            <GraduationCap className="h-4 w-4" />
+            <GraduationCap className="w-4 h-4" />
             Solo Acreditables
           </Button>
         </div>
@@ -107,7 +110,7 @@ const Tours = () => {
             className="overflow-hidden border-none shadow-none bg-transparent cursor-pointer transition-all duration-300 ease-in-out transform hover:scale-[1.02] hover:shadow-lg group"
             onClick={() => handleTourClick(tour.id)}
           >
-            <div className="flex flex-col md:flex-row gap-6">
+            <div className="flex flex-col gap-6 md:flex-row">
               {/* Image */}
               <div className="w-full md:w-[200px] relative">
                 <img
@@ -122,14 +125,14 @@ const Tours = () => {
                   accreditableHours={tour.accreditable_hours}
                   variant="compact"
                   showHours={false}
-                  className="absolute top-2 left-2 transition-all duration-300 group-hover:scale-105"
+                  className="absolute transition-all duration-300 top-2 left-2 group-hover:scale-105"
                 />
 
                 {/* Overlay sutil en hover */}
-                <div className="absolute inset-0 bg-black opacity-0 transition-opacity duration-300 group-hover:opacity-10 rounded-lg" />
+                <div className="absolute inset-0 transition-opacity duration-300 bg-black rounded-lg opacity-0 group-hover:opacity-10" />
 
                 {/* Indicador visual de clickeable */}
-                <div className="absolute bottom-3 right-3 w-8 h-8 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:scale-110">
+                <div className="absolute flex items-center justify-center w-8 h-8 transition-all duration-300 rounded-full opacity-0 bottom-3 right-3 bg-white/20 backdrop-blur-sm group-hover:opacity-100 group-hover:scale-110">
                   <svg
                     className="w-4 h-4 text-white"
                     fill="none"
@@ -148,10 +151,10 @@ const Tours = () => {
 
               {/* Content */}
               <div className="flex-1 p-6 transition-all duration-300 group-hover:translate-x-1">
-                <div className="flex flex-col md:h-full md:justify-center space-y-4">
+                <div className="flex flex-col space-y-4 md:h-full md:justify-center">
                   {/* Title with accreditable indicator */}
                   <div className="flex items-center gap-3">
-                    <h2 className="text-3xl font-kaiseiDecol flex-1 transition-colors duration-300 group-hover:text-primary">
+                    <h2 className="flex-1 text-3xl transition-colors duration-300 font-kaiseiDecol group-hover:text-primary">
                       {tour.name}
                     </h2>
                     {/* Badge adicional junto al título */}
@@ -167,32 +170,32 @@ const Tours = () => {
                   {/* Rating */}
                   <div className="flex items-center gap-1">
                     <Star
-                      className="h-6 w-6 transition-all duration-300 group-hover:scale-110"
+                      className="w-6 h-6 transition-all duration-300 group-hover:scale-110"
                       style={{ fill: "#B33424", color: "#B33424" }}
                     />
-                    <span className="font-medium text-lg transition-colors duration-300 group-hover:text-primary">
+                    <span className="text-lg font-medium transition-colors duration-300 group-hover:text-primary">
                       {tour.stars}
                     </span>
                   </div>
 
                   {/* Date */}
                   <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4 text-muted-foreground transition-all duration-300 group-hover:scale-110 group-hover:text-primary/70" />
-                    <time className="text-sm text-muted-foreground transition-colors duration-300 group-hover:text-primary/70">
+                    <Calendar className="w-4 h-4 transition-all duration-300 text-muted-foreground group-hover:scale-110 group-hover:text-primary/70" />
+                    <time className="text-sm transition-colors duration-300 text-muted-foreground group-hover:text-primary/70">
                       {dateFormatter(tour.created_at)}
                     </time>
                   </div>
 
                   {/* Description and Button */}
-                  <div className="flex justify-between items-end gap-4">
+                  <div className="flex items-end justify-between gap-4">
                     <div className="flex-1">
-                      <p className="text-muted-foreground transition-colors duration-300 group-hover:text-gray-700">
+                      <p className="transition-colors duration-300 text-muted-foreground group-hover:text-gray-700">
                         {tour.description}
                       </p>
 
                       {/* Información adicional de acreditación */}
                       {tour.is_accreditable && (
-                        <div className="mt-2 text-sm text-green-700 font-medium transition-colors duration-300 group-hover:text-green-800">
+                        <div className="mt-2 text-sm font-medium text-green-700 transition-colors duration-300 group-hover:text-green-800">
                           ✓ Recorrido con créditos académicos
                           {/* Preparado para mostrar horas */}
                           {tour.accreditable_hours && false && (
@@ -210,15 +213,15 @@ const Tours = () => {
                         e.stopPropagation();
                         handleTourClick(tour.id);
                       }}
-                      className="text-white bg-primary hover:bg-primary/90 whitespace-nowrap transition-all duration-300 group-hover:scale-105 group-hover:shadow-md z-10 relative"
+                      className="relative z-10 text-white transition-all duration-300 bg-primary hover:bg-primary/90 whitespace-nowrap group-hover:scale-105 group-hover:shadow-md"
                     >
                       Ver más
                     </Button>
                   </div>
 
                   {/* Indicador de acción */}
-                  <div className="mt-2 opacity-0 transition-all duration-300 group-hover:opacity-100">
-                    <span className="text-xs text-primary font-medium">
+                  <div className="mt-2 transition-all duration-300 opacity-0 group-hover:opacity-100">
+                    <span className="text-xs font-medium text-primary">
                       Haz clic para ver más detalles →
                     </span>
                   </div>

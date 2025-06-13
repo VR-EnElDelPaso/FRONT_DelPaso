@@ -1,14 +1,15 @@
 // src/types/user.ts
 export default interface User {
   id: string;
-  account_number?: number; // Cambiado de number a number | undefined para compatibilidad
+  account_number?: number;
   name: string;
   first_lastname: string;
   second_lastname: string;
   display_name: string;
   email: string;
-  image?: string; // Agregado el campo image que faltaba
+  image?: string;
   role: UserType;
+  is_verified?: boolean; // Agregar campo is_verified
   created_at: string;
   updated_at: string;
   iat: number;
@@ -16,7 +17,7 @@ export default interface User {
 }
 
 export interface RegisterUser {
-  account_number?: number; // Cambiado para que sea opcional
+  account_number?: number;
   name: string;
   first_lastname: string;
   second_lastname: string;

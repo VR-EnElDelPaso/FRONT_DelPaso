@@ -23,6 +23,10 @@ const columns: ColumnDef<Accreditation, unknown>[] = [
     header: "Número de Cuenta",
   },
   {
+    accessorKey: "user.email",
+    header: "Correo Electrónico",
+  },
+  {
     accessorKey: "tour.name",
     header: "Tour",
   },
@@ -65,6 +69,10 @@ const exportColumns: ExportColumn<Accreditation>[] = [
     accessorKey: "tour.accreditable_hours",
     header: "Horas de Acreditación",
   },
+  {
+    accessorKey: "user.email",
+    header: "Correo Electrónico",
+  }
 ];
 
 export const AdminAccreditationsPage = () => {
