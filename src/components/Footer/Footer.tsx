@@ -91,34 +91,34 @@ export default function Footer() {
               {/* Enlaces de navegación y contacto - Lado derecho */}
               <div className="flex flex-col justify-between gap-6 flex-1 max-w-4xl h-full min-h-[200px]">
                 {/* Enlaces de navegación - arriba en desktop, abajo en mobile */}
-                <div className="flex justify-between items-center text-base lg:text-lg w-full order-2 lg:order-1">
+                <div className="flex flex-wrap justify-between items-center text-sm sm:text-base lg:text-lg w-full order-2 lg:order-1 gap-2 sm:gap-4">
                   <a
                     href="/about"
-                    className="hover:text-white/80 transition-colors border-b-2 border-white/30 pb-1"
+                    className="hover:text-white/80 transition-colors border-b-2 border-white/30 pb-1 whitespace-nowrap"
                   >
                     Sobre MUVI
                   </a>
                   <a
                     href="/tours"
-                    className="hover:text-white/80 transition-colors border-b-2 border-white/30 pb-1"
+                    className="hover:text-white/80 transition-colors border-b-2 border-white/30 pb-1 whitespace-nowrap"
                   >
                     Recorridos
                   </a>
                   <a
                     href="/#"
-                    className="hover:text-white/80 transition-colors border-b-2 border-white/30 pb-1"
+                    className="hover:text-white/80 transition-colors border-b-2 border-white/30 pb-1 whitespace-nowrap"
                   >
                     Museos
                   </a>
                   <a
                     href="/faqs"
-                    className="hover:text-white/80 transition-colors border-b-2 border-white/30 pb-1"
+                    className="hover:text-white/80 transition-colors border-b-2 border-white/30 pb-1 whitespace-nowrap"
                   >
                     FAQ
                   </a>
                   <a
                     href="/cart"
-                    className="hover:text-white/80 transition-colors border-b-2 border-white/30 pb-1"
+                    className="hover:text-white/80 transition-colors border-b-2 border-white/30 pb-1 whitespace-nowrap"
                   >
                     Carrito
                   </a>
@@ -138,11 +138,11 @@ export default function Footer() {
                   {/* Correo */}
                   <div className="flex items-start gap-2">
                     <IoMail className="text-lg text-primary flex-shrink-0 mt-0.5" />
-                    <div>
+                    <div className="min-w-0 flex-1">
                       <span className="font-semibold block">Correo</span>
                       <a
                         href="mailto:museos@ucol.mx"
-                        className="text-white/90 hover:text-white underline"
+                        className="text-white/90 hover:text-white underline break-words"
                       >
                         museos@ucol.mx
                       </a>
@@ -163,9 +163,9 @@ export default function Footer() {
                   {/* Ubicación */}
                   <div className="flex items-start gap-2">
                     <IoLocationSharp className="text-lg text-primary flex-shrink-0 mt-0.5" />
-                    <div>
+                    <div className="min-w-0 flex-1">
                       <span className="font-semibold block">Ubicación</span>
-                      <span className="text-white/90">
+                      <span className="text-white/90 break-words">
                         Vicente Guerrero 35, Centro, 28000 Colima, Colima.
                       </span>
                     </div>
