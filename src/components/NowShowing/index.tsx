@@ -13,17 +13,17 @@ export default function NowShowing() {
   return (
     <div className="block py-12 sm:py-16 md:py-20">
       {/* MuseumStatus */}
-      {/* <div className="absolute right-0 top-0 p-4 sm:p-5 z-10">
+      {/* <div className="absolute top-0 right-0 z-10 p-4 sm:p-5">
        <MuseumStatus />
      </div> */}
 
-      <div className="container mx-auto flex flex-col px-4 sm:px-6 md:px-8">
+      <div className="container flex flex-col px-4 mx-auto sm:px-6 md:px-8">
         {/* Title */}
         <div className="mb-6 sm:mb-8">
-          <div className="flex text-primary/50 items-center mb-2">
-            <span className="text-lg sm:text-xl mr-2">•</span>
-            <p className="text-xs sm:text-sm font-bold tracking-widest uppercase">
-              Actuales
+          <div className="flex items-center mb-2 text-primary/50">
+            <span className="mr-2 text-lg sm:text-xl">•</span>
+            <p className="text-xs font-bold tracking-widest uppercase sm:text-sm">
+              Destacados
             </p>
           </div>
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-kaiseiDecol">
