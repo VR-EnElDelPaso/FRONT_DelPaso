@@ -1,18 +1,24 @@
-import { useEffect, useState } from 'react';
-import { useInView } from 'react-intersection-observer';
+import { useFetchMuseums } from "@/features/museum/museum.querys";
+import { useFetchTours } from "@/features/tour/tour.querys";
+import { useEffect, useState } from "react";
+import { useInView } from "react-intersection-observer";
 
 export default function StatsSection() {
+  const { data: museumsResponse } = useFetchMuseums();
+  const { data: toursResponse } = useFetchTours();
+  const museumsCount = museumsResponse?.data?.length || 0;
+  const toursCount = toursResponse?.data?.length || 0;
+
   // Detect when the section is in view
   const { ref, inView } = useInView({
     triggerOnce: true, // se dispara solo una vez
-    threshold: 0.2 // se dispara cuando el 20% del elemento está en el viewport
+    threshold: 0.2, // se dispara cuando el 20% del elemento está en el viewport
   });
 
   // State to count the stats
   const [counts, setCounts] = useState({
-    years: 0,
-    exhibitions: 0,
-    collaborators: 0
+    museums: 0,
+    tours: 0,
   });
 
   // Increment the stats when the section is in view
@@ -20,40 +26,36 @@ export default function StatsSection() {
     let interval: NodeJS.Timeout;
     if (inView) {
       interval = setInterval(() => {
-        setCounts(prev => ({
-          years: prev.years < 20 ? prev.years + 1 : prev.years,
-          exhibitions: prev.exhibitions < 10 ? prev.exhibitions + 1 : prev.exhibitions,
-          collaborators: prev.collaborators < 40 ? prev.collaborators + 1 : prev.collaborators
+        setCounts((prev) => ({
+          museums: prev.museums < museumsCount ? prev.museums + 1 : prev.museums,
+          tours: prev.tours < toursCount ? prev.tours + 1 : prev.tours,
         }));
       }, 50);
     }
     return () => clearInterval(interval);
-  }, [inView]);
+  }, [inView, museumsCount, toursCount]);
 
   return (
-    <div className="hidden sm:block h-[600px] relative">
+    <div className="hidden sm:block h-[400px] relative">
       <img
         src="/assets/images/pictures/stats.jpg"
         alt="interior del museo"
-        className="w-full h-full object-cover object-center"
+        className="object-cover object-center w-full h-full"
       />
       <div className="absolute inset-0 bg-black/70">
-        <div className="container mx-auto h-full flex flex-col justify-between py-32 px-4 sm:px-6 md:px-8">
+        <div className="container flex flex-col justify-between h-full px-4 py-32 mx-auto sm:px-6 md:px-8">
           {/* Title and description */}
-          <div className="flex justify-between items-center gap-8">
+          <div className="flex items-center justify-between gap-8">
             <div className="w-1/3">
-              <h2 className="text-3xl font-kaiseiDecol font-light text-white tracking-widest uppercase">
+              <h2 className="text-3xl font-light tracking-widest text-white uppercase font-kaiseiDecol">
                 Te interesará
               </h2>
             </div>
             <div className="w-2/3">
               <div className="flex flex-col gap-4 text-right">
                 <p className="text-white font-inter text-md">
-                  <span className="font-bold">El museo Universitario Fernando del Paso</span>
-                  {" "}cuenta con diversas actividades como con exposiciones, eventos y festivales.
-                </p>
-                <p className="text-white font-inter text-md">
-                  Somos el mejor museo de arte emergente en Colima, nuestros datos nos respaldan.
+                  <span className="font-bold">MUVI</span> cuenta con diversos
+                  museos y recorridos para que disfrutes de la mejor experiencia cultural.
                 </p>
               </div>
             </div>
@@ -61,29 +63,21 @@ export default function StatsSection() {
 
           {/* Stats */}
           <div className="flex justify-center mt-8" ref={ref}>
-            <div className="grid grid-cols-3 gap-16 uppercase">
+            <div className="grid grid-cols-2 gap-24 uppercase">
               <div className="flex flex-col items-center gap-2 transition-all duration-500 hover:transform hover:scale-105">
-                <h3 className="text-7xl font-outfit font-black text-white">
-                  {counts.years}
+                <h3 className="font-black text-white text-7xl font-outfit">
+                  {counts.museums}
                 </h3>
-                <p className="text-white font-outfit text-md tracking-wider">
-                  Años de experiencia
+                <p className="tracking-wider text-white font-outfit text-md">
+                  Museos disponibles
                 </p>
               </div>
               <div className="flex flex-col items-center gap-2 transition-all duration-500 hover:transform hover:scale-105">
-                <h3 className="text-7xl font-outfit font-black text-white">
-                  {counts.exhibitions}
+                <h3 className="font-black text-white text-7xl font-outfit">
+                  {counts.tours}
                 </h3>
-                <p className="text-white font-outfit text-md tracking-wider">
-                  Exposiciones realizadas
-                </p>
-              </div>
-              <div className="flex flex-col items-center gap-2 transition-all duration-500 hover:transform hover:scale-105">
-                <h3 className="text-7xl font-outfit font-black text-white">
-                  {counts.collaborators}
-                </h3>
-                <p className="text-white font-outfit text-md tracking-wider">
-                  Colaboradores
+                <p className="tracking-wider text-white font-outfit text-md">
+                  Recorridos disponibles
                 </p>
               </div>
             </div>
@@ -91,5 +85,5 @@ export default function StatsSection() {
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -3,6 +3,8 @@ export const es = {
     Home: "Inicio",
     "About Muvi": "Acerca de Muvi",
     Help: "Ayuda",
+    Tours: "Recorridos",
+    Museums: "Museos",
     FAQs: "Preguntas Frecuentes",
     "Change language": "Cambiar idioma",
     Account: "Cuenta",
@@ -10,6 +12,7 @@ export const es = {
     Logout: "Cerrar sesión",
     "My Purchases": "Mis Compras",
     "My Profile": "Mi Perfil", // Nueva
+    NoMuseums: "No hay museos disponibles en este momento",
 
     // User Profile Page - Nuevas traducciones
     "User Profile": "Perfil de Usuario",
