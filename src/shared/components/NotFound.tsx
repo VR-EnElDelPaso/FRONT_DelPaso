@@ -36,7 +36,7 @@ const NotFound: React.FC = () => {
             onClick={handleGoBack}
             className="px-8 py-3 font-semibold text-white transition-colors duration-200 bg-red-600 rounded-lg hover:bg-red-700"
           >
-            Regresar inicio
+            Regresar
           </Button>
         </div>
 
