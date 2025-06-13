@@ -22,7 +22,7 @@ const HelpSection = () => {
 
         <p className="mb-12 text-lg leading-relaxed text-gray-600">
           Si necesitas más información sobre nuestros recorridos virtuales, las
-          exposiciones o los museos universitarios que forman parte de MOVI, no
+          exposiciones o los museos universitarios que forman parte de MUVI, no
           te preocupes, estamos aquí para resolver todas tus preguntas y con
           gusto te responderemos lo antes posible. ¡Queremos que disfrutes al
           máximo la experiencia MUVI!
